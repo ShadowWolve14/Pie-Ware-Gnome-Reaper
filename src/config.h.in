@@ -56,8 +56,8 @@ namespace game
         inline static constexpr int player_Class_One_Max_Health = 100;
         inline static constexpr float player_Class_One_Movement_Speed = 13.0f;
         inline static constexpr float player_Class_One_Damage_Multiplier = 1.0f;
-        inline static constexpr int player_Ranged_Damage_Value = 8;
-        inline static constexpr int player_Melee_Damage_Value = 12;
+        inline static constexpr int player_Ranged_Damage_Value = 10;
+        inline static constexpr int player_Melee_Damage_Value = 30;
         inline static constexpr Vector2 player_Spawn_Position{760,192};
         inline static constexpr Vector2 player_Hittbox{16,16};
 
@@ -91,9 +91,9 @@ namespace game
         inline static constexpr const char* kPlayerRangeAttackDownLeftAnim = "PieWare/assets/Spritesheets/gnoooomeRangedLeftDown.png";
         inline static constexpr const char* kPlayerRangeAttackDownRightAnim = "PieWare/assets/Spritesheets/gnoooomeRangedRightDown.png";
 
-        inline static constexpr float player_Melee_Attack_Anim_Speed = 3.0f;
+        inline static constexpr float player_Melee_Attack_Anim_Speed = 2.0f;
         inline static constexpr int player_Melee_Attack_Frame_Count = 9;
-        inline static constexpr Vector2 player_Melee_Attack_Anim_Size{16, 16};
+        inline static constexpr Vector2 player_Melee_Attack_Anim_Size{48, 48};
         inline static constexpr const char* kPlayerMeleeAttackUpAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_Up.png";
         inline static constexpr const char* kPlayerMeleeAttackDownAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_Down.png";
         inline static constexpr const char* kPlayerMeleeAttackLeftAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_Left.png";
@@ -115,7 +115,7 @@ namespace game
         inline static constexpr const char* kProjectileSprite = "PieWare/assets/Spritesheets/Projectile_Right.png";
 
         // ------Player_Melee_Attack------
-        inline static constexpr float player_Melee_Attack_Cooldown = 0.5f;
+        inline static constexpr float player_Melee_Attack_Cooldown = 5.0f;
         inline static constexpr float player_Melee_Reach_Tiles = 1.5f;
         inline static constexpr float player_Melee_Width_Tiles = 2.0f;
         inline static constexpr float player_Melee_Hitbox_Lifetime = 0.2f;
