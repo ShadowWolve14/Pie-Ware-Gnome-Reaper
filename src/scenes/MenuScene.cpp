@@ -13,7 +13,7 @@ game::scenes::MenuScene::~MenuScene() { }
 
 void game::scenes::MenuScene::Update()
 {
-    if (IsKeyPressed(KEY_ENTER))
+    if (IsGamepadButtonPressed(0,13))
     {
         game::core::Store::last_score = 0;
         game::core::Store::stage->ReplaceWithNewScene("menu"s, "game"s, std::make_unique<GameScene>());

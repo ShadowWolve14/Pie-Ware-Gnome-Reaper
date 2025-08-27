@@ -36,17 +36,17 @@ Player_Base_Class::~Player_Base_Class()
 
 void Player_Base_Class::Player_Input()
 {
-    if (IsKeyPressed(game::Config::key_Melee_Attack) && melee_Cooldown <= 0)
+    if (IsGamepadButtonPressed(0,7) && melee_Cooldown <= 0)
     {
         Melee_Attack();
     }
 
-    if (IsKeyPressed(game::Config::key_Ranged_Attack) && range_Attack_Cooldown <= 0)
+    if (IsGamepadButtonPressed(0,6) && range_Attack_Cooldown <= 0)
     {
         Ranged_Attack();
     }
 
-    /*if (IsKeyPressed(game::Config::key_Use_Item) && inventory_Is_Full)
+    /*if (IsGamepadButtonPressed(0,8) && inventory_Is_Full)
     {
         Use_Item();
     }*/
@@ -67,19 +67,25 @@ void Player_Base_Class::Tick(float delta_time)
     if (currentState != ATTACKING_RANGED || game::Config::allow_Move_While_Attacking) {
         Vector2 move_Direction = {0.0f, 0.0f};
 
-        if (!horizontal_inputs.empty()) {
-            Input_Direction current_h = horizontal_inputs.front();
-            if (current_h == Input_Direction::LEFT) move_Direction.x = -1.0f;
-            else if (current_h == Input_Direction::RIGHT) move_Direction.x = 1.0f;
-        }
+        // if (!horizontal_inputs.empty()) {
+        //     Input_Direction current_h = horizontal_inputs.front();
+        //     if (current_h == Input_Direction::LEFT) move_Direction.x = -1.0f;
+        //     else if (current_h == Input_Direction::RIGHT) move_Direction.x = 1.0f;
+        // }
+        //
+        // if (!vertical_inputs.empty()) {
+        //     Input_Direction current_v = vertical_inputs.front();
+        //     if (current_v == Input_Direction::UP) move_Direction.y = -1.0f;
+        //     else if (current_v == Input_Direction::DOWN) move_Direction.y = 1.0f;
+        // }
 
-        if (!vertical_inputs.empty()) {
-            Input_Direction current_v = vertical_inputs.front();
-            if (current_v == Input_Direction::UP) move_Direction.y = -1.0f;
-            else if (current_v == Input_Direction::DOWN) move_Direction.y = 1.0f;
-        }
+        move_Direction.x = GetGamepadAxisMovement(0, 0);
+        move_Direction.y = GetGamepadAxisMovement(0, 1);
 
-        is_Moving = (move_Direction.x != 0.0f || move_Direction.y != 0.0f);
+        // Deadzones
+        float deadzone = 0.5f;
+        is_Moving = move_Direction.x > deadzone || move_Direction.x < -deadzone || move_Direction.y > deadzone || move_Direction.y < -deadzone;
+
         if(is_Moving) {
             move_Direction = Vector2Normalize(move_Direction);
             hitbox.x += move_Direction.x * player_Movement_Speed * delta_time;
@@ -159,21 +165,21 @@ void Player_Base_Class::Update_Facing_Direction()
         return;
     }
 
-    if (move_X > 0.0f)
+    if (move_X > 0.5f)
     {
-        if (move_Y > 0.0f) facing_Direction = Facing_Direction::DOWN_RIGHT;
-        else if (move_Y < 0.0f) facing_Direction = Facing_Direction::UP_RIGHT;
+        if (move_Y > 0.5f) facing_Direction = Facing_Direction::DOWN_RIGHT;
+        else if (move_Y < 0.5f) facing_Direction = Facing_Direction::UP_RIGHT;
         else facing_Direction = Facing_Direction::RIGHT;
     }
-    else if (move_X < 0.0f)
+    else if (move_X < 0.5f)
     {
-        if (move_Y > 0.0f) facing_Direction = Facing_Direction::DOWN_LEFT;
-        else if (move_Y < 0.0f) facing_Direction = Facing_Direction::UP_LEFT;
+        if (move_Y > 0.5f) facing_Direction = Facing_Direction::DOWN_LEFT;
+        else if (move_Y < 0.5f) facing_Direction = Facing_Direction::UP_LEFT;
         else facing_Direction = Facing_Direction::LEFT;
     }
     else {
-        if (move_Y > 0.0f) facing_Direction = Facing_Direction::DOWN;
-        else if (move_Y < 0.0f) facing_Direction = Facing_Direction::UP;
+        if (move_Y > 0.5f) facing_Direction = Facing_Direction::DOWN;
+        else if (move_Y < 0.5f) facing_Direction = Facing_Direction::UP;
     }
 }
 
