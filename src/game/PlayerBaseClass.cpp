@@ -161,25 +161,25 @@ void Player_Base_Class::Update_Facing_Direction()
     float move_Y = hitbox.y - previous_Position.y;
 
 
-    if (move_X == 0.0f && move_Y == 0.0f) {
+    if ((move_X < 0.5f && move_X > -0.5f) && (move_Y < 0.5f && move_Y > -0.5f)) {
         return;
     }
 
     if (move_X > 0.5f)
     {
         if (move_Y > 0.5f) facing_Direction = Facing_Direction::DOWN_RIGHT;
-        else if (move_Y < 0.5f) facing_Direction = Facing_Direction::UP_RIGHT;
+        else if (move_Y < -0.5f) facing_Direction = Facing_Direction::UP_RIGHT;
         else facing_Direction = Facing_Direction::RIGHT;
     }
-    else if (move_X < 0.5f)
+    else if (move_X < -0.5f)
     {
         if (move_Y > 0.5f) facing_Direction = Facing_Direction::DOWN_LEFT;
-        else if (move_Y < 0.5f) facing_Direction = Facing_Direction::UP_LEFT;
+        else if (move_Y < -0.5f) facing_Direction = Facing_Direction::UP_LEFT;
         else facing_Direction = Facing_Direction::LEFT;
     }
     else {
         if (move_Y > 0.5f) facing_Direction = Facing_Direction::DOWN;
-        else if (move_Y < 0.5f) facing_Direction = Facing_Direction::UP;
+        else if (move_Y < -0.5f) facing_Direction = Facing_Direction::UP;
     }
 }
 
