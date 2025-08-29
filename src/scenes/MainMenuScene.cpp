@@ -63,22 +63,22 @@ void MainMenuScene::Draw()
 
 }
 void MainMenuScene::Input_Check_Mov() {
-    if (IsKeyPressed(game::Config::key_Up)){
+    if (GetGamepadAxisMovement(0, 1) < -0.5){
         this->counter= this->counter-1;
     }
-    if (IsKeyPressed(game::Config::key_Down)){
+    if (GetGamepadAxisMovement(0, 1) > 0.5){
         this->counter= this->counter+1;
     }
 }
 bool MainMenuScene::Input_Check_Sel() {
-    if (IsKeyPressed(game::Config::key_Melee_Attack)){
+    if (IsGamepadButtonPressed(0,7)){
         return true;
     } else{
         return false;
     }
 }
 void MainMenuScene::Input_Check_Back() {
-    if (IsKeyPressed(game::Config::key_Ranged_Attack)){
+    if (IsGamepadButtonPressed(0,6)){
         state=main;
     }
 }

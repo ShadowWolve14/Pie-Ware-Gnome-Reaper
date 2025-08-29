@@ -339,7 +339,7 @@ void Player_Base_Class::PickUpItem(ItemBase* item_to_pick_up)
 
 void Player_Base_Class::Use_Item()
 {
-    if (IsKeyPressed(game::Config::key_Use_Item) && HasItem())
+    if (IsGamepadButtonPressed(0,8) && HasItem())
     {
         held_item->Activate(this);
     }
