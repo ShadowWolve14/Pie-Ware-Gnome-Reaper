@@ -9,6 +9,7 @@
 #include "scenes/Screen.h"
 #include "config.h.in"
 #include "MenuScene.h"
+#include "MainMenuScene.h"
 
 
 /* Aktiviert "String-Literalen erlaubt "menu"s Daraus wird dann direkt ein std::string
@@ -28,7 +29,8 @@ int main()
     const char* mappings = "03000000790000000600000000000000,G-Shark GS-GP702,platform:Windows,a:b0,b:b1,x:b2,y:b3,back:b9,start:b8,leftx:a0,lefty:a1,";
     SetGamepadMappings(mappings);
 
-    game.Run("menu"s, std::make_unique<game::scenes::MenuScene>());
+    
+    game.Run("menu"s, std::make_unique<MainMenuScene>());
 
     return EXIT_SUCCESS;
 }

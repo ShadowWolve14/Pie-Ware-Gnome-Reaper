@@ -15,7 +15,6 @@ Object_Manager::Object_Manager()
 void Object_Manager::AddObject(Collidable* object)
 {
     managed_objects.push_back(object);
-
 }
 
 void Object_Manager::RemoveObject(Collidable* object)
@@ -45,4 +44,23 @@ void Object_Manager::Cleanup_Objects(const std::function<void(Collidable*)>& on_
         return false;
     });
     managed_objects.erase(new_end, managed_objects.end());
+}
+
+void Object_Manager::AddObjectDeferred(Collidable* object)
+{
+    if (object)
+    {
+        objects_to_add.push_back(object);
+    }
+}
+
+void Object_Manager::ProcessAdditions()
+{
+    if (objects_to_add.empty())
+    {
+        return;
+    }
+    managed_objects.insert(managed_objects.end(), objects_to_add.begin(), objects_to_add.end());
+
+    objects_to_add.clear();
 }
