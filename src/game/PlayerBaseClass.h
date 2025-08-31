@@ -69,10 +69,10 @@ public:
 	float Get_Health() const;
     Collision_Type Get_Collision_Type() const override;
     Vector2 Get_Player_Pos();
-    Vector2 Get_Player_Center();
+	Vector2 Get_Player_Center() const;
 	void Set_Position(Vector2 position) override;
     void Take_Damage(int damage);
-
+	int item_remove_ticker = 0;
 	Object_Manager* object_manager_ptr = nullptr;
 
 	void Use_Item();
@@ -84,5 +84,8 @@ public:
 	bool IsBuffed() const;
 	void SetHasFairy(bool value) { has_fairy = value; }
 	bool HasFairy() const { return has_fairy; }
+
+	void Calculate_Melee_Hitboxes(std::vector<Rectangle>& out_hitboxes, Facing_Direction direction) const;
+	Facing_Direction Get_Facing_Direction() const { return facing_Direction; }
 };
 
