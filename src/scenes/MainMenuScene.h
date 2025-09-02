@@ -19,6 +19,7 @@ private:
     Texture2D credits_button= LoadTexture(game::Config::credits_button_asset);
     Texture2D quit_button= LoadTexture(game::Config::quit_button_asset);
     Rectangle src{1,1,80,32};
+    int input_delay;
 
     enum menustate {main,options, credits ,end,list};
     menustate state;

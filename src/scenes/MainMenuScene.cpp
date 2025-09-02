@@ -63,12 +63,15 @@ void MainMenuScene::Draw()
 
 }
 void MainMenuScene::Input_Check_Mov() {
-    if (GetGamepadAxisMovement(0, 1) < -0.5){
+    if (GetGamepadAxisMovement(0, 1) < -0.5&&input_delay<1){
         this->counter= this->counter-1;
+        input_delay=10;
     }
-    if (GetGamepadAxisMovement(0, 1) > 0.5){
+    if (GetGamepadAxisMovement(0, 1) > 0.5&&input_delay<1){
         this->counter= this->counter+1;
+        input_delay=10;
     }
+    input_delay--;
 }
 bool MainMenuScene::Input_Check_Sel() {
     if (IsGamepadButtonPressed(0,7)){
