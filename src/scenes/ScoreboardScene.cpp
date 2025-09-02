@@ -18,7 +18,7 @@ namespace game::scenes
 
     void ScoreboardScene::Update()
     {
-        if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(game::Config::key_Melee_Attack))
+        if (IsGamepadButtonPressed(0,7))
         {
             auto mainMenu = std::make_shared<MainMenuScene>();
             game::core::Store::stage->SwitchToNewScene("MainMenu", mainMenu);

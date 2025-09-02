@@ -20,7 +20,7 @@ namespace game::scenes
 
     void UpgradeScene::Update()
     {
-        if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(game::Config::key_Melee_Attack))
+        if (IsGamepadButtonPressed(0,7))
         {
             int next_level = current_level + 1;
             auto newGameScene = std::make_shared<GameScene>(next_level);

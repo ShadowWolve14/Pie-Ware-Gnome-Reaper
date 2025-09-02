@@ -24,14 +24,14 @@ namespace game::scenes
     {
         if (has_fairy && current_level < 3)
         {
-            if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(game::Config::key_Melee_Attack))
+            if (IsGamepadButtonPressed(0,7))
             {
                 auto upgradeScene = std::make_shared<UpgradeScene>(final_souls, current_level);
                 game::core::Store::stage->SwitchToNewScene("UpgradeScene", upgradeScene);
             }
         }
 
-        if (IsKeyPressed(KEY_ESCAPE))
+        if (IsGamepadButtonPressed(0,6))
         {
             auto scoreboardScene = std::make_shared<ScoreboardScene>(final_score);
             game::core::Store::stage->SwitchToNewScene("ScoreboardScene", scoreboardScene);
