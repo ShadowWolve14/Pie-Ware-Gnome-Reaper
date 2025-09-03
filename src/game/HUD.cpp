@@ -33,15 +33,15 @@ void HUD::HUD_update() {
     }
 
 
-    if (IsKeyPressed(game::Config::key_Melee_Attack)){
+    if (IsGamepadButtonPressed(0,7)){
         this->st=ma;
         UC=6;
     }
-    if(IsKeyPressed(game::Config::key_Ranged_Attack)){
+    if(IsGamepadButtonPressed(0,6)){
         this->st=ra;
         UC=6;
     }
-    if (IsKeyPressed(game::Config::key_Use_Item)){
+    if (IsGamepadButtonPressed(0,8)){
         this->st=iu;
         UC=6;
     }
