@@ -15,8 +15,18 @@ namespace game::core
         explicit PlayerState(Vector2 start_pos) : player(start_pos) {}
     };
 
+    struct UpgradeState {
+        int maxhealth_level = 0;
+        int speed_level = 0;
+        float atkSpeed_level = 0;
+        float DMGxmult_level = 0;
+        int meleeDMG_level = 0;
+        int rangedDMG_level = 0;
+    };
 
+    inline UpgradeState upgrades{};
     struct Store final
+
     {
         /// The Stage object is responsible for the scene change and for updating and drawing the scene contents
         inline static std::unique_ptr<game::core::Stage> stage = nullptr;

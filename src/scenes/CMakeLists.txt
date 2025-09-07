@@ -10,7 +10,9 @@ add_library(scenes STATIC MenuScene.h MenuScene.cpp GameScene.h GameScene.cpp Pa
         UpgradeScene.cpp
         UpgradeScene.h
         ScoreboardScene.cpp
-        ScoreboardScene.h)
+        ScoreboardScene.h
+        ../core/PlayerEffectiveStats.h
+        ../core/FairyAnim.h)
 
 target_include_directories(scenes PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 

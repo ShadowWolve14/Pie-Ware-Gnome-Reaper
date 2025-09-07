@@ -182,13 +182,13 @@ namespace game
         inline static constexpr float melee_enemy_2_walk_anim_speed = 1.0f;
         inline static constexpr int melee_enemy_2_walk_frame_count = 12;
         inline static constexpr Vector2 melee_enemy_2_walk_anim_size = {32, 32};
-        inline static constexpr const char* kMeleeEnemy2WalkLeftAnim = "PieWare/assets/Spritesheets/Knight/Knight.png";
+        inline static constexpr const char* kMeleeEnemy2WalkLeftAnim = "PieWare/assets/Spritesheets/Knight/KnightWalk Left.png";
         inline static constexpr const char* kMeleeEnemy2WalkRightAnim = "PieWare/assets/Spritesheets/Knight/Knight.png";
 
         inline static constexpr float melee_enemy_2_attack_anim_speed = 3.0f;
         inline static constexpr int melee_enemy_2_attack_frame_count = 10;
         inline static constexpr Vector2 melee_enemy_2_attack_anim_size = {64, 32};
-        inline static constexpr const char* kMeleeEnemy2AttackLeftAnim = "PieWare/assets/Spritesheets/Knight/KnighAttackt.png";
+        inline static constexpr const char* kMeleeEnemy2AttackLeftAnim = "PieWare/assets/Spritesheets/Knight/KnightAttackLeft.png";
         inline static constexpr const char* kMeleeEnemy2AttackRightAnim = "PieWare/assets/Spritesheets/Knight/KnighAttackt.png";
 
 
@@ -209,13 +209,13 @@ namespace game
         inline static constexpr float melee_enemy_3_walk_anim_speed = 1.0f;
         inline static constexpr int melee_enemy_3_walk_frame_count = 12;
         inline static constexpr Vector2 melee_enemy_3_walk_anim_size = {32, 32};
-        inline static constexpr const char* kMeleeEnemy3WalkLeftAnim = "PieWare/assets/Spritesheets/DemonKnight/DemonKnight.png";
+        inline static constexpr const char* kMeleeEnemy3WalkLeftAnim = "PieWare/assets/Spritesheets/DemonKnight/DemonKnigtWalkLeft.png";
         inline static constexpr const char* kMeleeEnemy3WalkRightAnim = "PieWare/assets/Spritesheets/DemonKnight/DemonKnight.png";
 
         inline static constexpr float melee_enemy_3_attack_anim_speed = 3.0f;
         inline static constexpr int melee_enemy_3_attack_frame_count = 10;
         inline static constexpr Vector2 melee_enemy_3_attack_anim_size = {64, 32};
-        inline static constexpr const char* kMeleeEnemy3AttackLeftAnim = "PieWare/assets/Spritesheets/DemonKnight/DemonKnightAttack.png";
+        inline static constexpr const char* kMeleeEnemy3AttackLeftAnim = "PieWare/assets/Spritesheets/DemonKnight/DemonKnightAttackLeft.png";
         inline static constexpr const char* kMeleeEnemy3AttackRightAnim = "PieWare/assets/Spritesheets/DemonKnight/DemonKnightAttack.png";
 
 
@@ -464,6 +464,33 @@ namespace game
         inline static constexpr const char* credits_button_asset ="PieWare/assets/UI/MainMenu/Button_Credits.png";
         inline static constexpr const char* quit_button_asset ="PieWare/assets/UI/MainMenu/Button_CloseGame.png";
 
+        // ------Upgrade Screen-------
+                inline static constexpr const char* continue_button_asset = "PieWare/assets/UI/Upgrade/Button_weiter.png";
+                inline static constexpr const char* speed_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_Speed.png";
+                inline static constexpr const char* rangedDMG_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_RangedDMG.png";
+                inline static constexpr const char* meeleDMG_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_MeeleDMG.png";
+                inline static constexpr const char* lives_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_Lives.png";
+                inline static constexpr const char* baseDMG_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_BaseDMG.png";
+                inline static constexpr const char* atkSpeed_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_AtkSpeed.png";
+                inline static constexpr const char* Soulcounter_BG_asset = "PieWare/assets/UI/Upgrade/Banner_SoulCounter.png";
+                inline static constexpr const char* abilityLevel_asset = "PieWare/assets/UI/Upgrade/AbilityLevel.png";
+                inline static std::string fairy_spritesheet_path(int Lvl_Nbr)
+                                        {
+                                            switch (Lvl_Nbr)
+                                            {
+                                                case 1:
+                                                return "PieWare/assets/Spritesheets/Erzfee/ErzfeeAnimationLv1.png";
+                                                case 2:
+                                                return "PieWare/assets/Spritesheets/Erzfee/ErzfeeLv2Animation.png";
+                                                case 3:
+                                                return "PieWare/assets/Spritesheets/Erzfee/ErzfeeLv3Animation.png";
+                                                default:
+                                                return "no sprite found";
+                                            }
+                                        }
+
+
+
         //-------HUD----------
          inline static constexpr const char* Symbol_AA ="PieWare/assets/UI/HUD/Button_ArrowAttack.png";
                         inline static constexpr const char* Symbol_AAU ="PieWare/assets/UI/HUD/Button_ArrowAttack_Use.png";
@@ -514,4 +541,6 @@ namespace game
             }
         }
     };
-}
+};
+
+
