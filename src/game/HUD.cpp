@@ -143,32 +143,32 @@ void HUD::HUD_draw() {
             }
             case potion:{
                 if (UC>0){
-                    DrawTextureEx(IPU,v6,rot,3,WHITE);;}
+                    DrawTextureEx(IPU,v6,rot,3,WHITE);}
                 break;
             }
 
             default:{
                 if (UC>0){
-                    DrawTextureEx(IEU,v6,rot,3,WHITE);;}
+                    DrawTextureEx(IEU,v6,rot,3,WHITE);}
                 break;
             }
         }
     } else{
         switch (it) {
             case bomb:{
-                DrawTextureEx(IB,v6,rot,3,WHITE);;
+                DrawTextureEx(IB,v6,rot,3,WHITE);
                 break;
             }
             case key:{
-                DrawTextureEx(IK,v6,rot,3,WHITE);;
+                DrawTextureEx(IK,v6,rot,3,WHITE);
                 break;
             }
             case testo:{
-                DrawTextureEx(IT,v6,rot,3,WHITE);;
+                DrawTextureEx(IT,v6,rot,3,WHITE);
                 break;
             }
             case potion:{
-                DrawTextureEx(IP,v6,rot,3,WHITE);;
+                DrawTextureEx(IP,v6,rot,3,WHITE);
                 break;
             }
             default:{
@@ -195,11 +195,11 @@ void HUD::HUD_draw() {
     if (mp->Get_Health()>29){
         DrawTextureEx(HH,v11,rot,3,WHITE);
     }
-    if (mp->Get_Health()>99){
-        DrawTextureEx(H,v14,rot,3,WHITE);
-    }
     if (mp->Get_Health()>9){
         DrawTextureEx(HH,v10,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>99){
+        DrawTextureEx(H,v14,rot,3,WHITE);
     }
     if (mp->Get_Health()>79){
         DrawTextureEx(H,v13,rot,3,WHITE);
@@ -212,6 +212,10 @@ void HUD::HUD_draw() {
     }
     if (mp->Get_Health()>19){
         DrawTextureEx(H,v10,rot,3,WHITE);
+
     }
-    //Writing the values sc and scc on the two counters
+    std::string temp=std::to_string(game::core::Store::player_state->score);
+    DrawTextEx(game::core::Store::font,temp.c_str(),{v2.x+85,v2.y+36},30,1,WHITE);
+    temp=std::to_string(game::core::Store::player_state->souls);
+    DrawTextEx(game::core::Store::font,temp.c_str(),{v3.x+85,v3.y+36},30,1,WHITE);
 }
