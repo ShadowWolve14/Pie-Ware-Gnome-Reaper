@@ -477,11 +477,13 @@ namespace game
         inline static constexpr const int key_Use_Item = KEY_L;
 
         // ------Main Menu -------
-        inline static constexpr const char* start_button_asset ="PieWare/assets/UI/MainMenu/Button_StartGame.png";
-        inline static constexpr const char* option_button_asset ="PieWare/assets/UI/MainMenu/Button_Options.png";
-        inline static constexpr const char* ranking_button_asset ="PieWare/assets/UI/MainMenu/Button_ScoreBoard.png";
-        inline static constexpr const char* credits_button_asset ="PieWare/assets/UI/MainMenu/Button_Credits.png";
-        inline static constexpr const char* quit_button_asset ="PieWare/assets/UI/MainMenu/Button_CloseGame.png";
+        inline static constexpr const char* start_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_StartButton.png";
+        inline static constexpr const char* option_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_OptionsButton.png";
+        inline static constexpr const char* ranking_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_ScoreButton.png";
+        inline static constexpr const char* credits_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_CreditsButton.png";
+        inline static constexpr const char* quit_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_QuitButton.png";
+         inline static constexpr const char* Back_Sign_asset ="PieWare/assets/UI/MainMenu/MainMenu_Schriftzugl.png";
+          inline static constexpr const char* Background_asset ="PieWare/assets/UI/MainMenu/Scroll.png";
 
         // ------Upgrade Screen-------
         inline static constexpr const char* continue_button_asset = "PieWare/assets/UI/Upgrade/Button_weiter.png";
