@@ -159,7 +159,7 @@ void Player_Base_Class::Ranged_Attack()
         case UP_RIGHT:   fire_direction = Vector2Normalize({1.0f, -1.0f});  break;
         case DOWN_LEFT:  fire_direction = Vector2Normalize({-1.0f, 1.0f});  break;
         case DOWN_RIGHT: fire_direction = Vector2Normalize({1.0f, 1.0f});   break;
-        case NONE:       return;
+        case FACING_NONE:       return;
     }
 
     float offset_distance = (hitbox.width / 2.0f) + 1;
@@ -398,7 +398,7 @@ void Player_Base_Class::Calculate_Melee_Hitboxes(std::vector<Rectangle>& out_hit
             break;
         }
 
-        case NONE:
+        case FACING_NONE:
             return;
     }
 }

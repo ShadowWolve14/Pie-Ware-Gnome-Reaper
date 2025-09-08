@@ -12,10 +12,6 @@ namespace game { class Player_Projectile; }
 class Object_Manager;
 class Collision_Manager;
 
-enum Facing_Direction {UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, NONE};
-enum PlayerState {IDLE, WALKING, ATTACKING_RANGED, ATTACKING_MELEE};
-enum class Input_Direction { UP, DOWN, LEFT, RIGHT };
-
 class Player_Base_Class : public Collidable
 {
 protected:
@@ -86,6 +82,7 @@ public:
 	bool HasFairy() const { return has_fairy; }
 	void Reset_For_New_Level();
 	void Calculate_Melee_Hitboxes(std::vector<Rectangle>& out_hitboxes, Facing_Direction direction) const;
+	bool IsMoving() const { return is_Moving; }
 	Facing_Direction Get_Facing_Direction() const { return facing_Direction; }
 };
 

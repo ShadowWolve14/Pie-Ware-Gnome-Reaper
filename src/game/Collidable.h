@@ -8,18 +8,11 @@
 #include "raylib.h"
 #include <string>
 
-enum class Collision_Type
-{
-    PLAYER,
-    ENEMY,
-    WALL,
-    PLAYER_PROJECTILE,
-    ENEMY_PROJECTILE,
-    CONSUMABLE,
-    PLAYER_MELEE_HITBOX,
-    ENEMY_SPAWNER,
-    PLAYER_MELEE_ATTACK
-};
+enum Facing_Direction {UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, FACING_NONE};
+enum PlayerState {IDLE, WALKING, ATTACKING_RANGED, ATTACKING_MELEE};
+enum class Input_Direction { UP, DOWN, LEFT, RIGHT };
+enum class Collision_Type {PLAYER, ENEMY, WALL, PLAYER_PROJECTILE,  ENEMY_PROJECTILE, CONSUMABLE, PLAYER_MELEE_HITBOX,
+    ENEMY_SPAWNER, PLAYER_MELEE_ATTACK, MOVABLE_WALL};
 
 class Collidable
 {

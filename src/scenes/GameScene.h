@@ -9,6 +9,8 @@
 #include "../game/EnemySpawner.h"
 #include "../game/HUD.h"
 
+class PuzzleOne;
+
 namespace game::scenes
 {
     class GameScene final : public game::core::Scene
@@ -27,6 +29,7 @@ namespace game::scenes
         int current_level = 1;
         float wave_timer = 0.0f;
 
+        std::unique_ptr<PuzzleOne> puzzle_one;
         bool fairy_has_spawned = false;
         float score_timer = 0.0f;
         std::string debug_text = "Debug Info:";
