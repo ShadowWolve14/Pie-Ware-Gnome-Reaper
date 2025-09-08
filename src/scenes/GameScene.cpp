@@ -28,7 +28,16 @@ using namespace std::string_literals;
 game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
 {
     enemy::Melee_Enemy::Load_All_Melee_Assets();
-
+    if (Level_Nbr==1){
+        Active_Song=&Song1;
+    }
+    if (Level_Nbr==2){
+        Active_Song=&Song2;
+    }
+    if (Level_Nbr==3){
+        Active_Song=&Song3;
+    }
+    PlayMusicStream(*Active_Song);
     if (!game::core::Store::player_state)
     {
         game::core::Store::player_state = std::make_unique<game::core::PlayerState>(game::Config::player_Spawn_Position);
@@ -82,11 +91,12 @@ game::scenes::GameScene::~GameScene()
 
 void game::scenes::GameScene::Update()
 {
+    UpdateMusicStream(*Active_Song);
     if (player_ptr->Is_Dead())
     {
         bool player_has_fairy = player_ptr->HasFairy();
         auto deathScene = std::make_shared<DeathScene>(game::core::Store::player_state->score,
-        game::core::Store::player_state->souls, player_has_fairy, this->current_level);
+                                                       game::core::Store::player_state->souls, player_has_fairy, this->current_level);
         game::core::Store::stage->SwitchToNewScene("DeathScene", deathScene);
 
         return;
@@ -160,78 +170,78 @@ void game::scenes::GameScene::Update()
     p_cm->Check_Collisions();
     cam->Cam_Movement(dtm.Get_Dt(), screen.Get_Map_Dimensions());
     std::vector<Vector2> dead_enemy_positions;
-objectManager.Cleanup_Objects([this, &dead_enemy_positions](Collidable* cleaned_obj)
-{
-    if (cleaned_obj->Get_Collision_Type() == Collision_Type::ENEMY)
-    {
-        auto* enemy = static_cast<enemy::Enemy_Base_Class*>(cleaned_obj);
-        game::core::Store::player_state->score += enemy->Get_Score_Value();
-        game::core::Store::player_state->souls += enemy->Get_Souls_Value();
+    objectManager.Cleanup_Objects([this, &dead_enemy_positions](Collidable* cleaned_obj)
+                                  {
+                                      if (cleaned_obj->Get_Collision_Type() == Collision_Type::ENEMY)
+                                      {
+                                          auto* enemy = static_cast<enemy::Enemy_Base_Class*>(cleaned_obj);
+                                          game::core::Store::player_state->score += enemy->Get_Score_Value();
+                                          game::core::Store::player_state->souls += enemy->Get_Souls_Value();
 
-        dead_enemy_positions.push_back(enemy->Get_Position());
-    }
-});
+                                          dead_enemy_positions.push_back(enemy->Get_Position());
+                                      }
+                                  });
 
     int potions_to_spawn = 0;
     int bombs_to_spawn = 0;
     int needles_to_spawn = 0;
 
-for (const auto& pos : dead_enemy_positions)
-{
-    if (GetRandomValue(1, 100) <= game::Config::enemy_Item_Drop_Chance_Percent)
+    for (const auto& pos : dead_enemy_positions)
     {
-        std::vector<std::pair<ItemType, int>> weighted_list;
-        int total_weight = 0;
-
-        if (CountItemsOfType(ItemType::HEALTH_POTION, objectManager, *player_ptr) + potions_to_spawn < game::Config::health_Potion_Max_On_Map) {
-            weighted_list.push_back({ItemType::HEALTH_POTION, game::Config::item_Drop_Weight_Heal});
-            total_weight += game::Config::item_Drop_Weight_Heal;
-        }
-        if (CountItemsOfType(ItemType::BOMB, objectManager, *player_ptr) + bombs_to_spawn < game::Config::bomb_Max_On_Map) {
-            weighted_list.push_back({ItemType::BOMB, game::Config::item_Drop_Weight_Bomb});
-            total_weight += game::Config::item_Drop_Weight_Bomb;
-        }
-        if (CountItemsOfType(ItemType::TESTO_NEEDLE, objectManager, *player_ptr) + needles_to_spawn < game::Config::testo_Needle_Max_On_Map) {
-            weighted_list.push_back({ItemType::TESTO_NEEDLE, game::Config::item_Drop_Weight_TestoNeedle});
-            total_weight += game::Config::item_Drop_Weight_TestoNeedle;
-        }
-
-        if (total_weight > 0)
+        if (GetRandomValue(1, 100) <= game::Config::enemy_Item_Drop_Chance_Percent)
         {
-            int roll = GetRandomValue(1, total_weight);
-            for (const auto& pair : weighted_list)
+            std::vector<std::pair<ItemType, int>> weighted_list;
+            int total_weight = 0;
+
+            if (CountItemsOfType(ItemType::HEALTH_POTION, objectManager, *player_ptr) + potions_to_spawn < game::Config::health_Potion_Max_On_Map) {
+                weighted_list.push_back({ItemType::HEALTH_POTION, game::Config::item_Drop_Weight_Heal});
+                total_weight += game::Config::item_Drop_Weight_Heal;
+            }
+            if (CountItemsOfType(ItemType::BOMB, objectManager, *player_ptr) + bombs_to_spawn < game::Config::bomb_Max_On_Map) {
+                weighted_list.push_back({ItemType::BOMB, game::Config::item_Drop_Weight_Bomb});
+                total_weight += game::Config::item_Drop_Weight_Bomb;
+            }
+            if (CountItemsOfType(ItemType::TESTO_NEEDLE, objectManager, *player_ptr) + needles_to_spawn < game::Config::testo_Needle_Max_On_Map) {
+                weighted_list.push_back({ItemType::TESTO_NEEDLE, game::Config::item_Drop_Weight_TestoNeedle});
+                total_weight += game::Config::item_Drop_Weight_TestoNeedle;
+            }
+
+            if (total_weight > 0)
             {
-                roll -= pair.second;
-                if (roll <= 0)
+                int roll = GetRandomValue(1, total_weight);
+                for (const auto& pair : weighted_list)
                 {
-                    ItemBase* spawned_item = nullptr;
-                    switch (pair.first)
+                    roll -= pair.second;
+                    if (roll <= 0)
                     {
-                        case ItemType::HEALTH_POTION:
-                            spawned_item = new HealthPotion(pos);
-                            potions_to_spawn++;
-                            break;
-                        case ItemType::BOMB:
-                            spawned_item = new BombItem(pos);
-                            bombs_to_spawn++;
-                            break;
-                        case ItemType::TESTO_NEEDLE:
-                            spawned_item = new TestoNeedle(pos);
-                            needles_to_spawn++;
-                            break;
+                        ItemBase* spawned_item = nullptr;
+                        switch (pair.first)
+                        {
+                            case ItemType::HEALTH_POTION:
+                                spawned_item = new HealthPotion(pos);
+                                potions_to_spawn++;
+                                break;
+                            case ItemType::BOMB:
+                                spawned_item = new BombItem(pos);
+                                bombs_to_spawn++;
+                                break;
+                            case ItemType::TESTO_NEEDLE:
+                                spawned_item = new TestoNeedle(pos);
+                                needles_to_spawn++;
+                                break;
+                        }
+                        if (spawned_item) {
+                            objectManager.AddObjectDeferred(spawned_item);
+                        }
+                        break;
                     }
-                    if (spawned_item) {
-                        objectManager.AddObjectDeferred(spawned_item);
-                    }
-                    break;
                 }
             }
         }
     }
-}
 
     hud.HUD_update();
-objectManager.ProcessAdditions();
+    objectManager.ProcessAdditions();
     dtm.Update();
 }
 
@@ -240,9 +250,9 @@ void game::scenes::GameScene::Draw()
     BeginMode2D(this->cam->cam);
     screen.Draw_Level(this->cam, false);
     std::sort(objectManager.managed_objects.begin(), objectManager.managed_objects.end(),
-        [](const Collidable* a, const Collidable* b) {
-            return a->GetYSortPosition() < b->GetYSortPosition();
-        });
+              [](const Collidable* a, const Collidable* b) {
+                  return a->GetYSortPosition() < b->GetYSortPosition();
+              });
     for(auto* obj : objectManager.managed_objects)
     {
         obj->Draw();

@@ -7,8 +7,8 @@
 #include "../config.h.in"
 
 Player_Class_One::Player_Class_One(Vector2 start_Position)
-    : Player_Base_Class(game::Config::player_Class_One_Max_Health, game::Config::player_Class_One_Movement_Speed,
-        game::Config::player_Class_One_Damage_Multiplier, start_Position)
+        : Player_Base_Class(game::Config::player_Class_One_Max_Health, game::Config::player_Class_One_Movement_Speed,
+                            game::Config::player_Class_One_Damage_Multiplier, start_Position)
 {
     int player_Walk_Anim_Speed = game::Config::player_Walk_Anim_Speed;
     Vector2 player_Walk_Anim_Size = game::Config::player_Walk_Anim_Size;
@@ -165,6 +165,7 @@ void Player_Class_One::Draw()
 
     if (currentState == ATTACKING_MELEE)
     {
+
         if (active_melee_map->count(attack_Direction))
         {
             current_attack_anim = &active_melee_map->at(attack_Direction);
@@ -172,6 +173,7 @@ void Player_Class_One::Draw()
     }
     else if (currentState == ATTACKING_RANGED)
     {
+
         if (ranged_Attack_Animations.count(attack_Direction))
         {
             current_attack_anim = &ranged_Attack_Animations.at(attack_Direction);
@@ -217,6 +219,7 @@ void Player_Class_One::Draw()
 void Player_Class_One::Ranged_Attack()
 {
     this->attack_Direction = this->facing_Direction;
+    PlaySound(rats);
     Player_Base_Class::Ranged_Attack();
     if (ranged_Attack_Animations.count(this->attack_Direction)) {
         ranged_Attack_Animations.at(this->attack_Direction).First_Frame();
@@ -225,6 +228,7 @@ void Player_Class_One::Ranged_Attack()
 void Player_Class_One::Melee_Attack()
 {
     this->attack_Direction = this->facing_Direction;
+    PlaySound(ats);
     Player_Base_Class::Melee_Attack();
     auto* active_melee_map = IsBuffed() ? &buff_melee_Attack_Animations : &melee_Attack_Animations;
     if (active_melee_map->count(this->attack_Direction))
