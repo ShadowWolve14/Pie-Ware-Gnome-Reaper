@@ -6,10 +6,11 @@
 #include "../Config.h.in"
 #include "raymath.h"
 #include "CollisionResponse.h"
+#include "Object_Manager.h"
 
-MovableWall::MovableWall(Vector2 position, Vector2 size, Vector2 target, const char* spritesheet_path)
+MovableWall::MovableWall(Vector2 position, Vector2 size, Vector2 target, const char* spritesheet_path, Object_Manager& obj_manager)
     : Walls({position.x + game::Config::movable_wall_hitbox_offset.x, position.y + game::Config::movable_wall_hitbox_offset.y}, size),
-    target_position(target)
+    target_position(target), object_manager_ref(obj_manager)
 {
     spritesheet = LoadTexture(spritesheet_path);
     inactive_frame = { 0.0f, 0.0f, game::Config::movable_wall_sprite_size.x, game::Config::movable_wall_sprite_size.y };
@@ -41,15 +42,39 @@ void MovableWall::Tick(float delta_time)
             push_timer += delta_time;
         }
 
-        if (push_timer >= game::Config::movable_wall_move_speed * delta_time) {
-            Vector2 move_vec = {0,0};
-            if (last_push_direction == UP) move_vec.y = -1;
-            else if (last_push_direction == DOWN) move_vec.y = 1;
-            else if (last_push_direction == LEFT) move_vec.x = -1;
-            else if (last_push_direction == RIGHT) move_vec.x = 1;
+        Vector2 move_vec = {0,0};
+        if (last_push_direction == UP) move_vec.y = -1;
+        else if (last_push_direction == DOWN) move_vec.y = 1;
+        else if (last_push_direction == LEFT) move_vec.x = -1;
+        else if (last_push_direction == RIGHT) move_vec.x = 1;
 
-            this->hitbox.x += move_vec.x * game::Config::movable_wall_move_speed * delta_time;
-            this->hitbox.y += move_vec.y * game::Config::movable_wall_move_speed * delta_time;
+        Vector2 delta_pos = Vector2Scale(move_vec, game::Config::movable_wall_move_speed * delta_time);
+        Rectangle original_hitbox = this->hitbox;
+
+        // Bewege und prüfe die X-Achse
+        this->hitbox.x += delta_pos.x;
+        for (auto* obj : object_manager_ref.managed_objects) {
+            if (obj == this) continue;
+            Collision_Type type = obj->Get_Collision_Type();
+            if (type == Collision_Type::WALL || type == Collision_Type::MOVABLE_WALL) {
+                if (CheckCollisionRecs(this->hitbox, obj->Get_Hitbox())) {
+                    this->hitbox.x = original_hitbox.x; // Setze bei Kollision zurück
+                    break;
+                }
+            }
+        }
+
+        // Bewege und prüfe die Y-Achse
+        this->hitbox.y += delta_pos.y;
+        for (auto* obj : object_manager_ref.managed_objects) {
+            if (obj == this) continue;
+            Collision_Type type = obj->Get_Collision_Type();
+            if (type == Collision_Type::WALL || type == Collision_Type::MOVABLE_WALL) {
+                if (CheckCollisionRecs(this->hitbox, obj->Get_Hitbox())) {
+                    this->hitbox.y = original_hitbox.y; // Setze bei Kollision zurück
+                    break;
+                }
+            }
         }
     }
 
@@ -89,6 +114,7 @@ void MovableWall::On_Collision(Collidable* other)
         CollisionResponse::Resolve_Overlap(this, other);
     }
 }
+
 
 void MovableWall::StopPushing()
 {

@@ -7,10 +7,11 @@
 
 #include "Walls.h"
 class Player_Base_Class;
-
+class Object_Manager;
 class MovableWall : public Walls
 {
 private:
+    Object_Manager& object_manager_ref;
     Vector2 target_position;
     bool is_solved = false;
     bool is_activating = false;
@@ -24,7 +25,7 @@ private:
     Facing_Direction last_push_direction = FACING_NONE;
 
 public:
-    MovableWall(Vector2 position, Vector2 size, Vector2 target, const char* spritesheet_path);
+    MovableWall(Vector2 position, Vector2 size, Vector2 target, const char* spritesheet_path, Object_Manager& obj_manager);
     ~MovableWall() override;
     Collision_Type Get_Collision_Type() const override;
     void Tick(float delta_time) override;

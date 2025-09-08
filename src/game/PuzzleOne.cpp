@@ -17,31 +17,36 @@ void PuzzleOne::Load(int level_number)
             game::Config::movable_wall_1_start_pos,
             game::Config::movable_wall_hitbox,
             game::Config::movable_wall_1_target_pos,
-            game::Config::movable_wall_1_spritesheet
+            game::Config::movable_wall_1_spritesheet,
+            object_manager // object_manager übergeben
         );
         MovableWall* stone2 = new MovableWall(
             game::Config::movable_wall_2_start_pos,
             game::Config::movable_wall_hitbox,
             game::Config::movable_wall_2_target_pos,
-            game::Config::movable_wall_2_spritesheet
+            game::Config::movable_wall_2_spritesheet,
+            object_manager // object_manager übergeben
         );
         MovableWall* stone3 = new MovableWall(
             game::Config::movable_wall_3_start_pos,
             game::Config::movable_wall_hitbox,
             game::Config::movable_wall_3_target_pos,
-            game::Config::movable_wall_3_spritesheet
+            game::Config::movable_wall_3_spritesheet,
+            object_manager // object_manager übergeben
         );
         MovableWall* stone4 = new MovableWall(
             game::Config::movable_wall_4_start_pos,
             game::Config::movable_wall_hitbox,
             game::Config::movable_wall_4_target_pos,
-            game::Config::movable_wall_4_spritesheet
+            game::Config::movable_wall_4_spritesheet,
+            object_manager // object_manager übergeben
         );
         MovableWall* stone5 = new MovableWall(
             game::Config::movable_wall_5_start_pos,
             game::Config::movable_wall_hitbox,
             game::Config::movable_wall_5_target_pos,
-            game::Config::movable_wall_5_spritesheet
+            game::Config::movable_wall_5_spritesheet,
+            object_manager // object_manager übergeben
         );
 
         object_manager.AddObject(stone1); puzzle_stones.push_back(stone1);
