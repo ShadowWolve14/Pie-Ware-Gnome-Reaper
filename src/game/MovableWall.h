@@ -23,6 +23,7 @@ private:
     Player_Base_Class* pushing_player = nullptr;
     float push_timer = 0.0f;
     Facing_Direction last_push_direction = FACING_NONE;
+    Vector2 last_player_position;
 
 public:
     MovableWall(Vector2 position, Vector2 size, Vector2 target, const char* spritesheet_path, Object_Manager& obj_manager);

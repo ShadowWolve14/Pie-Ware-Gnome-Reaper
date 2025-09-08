@@ -15,6 +15,7 @@ MovableWall::MovableWall(Vector2 position, Vector2 size, Vector2 target, const c
     spritesheet = LoadTexture(spritesheet_path);
     inactive_frame = { 0.0f, 0.0f, game::Config::movable_wall_sprite_size.x, game::Config::movable_wall_sprite_size.y };
     active_frame = { game::Config::movable_wall_sprite_size.x, 0.0f, game::Config::movable_wall_sprite_size.x, game::Config::movable_wall_sprite_size.y };
+    last_player_position = { 0.0f, 0.0f };
 }
 
 MovableWall::~MovableWall()
@@ -29,17 +30,27 @@ void MovableWall::Tick(float delta_time)
     if (pushing_player)
     {
         Facing_Direction current_push_direction = pushing_player->Get_Facing_Direction();
+        Vector2 current_player_pos = pushing_player->Get_Position();
+        bool player_is_blocked = false;
 
-        if (!pushing_player->IsMoving() || (current_push_direction != UP && current_push_direction != DOWN && current_push_direction != LEFT && current_push_direction != RIGHT)) {
+        if (!pushing_player->IsMoving() || current_push_direction != last_push_direction ||
+            (current_push_direction != UP && current_push_direction != DOWN && current_push_direction != LEFT && current_push_direction != RIGHT))
+        {
             StopPushing();
             return;
         }
+        switch (last_push_direction)
+        {
+            case RIGHT: if (current_player_pos.x <= last_player_position.x) player_is_blocked = true; break;
+            case LEFT:  if (current_player_pos.x >= last_player_position.x) player_is_blocked = true; break;
+            case DOWN:  if (current_player_pos.y <= last_player_position.y) player_is_blocked = true; break;
+            case UP:    if (current_player_pos.y >= last_player_position.y) player_is_blocked = true; break;
+        }
 
-        if (current_push_direction != last_push_direction) {
-            push_timer = 0.0f;
-            last_push_direction = current_push_direction;
-        } else {
-            push_timer += delta_time;
+        if (player_is_blocked)
+        {
+            StopPushing();
+            return;
         }
 
         Vector2 move_vec = {0,0};
@@ -51,31 +62,30 @@ void MovableWall::Tick(float delta_time)
         Vector2 delta_pos = Vector2Scale(move_vec, game::Config::movable_wall_move_speed * delta_time);
         Rectangle original_hitbox = this->hitbox;
 
-        // Bewege und prüfe die X-Achse
         this->hitbox.x += delta_pos.x;
         for (auto* obj : object_manager_ref.managed_objects) {
             if (obj == this) continue;
             Collision_Type type = obj->Get_Collision_Type();
             if (type == Collision_Type::WALL || type == Collision_Type::MOVABLE_WALL) {
                 if (CheckCollisionRecs(this->hitbox, obj->Get_Hitbox())) {
-                    this->hitbox.x = original_hitbox.x; // Setze bei Kollision zurück
+                    this->hitbox.x = original_hitbox.x;
                     break;
                 }
             }
         }
 
-        // Bewege und prüfe die Y-Achse
         this->hitbox.y += delta_pos.y;
         for (auto* obj : object_manager_ref.managed_objects) {
             if (obj == this) continue;
             Collision_Type type = obj->Get_Collision_Type();
             if (type == Collision_Type::WALL || type == Collision_Type::MOVABLE_WALL) {
                 if (CheckCollisionRecs(this->hitbox, obj->Get_Hitbox())) {
-                    this->hitbox.y = original_hitbox.y; // Setze bei Kollision zurück
+                    this->hitbox.y = original_hitbox.y;
                     break;
                 }
             }
         }
+        last_player_position = current_player_pos;
     }
 
     if (Vector2Distance(Get_Position(), target_position) < game::Config::movable_wall_target_snap_radius)
@@ -102,7 +112,12 @@ void MovableWall::On_Collision(Collidable* other)
 
     if (other_type == Collision_Type::PLAYER)
     {
-        pushing_player = static_cast<Player_Base_Class*>(other);
+        if (!pushing_player)
+        {
+            pushing_player = static_cast<Player_Base_Class*>(other);
+            last_push_direction = pushing_player->Get_Facing_Direction();
+            last_player_position = pushing_player->Get_Position();
+        }
         CollisionResponse::Resolve_Overlap(other, this);
     }
     else if (other_type == Collision_Type::ENEMY)
