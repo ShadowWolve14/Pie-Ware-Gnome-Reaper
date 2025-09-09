@@ -68,7 +68,9 @@ add_library(core STATIC game.h game.cpp store.h ../scenes/Scene.h stage.h stage.
         ../game/MovableWall.cpp
         ../game/MovableWall.h
         ../game/PuzzleOne.cpp
-        ../game/PuzzleOne.h)
+        ../game/PuzzleOne.h
+        PlayerEffectiveStats.h
+        FairyAnim.h)
 
 target_include_directories(core PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 

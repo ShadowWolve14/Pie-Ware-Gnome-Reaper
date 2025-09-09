@@ -12,20 +12,22 @@
 #include "../Config.h.in"
 
 Player_Base_Class::Player_Base_Class(int max_Health, float movement_Speed, float damage_multiplier, Vector2 start_Position)
-        : player_Max_Health(max_Health), player_Health((float)max_Health), player_Movement_Speed(movement_Speed),
-          player_Damage_Multiplier(damage_multiplier),
-          previous_Position(start_Position), melee_Cooldown(0.0f), range_Attack_Cooldown(0.0f),
-          inventory_Is_Full(false), facing_Direction(Facing_Direction::DOWN), is_Moving(false)
+    : player_Max_Health(max_Health), player_Health((float)max_Health), player_Movement_Speed(movement_Speed),
+        player_Damage_Multiplier(damage_multiplier), melee_Base_Damage(game::Config::player_Melee_Damage_Value),
+        ranged_Base_Damage(game::Config::player_Ranged_Damage_Value), melee_Base_Cooldown(game::Config::player_Melee_Attack_Cooldown),
+        ranged_Base_Cooldown(game::Config::player_Ranged_Attack_Cooldown),
+        previous_Position(start_Position), melee_Cooldown(0.0f), range_Attack_Cooldown(0.0f),
+        inventory_Is_Full(false), facing_Direction(Facing_Direction::DOWN), is_Moving(false)
 {
     this->original_movement_speed = movement_Speed;
     this->original_damage_multiplier = damage_multiplier;
     this->hitbox =
-            {
-                    start_Position.x,
-                    start_Position.y,
-                    game::Config::player_Hittbox.x,
-                    game::Config::player_Hittbox.y
-            };
+    {
+        start_Position.x,
+        start_Position.y,
+        game::Config::player_Hittbox.x,
+        game::Config::player_Hittbox.y
+    };
 
     this->projectile_Speed = game::Config::player_Class_One_Projectile_Speed;
 }
@@ -112,13 +114,13 @@ void Player_Base_Class::Tick(float delta_time)
 
 void Player_Base_Class::On_Collision(Collidable* other)
 {
-    Collision_Type otherType = other->Get_Collision_Type();
+	Collision_Type otherType = other->Get_Collision_Type();
 
     if (otherType == Collision_Type::WALL ||
         otherType == Collision_Type::ENEMY_SPAWNER)
     {
         CollisionResponse::Resolve_Overlap(this, other);
-    }
+	}
     else if (otherType == Collision_Type::CONSUMABLE)
     {
         if (auto* item = dynamic_cast<ItemBase*>(other))
@@ -145,7 +147,7 @@ void Player_Base_Class::Draw()
 void Player_Base_Class::Ranged_Attack()
 {
     if (is_buffed) return;
-    this->range_Attack_Cooldown = game::Config::player_Ranged_Attack_Cooldown;
+    this->range_Attack_Cooldown = ranged_Base_Cooldown;
 
     this->currentState = ATTACKING_RANGED;
 
@@ -165,13 +167,13 @@ void Player_Base_Class::Ranged_Attack()
     float offset_distance = (hitbox.width / 2.0f) + 1;
     Vector2 spawn_position = Vector2Add(Get_Player_Center(), Vector2Scale(fire_direction, offset_distance));
 
-    int final_damage = static_cast<int>(game::Config::player_Ranged_Damage_Value * this->player_Damage_Multiplier);
+    int final_damage = static_cast<int>(ranged_Base_Damage * this->player_Damage_Multiplier);
 
     auto* projectile = new game::Player_Projectile(
-            spawn_position,
-            fire_direction,
-            projectile_Speed,
-            final_damage
+        spawn_position,
+        fire_direction,
+        projectile_Speed,
+        final_damage
     );
 
     if (object_manager_ptr) {
@@ -277,9 +279,9 @@ void Player_Base_Class::Update_Input_Stacks()
 
 void Player_Base_Class::Melee_Attack()
 {
-    this->melee_Cooldown = game::Config::player_Melee_Attack_Cooldown;
+    this->melee_Cooldown = melee_Base_Cooldown;
     this->currentState = ATTACKING_MELEE;
-    int final_damage = static_cast<int>(game::Config::player_Melee_Damage_Value * this->player_Damage_Multiplier);
+    int final_damage = static_cast<int>(melee_Base_Damage * this->player_Damage_Multiplier);
     auto* melee_box = new game::Player_Melee_Hitbox(this, final_damage, this->facing_Direction);
 
     if (object_manager_ptr)

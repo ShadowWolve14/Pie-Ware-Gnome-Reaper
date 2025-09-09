@@ -15,80 +15,104 @@ class Collision_Manager;
 class Player_Base_Class : public Collidable
 {
 protected:
-    Vector2 current_Sprite_Size;
-    PlayerState currentState = IDLE;
-    float player_Health;
-    int player_Max_Health;
-    float player_Movement_Speed;
-    float player_Damage_Multiplier;
+	Vector2 current_Sprite_Size;
+	PlayerState currentState = IDLE;
+	float player_Health;
+	int player_Max_Health;
+	float player_Movement_Speed;
+	float player_Damage_Multiplier;
 
-    ItemBase* held_item = nullptr;
-    bool is_buffed = false;
-    float buff_timer = 0.0f;
-    float original_movement_speed;
-    float original_damage_multiplier;
-    bool has_fairy = false;
+	int melee_Base_Damage;
+	int ranged_Base_Damage;
+	float melee_Base_Cooldown;
+	float ranged_Base_Cooldown;
+
+	ItemBase* held_item = nullptr;
+	bool is_buffed = false;
+	float buff_timer = 0.0f;
+	float original_movement_speed;
+	float original_damage_multiplier;
+	bool has_fairy = false;
 
     Vector2 player_Pos;
-    Vector2 previous_Position;
-    Collision_Manager* manager_Ptr;
-    float range_Attack_Cooldown;
-    float melee_Cooldown;
-    bool inventory_Is_Full;
-    Facing_Direction facing_Direction = DOWN;
-    bool is_Moving;
-    std::list<Input_Direction> horizontal_inputs;
-    std::list<Input_Direction> vertical_inputs;
+	Vector2 previous_Position;
+	Collision_Manager* manager_Ptr;
+	float range_Attack_Cooldown;
+	float melee_Cooldown;
+	bool inventory_Is_Full;
+	Facing_Direction facing_Direction = DOWN;
+	bool is_Moving;
+	std::list<Input_Direction> horizontal_inputs;
+	std::list<Input_Direction> vertical_inputs;
 
     Texture2D maintex= LoadTexture("assets/graphics/ball.png");
 
     float projectile_Speed;
     std::vector<std::unique_ptr<game::Player_Projectile>> sp_projectiles;
 
-    Sound ats= LoadSound("assets/audio/sfx/Gnome_CloseAttack.wav");
-    Sound rats= LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
-    Sound hits= LoadSound("assets/audio/sfx/Gnome_Hit.wav");
-    Sound deaths= LoadSound("assets/audio/sfx/Gnome_Death.wav");
-    Sound itoS= LoadSound("assets/audio/sfx/Item_Obtained.wav");
+	Sound ats= LoadSound("assets/audio/sfx/Gnome_CloseAttack.wav");
+	Sound rats= LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
+	Sound hits= LoadSound("assets/audio/sfx/Gnome_Hit.wav");
+	Sound deaths= LoadSound("assets/audio/sfx/Gnome_Death.wav");
+	Sound itoS= LoadSound("assets/audio/sfx/Item_Obtained.wav");
+
 
 public:
 
-    Player_Base_Class(int max_Health, float movement_Speed, float damage_multiplier, Vector2 start_Position);
-    bool Is_Dead() const;
+	Player_Base_Class(int max_Health, float movement_Speed, float damage_multiplier, Vector2 start_Position);
+	bool Is_Dead() const;
 
-    ~Player_Base_Class() override;
-    void Player_Input();
-    void Tick(float delta_time) override;
-    void On_Collision(Collidable* other) override;
-    virtual void Draw() override;
+	~Player_Base_Class() override;
+	void Player_Input();
+	void Tick(float delta_time) override;
+	void On_Collision(Collidable* other) override;
+	virtual void Draw() override;
 
-    virtual void Melee_Attack();
-    void Heal_To_Full();
-    void Update_Previous_Position();
-    void Update_Facing_Direction();
-    void Update_Input_Stacks();
-    virtual void Ranged_Attack();
-    float Get_Health() const;
+	virtual void Melee_Attack();
+	void Heal_To_Full();
+	void Update_Previous_Position();
+	void Update_Facing_Direction();
+	void Update_Input_Stacks();
+	virtual void Ranged_Attack();
+	float Get_Health() const;
     Collision_Type Get_Collision_Type() const override;
     Vector2 Get_Player_Pos();
-    Vector2 Get_Player_Center() const;
-    void Set_Position(Vector2 position) override;
+	Vector2 Get_Player_Center() const;
+	void Set_Position(Vector2 position) override;
     void Take_Damage(int damage);
-    int item_remove_ticker = 0;
-    Object_Manager* object_manager_ptr = nullptr;
+	int item_remove_ticker = 0;
+	Object_Manager* object_manager_ptr = nullptr;
 
-    void Use_Item();
-    void PickUpItem(ItemBase* item_to_pick_up);
-    bool HasItem() const;
-    ItemBase* GetHeldItem() const { return held_item; }
-    void RemoveHeldItem();
-    void ApplyTestoBuff();
-    bool IsBuffed() const;
-    void SetHasFairy(bool value) { has_fairy = value; }
-    bool HasFairy() const { return has_fairy; }
-    void Reset_For_New_Level();
-    void Calculate_Melee_Hitboxes(std::vector<Rectangle>& out_hitboxes, Facing_Direction direction) const;
-    Facing_Direction Get_Facing_Direction() const { return facing_Direction; }
-    bool IsMoving() const { return is_Moving; }
+	void Use_Item();
+	void PickUpItem(ItemBase* item_to_pick_up);
+	bool HasItem() const;
+	ItemBase* GetHeldItem() const { return held_item; }
+	void RemoveHeldItem();
+	void ApplyTestoBuff();
+	bool IsBuffed() const;
+	void SetHasFairy(bool value) { has_fairy = value; }
+	bool HasFairy() const { return has_fairy; }
+	void Reset_For_New_Level();
+	void Calculate_Melee_Hitboxes(std::vector<Rectangle>& out_hitboxes, Facing_Direction direction) const;
+	Facing_Direction Get_Facing_Direction() const { return facing_Direction; }
+	bool IsMoving() const { return is_Moving; }
+
+
+	// --- setters/getters for upgrades ---
+	void SetMeleeDamage(int dmg) { melee_Base_Damage = dmg; }
+	void SetRangedDamage(int dmg) { ranged_Base_Damage = dmg; }
+	void SetAttackCooldown(float cd) { melee_Base_Cooldown = cd; }
+	void SetRangedCooldown(float cd) { ranged_Base_Cooldown = cd; }
+	void SetMovementSpeed(float speed) { player_Movement_Speed = speed; }
+	void SetMaxHealth(int health) { player_Max_Health = health; }
+	void SetDMGMult(float DMGMult) { player_Damage_Multiplier = DMGMult; }
+
+	int GetMeleeDamage() const { return melee_Base_Damage; }
+	int GetRangedDamage() const { return ranged_Base_Damage; }
+	float GetAttackCooldown() const { return melee_Base_Cooldown; }
+	float GetRangedCooldown() const { return ranged_Base_Cooldown; }
+	float GetMovementSpeed() const {return  player_Movement_Speed; }
+	int GetMaxHealth() { return player_Max_Health; }
+	float GetDMGMult() { return player_Damage_Multiplier; }
 };
 

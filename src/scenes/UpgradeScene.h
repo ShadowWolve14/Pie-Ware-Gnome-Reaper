@@ -1,7 +1,3 @@
-//
-// Created by $Will on 01.09.2025.
-//
-
 #ifndef UPGRADESCENE_H
 #define UPGRADESCENE_H
 #include "Scene.h"
@@ -31,12 +27,14 @@ namespace game::scenes
         int current_level;
         int counter;
 
+        Font GnomeFont = LoadFont("../../PieWare/assets/Font/GnomishGame.ttf");
+
         RepeatAnimation fairyAnim{ Vector2{32.0f, 32.0f}, "", 1, 1, 1.0f };
 
 
         inline static constexpr int kUpgrade_Max_Level = 7;
         inline static constexpr int kUpgrade_Prices[kUpgrade_Max_Level] = {
-                10, 20, 50, 100, 150, 200, 250
+            10, 20, 50, 100, 150, 200, 250
         };
 
         inline static int GetUpgradePrice(int level) {

@@ -165,7 +165,7 @@ namespace game
         inline static constexpr const char* kMeleeEnemy1AttackLeftAnim = "PieWare/assets/Spritesheets/EnemyBauer_AttackLeft_Lv1.png";
         inline static constexpr const char* kMeleeEnemy1AttackRightAnim = "PieWare/assets/Spritesheets/EnemyBauer_AttackRightt_Lv1.png"; // Achtung: "Rightt"?
 
-        inline static constexpr float melee_enemy_1_hit_anim_speed = 0.25f;
+      inline static constexpr float melee_enemy_1_hit_anim_speed = 0.25f;
         inline static constexpr int melee_enemy_1_hit_frame_count = 2;
         inline static constexpr Vector2 melee_enemy_1_hit_anim_size = {32, 32};
         inline static constexpr const char* kMeleeEnemy1HitLeft="PieWare/assets/Spritesheets/EnemyBauer_Damaged.png";
@@ -174,14 +174,14 @@ namespace game
 
         //____________________Gegner Ritter____________________________
         // ------Melee_Enemy_Type2 Settings------
-        inline static constexpr int melee_enemy_2_health = 50;
+        inline static constexpr int melee_enemy_2_health = 60;
         inline static constexpr float melee_enemy_2_movement_speed = 8.0f;
         inline static constexpr Vector2 melee_enemy_2_hitbox = {16, 24};
         inline static constexpr int melee_enemy_2_score_value = 250;
         inline static constexpr int melee_enemy_2_souls_value = 3;
 
         // ------Melee_Enemy_Type2 Attack------
-        inline static constexpr int melee_enemy_2_damage = 15;
+        inline static constexpr int melee_enemy_2_damage = 20;
         inline static constexpr float melee_enemy_2_attack_cooldown = 30.0f;
 
         // ------Melee_Enemy_Type2 Animations ------
@@ -210,10 +210,10 @@ namespace game
         inline static constexpr float melee_enemy_3_movement_speed = 8.0f;
         inline static constexpr Vector2 melee_enemy_3_hitbox = {16, 24};
         inline static constexpr int melee_enemy_3_score_value = 500;
-        inline static constexpr int melee_enemy_3_souls_value = 5;
+        inline static constexpr int melee_enemy_3_souls_value = 0;
 
         // ------Melee_Enemy_Type3 Attack------
-        inline static constexpr int melee_enemy_3_damage = 20;
+        inline static constexpr int melee_enemy_3_damage = 40;
         inline static constexpr float melee_enemy_3_attack_cooldown = 30.0f;
 
         // ------Melee_Enemy_Type3 Animations ------
@@ -235,7 +235,6 @@ namespace game
         inline static constexpr Vector2 melee_enemy_3_hit_anim_size = {32, 32};
         inline static constexpr const char* kMeleeEnemy3HitLeft="PieWare/assets/Spritesheets/DemonKnight/Demon Knight HitLeft.png";
         inline static constexpr const char* kMeleeEnemy3HitRight ="PieWare/assets/Spritesheets/DemonKnight/Demon Knight Hit.png";
-
 
 
         //____________________Wellen Spawner Global____________________________
@@ -477,24 +476,40 @@ namespace game
         inline static constexpr const int key_Use_Item = KEY_L;
 
         // ------Main Menu -------
-        inline static constexpr const char* start_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_StartButton.png";
-        inline static constexpr const char* option_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_OptionsButton.png";
-        inline static constexpr const char* ranking_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_ScoreButton.png";
-        inline static constexpr const char* credits_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_CreditsButton.png";
-        inline static constexpr const char* quit_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_QuitButton.png";
-         inline static constexpr const char* Back_Sign_asset ="PieWare/assets/UI/MainMenu/MainMenu_Schriftzugl.png";
-          inline static constexpr const char* Background_asset ="PieWare/assets/UI/MainMenu/Scroll.png";
+              inline static constexpr const char* start_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_StartButton.png";
+              inline static constexpr const char* option_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_OptionsButton.png";
+              inline static constexpr const char* ranking_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_ScoreButton.png";
+              inline static constexpr const char* credits_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_CreditsButton.png";
+              inline static constexpr const char* quit_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_QuitButton.png";
+              inline static constexpr const char* Back_Sign_asset ="PieWare/assets/UI/MainMenu/MainMenu_Schriftzugl.png";
+              inline static constexpr const char* Background_asset ="PieWare/assets/UI/MainMenu/Scroll.png";
 
-        // ------Upgrade Screen-------
-        inline static constexpr const char* continue_button_asset = "PieWare/assets/UI/Upgrade/Button_weiter.png";
-        inline static constexpr const char* speed_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_Speed.png";
-        inline static constexpr const char* rangedDMG_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_RangedDMG.png";
-        inline static constexpr const char* meeleDMG_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_MeeleDMG.png";
-        inline static constexpr const char* lives_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_Lives.png";
-        inline static constexpr const char* baseDMG_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_BaseDMG.png";
-        inline static constexpr const char* atkSpeed_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_AtkSpeed.png";
-        inline static constexpr const char* Soulcounter_BG_asset = "PieWare/assets/UI/Upgrade/Banner_SoulCounter.png";
-        inline static constexpr const char* abilityLevel_asset = "PieWare/assets/UI/Upgrade/AbilityLevel.png";
+           // ------Upgrade Screen-------
+            inline static constexpr const char* continue_button_asset = "PieWare/assets/UI/Upgrade/Button_weiter.png";
+            inline static constexpr const char* speed_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_Speed.png";
+            inline static constexpr const char* rangedDMG_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_RangedDMG.png";
+            inline static constexpr const char* meeleDMG_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_MeeleDMG.png";
+            inline static constexpr const char* lives_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_Lives.png";
+            inline static constexpr const char* baseDMG_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_BaseDMG.png";
+            inline static constexpr const char* atkSpeed_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_AtkSpeed.png";
+            inline static constexpr const char* Soulcounter_BG_asset = "PieWare/assets/UI/Upgrade/Banner_SoulCounter.png";
+            inline static constexpr const char* abilityLevel_asset = "PieWare/assets/UI/Upgrade/AbilityLevel.png";
+            inline static std::string fairy_spritesheet_path(int Lvl_Nbr)
+            {
+            switch (Lvl_Nbr)
+            {
+            case 1:
+            return "PieWare/assets/Spritesheets/Erzfee/ErzfeeAnimationLv1.png";
+            case 2:
+            return "PieWare/assets/Spritesheets/Erzfee/ErzfeeLv2Animation.png";
+            case 3:
+            return "PieWare/assets/Spritesheets/Erzfee/ErzfeeLv3Animation.png";
+            default:
+            return "no sprite found";
+            }
+            }
+
+
 
         //-------HUD----------
          inline static constexpr const char* Symbol_AA ="PieWare/assets/UI/HUD/Button_ArrowAttack.png";
@@ -523,10 +538,10 @@ namespace game
                         inline static constexpr const char* Symbol_ITU ="PieWare/assets/UI/HUD/Button_Item_Testonadel_Use.png";
 
 
-        //____________________Rätsel: Steinverschieben____________________________
+       //____________________Rätsel: Steinverschieben____________________________
         // ------ Allgemeine Rätsel-Mechaniken ------
         inline static constexpr float movable_wall_push_delay = 10.0f; // Zeit die man drücken muss bevor sich Steine bwegen
-        inline static constexpr float movable_wall_move_speed = 9.0f;   // Geschwindigkeit der Steine
+        inline static constexpr float movable_wall_move_speed = 8.0f;   // Geschwindigkeit der Steine
         inline static constexpr float movable_wall_target_snap_radius = 12.0f;   // Radius in welchem Die Steine sich einzentrieren
         inline static constexpr Vector2 movable_wall_hitbox = {16.0f, 20.0f}; // Die Kollisionsgröße der Steine
         inline static constexpr Vector2 movable_wall_sprite_size = {48.0f, 32.0f}; // Die visuelle Größe der Steine
@@ -554,6 +569,7 @@ namespace game
         inline static constexpr Vector2 movable_wall_5_target_pos = {696, 863};
         inline static constexpr const char* movable_wall_5_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Earth.png";
 
+
         // ------ DEBUGGING ------
         inline static constexpr bool visualize_Player_Hitbox = false;
         inline static constexpr bool visualize_Attack_Hitboxes = false;
@@ -575,19 +591,5 @@ namespace game
                 return "assets/maps/default.json";
             }
         }
-        inline static std::string fairy_spritesheet_path(int Lvl_Nbr)
-                                {
-                                    switch (Lvl_Nbr)
-                                    {
-                                        case 1:
-                                        return "PieWare/assets/Spritesheets/Erzfee/ErzfeeAnimationLv1.png";
-                                        case 2:
-                                        return "PieWare/assets/Spritesheets/Erzfee/ErzfeeLv2Animation.png";
-                                        case 3:
-                                        return "PieWare/assets/Spritesheets/Erzfee/ErzfeeLv3Animation.png";
-                                        default:
-                                        return "no sprite found";
-                                    }
-                                }
     };
-}
+};
