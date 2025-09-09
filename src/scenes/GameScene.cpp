@@ -30,12 +30,15 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
 {
     if (Level_Nbr==1){
         Active_Song=&Song1;
+        Song1.looping = true;
     }
     if (Level_Nbr==2){
         Active_Song=&Song2;
+        Song2.looping = true;
     }
     if (Level_Nbr==3){
         Active_Song=&Song3;
+        Song3.looping = true;
     }
     PlayMusicStream(*Active_Song);
     enemy::Melee_Enemy::Load_All_Melee_Assets();
@@ -148,7 +151,10 @@ void game::scenes::GameScene::Update()
             }
         }
     }
-
+    if (Active_Song)
+    {
+        UpdateMusicStream(*Active_Song);
+    }
     puzzle_one->Update();
 
     if (puzzle_one->IsSolved() && !fairy_has_spawned && !player_ptr->HasFairy())
