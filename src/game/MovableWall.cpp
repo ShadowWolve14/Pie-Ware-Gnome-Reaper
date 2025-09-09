@@ -27,27 +27,12 @@ void MovableWall::Tick(float delta_time)
 {
     if (is_solved) return;
 
-    if (pushing_player)
+   if (pushing_player)
     {
         Facing_Direction current_push_direction = pushing_player->Get_Facing_Direction();
         Vector2 current_player_pos = pushing_player->Get_Position();
-        bool player_is_blocked = false;
 
-        if (!pushing_player->IsMoving() || current_push_direction != last_push_direction ||
-            (current_push_direction != UP && current_push_direction != DOWN && current_push_direction != LEFT && current_push_direction != RIGHT))
-        {
-            StopPushing();
-            return;
-        }
-        switch (last_push_direction)
-        {
-            case RIGHT: if (current_player_pos.x <= last_player_position.x) player_is_blocked = true; break;
-            case LEFT:  if (current_player_pos.x >= last_player_position.x) player_is_blocked = true; break;
-            case DOWN:  if (current_player_pos.y <= last_player_position.y) player_is_blocked = true; break;
-            case UP:    if (current_player_pos.y >= last_player_position.y) player_is_blocked = true; break;
-        }
-
-        if (player_is_blocked)
+        if (!pushing_player->IsMoving() || current_push_direction != last_push_direction)
         {
             StopPushing();
             return;
