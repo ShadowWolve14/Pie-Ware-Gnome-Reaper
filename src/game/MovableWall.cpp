@@ -16,6 +16,7 @@ MovableWall::MovableWall(Vector2 position, Vector2 size, Vector2 target, const c
     inactive_frame = { 0.0f, 0.0f, game::Config::movable_wall_sprite_size.x, game::Config::movable_wall_sprite_size.y };
     active_frame = { game::Config::movable_wall_sprite_size.x, 0.0f, game::Config::movable_wall_sprite_size.x, game::Config::movable_wall_sprite_size.y };
     last_player_position = { 0.0f, 0.0f };
+
 }
 
 MovableWall::~MovableWall()
@@ -29,8 +30,10 @@ void MovableWall::Tick(float delta_time)
 
    if (pushing_player)
     {
+
         Facing_Direction current_push_direction = pushing_player->Get_Facing_Direction();
         Vector2 current_player_pos = pushing_player->Get_Position();
+
 
         if (!pushing_player->IsMoving() || current_push_direction != last_push_direction)
         {
@@ -90,6 +93,7 @@ void MovableWall::Tick(float delta_time)
         if (Vector2LengthSqr(movement) >= distance_to_target * distance_to_target)
         {
 
+
             this->hitbox.x = target_position.x;
             this->hitbox.y = target_position.y;
 
@@ -104,6 +108,7 @@ void MovableWall::Tick(float delta_time)
         {
             this->hitbox.x += movement.x;
             this->hitbox.y += movement.y;
+
         }
     }
 
@@ -121,8 +126,13 @@ void MovableWall::On_Collision(Collidable* other)
 
     if (other_type == Collision_Type::PLAYER)
     {
+
         if (!pushing_player)
         {
+            PlaySound(pushs);
+
+
+
             pushing_player = static_cast<Player_Base_Class*>(other);
             last_push_direction = pushing_player->Get_Facing_Direction();
             last_player_position = pushing_player->Get_Position();
