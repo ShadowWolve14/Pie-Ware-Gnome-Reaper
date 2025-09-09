@@ -25,12 +25,12 @@ inline PlayerEffectiveStats BuildEffectiveStats(const game::core::UpgradeState &
     stats.DMGxMult = game::Config::player_Class_One_Damage_Multiplier;
 
     // ---- Per-level rules (tune as needed) ----
-    constexpr int kHPPerLevel = 10; // +10 HP per level
-    constexpr float kSpeedPerLevel = 0.05f; // +5% movespeed / level
-    constexpr float kDmgMultPerLevel = 0.05f; // +5% all dmg / level
-    constexpr int kMeleePerLevel = 10; // +10 melee per level (additive)
-    constexpr int kRangedPerLevel = 10; // +10 ranged per level (additive)
-    constexpr float kAtkSpeedPerLevel = 0.08f; // -8% cooldown / level (multiplicative)
+    constexpr int kHPPerLevel = 20; // +10 HP per level
+    constexpr float kSpeedPerLevel = 0.15f; // +5% movespeed / level
+    constexpr float kDmgMultPerLevel = 0.4f; // +5% all dmg / level
+    constexpr int kMeleePerLevel = 30; // +10 melee per level (additive)
+    constexpr int kRangedPerLevel = 30; // +10 ranged per level (additive)
+    constexpr float kAtkSpeedPerLevel = 0.1f; // -8% cooldown / level (multiplicative)
     constexpr float kMinCooldownSeconds = 0.15f; // never go below this
 
     // ---- Apply upgrades ----
