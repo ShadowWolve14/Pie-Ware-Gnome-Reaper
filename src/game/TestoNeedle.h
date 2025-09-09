@@ -10,6 +10,8 @@
 
 class TestoNeedle : public ItemBase
 {
+private:
+    Sound us= LoadSound("assets/audio/sfx/Testoneadle_Used.wav");
 public:
     TestoNeedle(Vector2 position, bool has_despawn_timer = true);
     void Activate(Player_Base_Class* player) override;

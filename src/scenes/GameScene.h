@@ -9,6 +9,8 @@
 #include "../game/EnemySpawner.h"
 #include "../game/HUD.h"
 
+class PuzzleOne;
+
 namespace game::scenes
 {
     class GameScene final : public game::core::Scene
@@ -27,11 +29,18 @@ namespace game::scenes
         int current_level = 1;
         float wave_timer = 0.0f;
 
+        std::unique_ptr<PuzzleOne> puzzle_one;
         bool fairy_has_spawned = false;
         float score_timer = 0.0f;
         std::string debug_text = "Debug Info:";
 
         HUD hud{nullptr};
+
+        Music Song1= LoadMusicStream("assets/audio/tracks/GameMusic_Lv1.mp3");
+        Music Song2= LoadMusicStream("assets/audio/tracks/GameMusic_Lv2.mp3");
+        Music Song3= LoadMusicStream("assets/audio/tracks/GameMusic_Lv3.mp3");
+
+        Music* Active_Song;
 
 
     public:

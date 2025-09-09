@@ -9,8 +9,8 @@
 #include "../Config.h.in"
 
 BombItem::BombItem(Vector2 position)
-    : ItemBase(position, ItemType::BOMB, game::Config::kBombItemAnim, true,
-               game::Config::bomb_Item_Anim_Size, game::Config::bomb_Item_Frame_Count, game::Config::bomb_Item_Anim_Speed)
+        : ItemBase(position, ItemType::BOMB, game::Config::kBombItemAnim, true,
+                   game::Config::bomb_Item_Anim_Size, game::Config::bomb_Item_Frame_Count, game::Config::bomb_Item_Anim_Speed)
 {
 }
 
@@ -27,38 +27,38 @@ void BombItem::Activate(Player_Base_Class* player)
     const float arm_half_width = arm_width / 2.0f;
 
     Rectangle center_box = {
-        player_center.x - arm_half_width,
-        player_center.y - arm_half_width,
-        arm_width,
-        arm_width
+            player_center.x - arm_half_width,
+            player_center.y - arm_half_width,
+            arm_width,
+            arm_width
     };
     const float arm_length = radius_in_pixels - arm_half_width;
     Rectangle top_box = {
-        player_center.x - arm_half_width,
-        player_center.y - radius_in_pixels,
-        arm_width,
-        arm_length
+            player_center.x - arm_half_width,
+            player_center.y - radius_in_pixels,
+            arm_width,
+            arm_length
     };
 
     Rectangle bottom_box = {
-        player_center.x - arm_half_width,
-        player_center.y + arm_half_width,
-        arm_width,
-        arm_length
+            player_center.x - arm_half_width,
+            player_center.y + arm_half_width,
+            arm_width,
+            arm_length
     };
 
     Rectangle left_box = {
-        player_center.x - radius_in_pixels,
-        player_center.y - arm_half_width,
-        arm_length,
-        arm_width
+            player_center.x - radius_in_pixels,
+            player_center.y - arm_half_width,
+            arm_length,
+            arm_width
     };
 
     Rectangle right_box = {
-        player_center.x + arm_half_width,
-        player_center.y - arm_half_width,
-        arm_length,
-        arm_width
+            player_center.x + arm_half_width,
+            player_center.y - arm_half_width,
+            arm_length,
+            arm_width
     };
 
     player->object_manager_ptr->AddObjectDeferred(new BombExplosionHitbox(center_box, damage));
@@ -68,4 +68,5 @@ void BombItem::Activate(Player_Base_Class* player)
     player->object_manager_ptr->AddObjectDeferred(new BombExplosionHitbox(right_box, damage));
     player->item_remove_ticker = 1;
     this->Mark_For_Destruction();
+    PlaySound(us);
 }
