@@ -120,6 +120,7 @@ void MainMenuScene::main_Update() {
 }
 void MainMenuScene::main_Draw() {
     Color grer{100,125,52,255};
+
     ClearBackground(grer);
     Rectangle dest{game::Config::kStageWidth/2-140,150,280,64};
     DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-315,20+90*3-50},0,3,WHITE);
