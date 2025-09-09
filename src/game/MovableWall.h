@@ -5,6 +5,7 @@
 #ifndef MOVABLEWALL_H
 #define MOVABLEWALL_H
 
+#include <vector>
 #include "Walls.h"
 class Player_Base_Class;
 class Object_Manager;
@@ -24,6 +25,10 @@ private:
     float push_timer = 0.0f;
     Facing_Direction last_push_direction = FACING_NONE;
     Vector2 last_player_position;
+
+    Sound pushs= LoadSound("assets/audio/sfx/Pushing_Stone.wav");
+    std::vector<Sound> sav;
+
 
 public:
     MovableWall(Vector2 position, Vector2 size, Vector2 target, const char* spritesheet_path, Object_Manager& obj_manager);
