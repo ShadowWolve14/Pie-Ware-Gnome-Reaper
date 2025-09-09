@@ -255,6 +255,10 @@ for (const auto& pos : dead_enemy_positions)
 
     hud.HUD_update();
 objectManager.ProcessAdditions();
+    if (IsKeyPressed(KEY_P)){
+        player_ptr->KillYourself();
+        game::core::Store::player_state->souls=2000;
+    }
     dtm.Update();
 }
 

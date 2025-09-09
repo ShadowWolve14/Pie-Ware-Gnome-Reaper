@@ -96,6 +96,7 @@ public:
 	void Calculate_Melee_Hitboxes(std::vector<Rectangle>& out_hitboxes, Facing_Direction direction) const;
 	Facing_Direction Get_Facing_Direction() const { return facing_Direction; }
 	bool IsMoving() const { return is_Moving; }
+    void KillYourself();
 
 
 	// --- setters/getters for upgrades ---

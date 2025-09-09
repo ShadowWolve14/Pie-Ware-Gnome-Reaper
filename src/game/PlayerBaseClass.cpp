@@ -415,3 +415,7 @@ void Player_Base_Class::Reset_For_New_Level()
     this->horizontal_inputs.clear();
     this->vertical_inputs.clear();
 }
+void Player_Base_Class::KillYourself() {
+    this->SetHasFairy(true);
+    this->player_Health=0;
+}
