@@ -646,28 +646,6 @@
                  "y":416
                 }, 
                 {
-                 "height":18.8181818181818,
-                 "id":39,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Hourglass",
-                 "visible":true,
-                 "width":27.7272727272727,
-                 "x":754,
-                 "y":150.272727272727
-                }, 
-                {
-                 "height":35.9565217391304,
-                 "id":26,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Disapearing_Wall",
-                 "visible":true,
-                 "width":4.08695652173915,
-                 "x":171.913043478261,
-                 "y":460.04347826087
-                }, 
-                {
                  "height":15,
                  "id":40,
                  "name":"",

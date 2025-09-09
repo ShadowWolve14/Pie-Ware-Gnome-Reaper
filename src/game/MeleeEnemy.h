@@ -27,6 +27,8 @@ namespace enemy
         Texture2D* hit_texture_left;
         Texture2D* hit_texture_right;
 
+        int dc;
+
         static std::map<std::string, Texture2D> s_melee_textures;
 
         Melee_Enemy(Vector2 start_position, const std::string& name, int health, float speed, int damage, int score,
