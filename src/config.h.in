@@ -569,6 +569,18 @@ namespace game
         inline static constexpr Vector2 movable_wall_5_target_pos = {696, 863};
         inline static constexpr const char* movable_wall_5_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Earth.png";
 
+        // --- Disappearing Wall ---
+        inline static constexpr Vector2 disappearing_wall_position = {172.0f, 448.0f};
+
+        // Visuelle und Kollisions-Eigenschaften
+        inline static constexpr Vector2 disappearing_wall_sprite_size = {4.0f, 64.0f}; // Die Größe von Textur & Hitbox der Wand
+        inline static constexpr const char* disappearing_wall_spritesheet = "PieWare/assets/Spritesheets/Door/Temple Door.png";
+
+        // Animations-Eigenschaften
+        inline static constexpr const char* disappearing_wall_anim_path = "PieWare/assets/Spritesheets/Wand/Wand_Verschwinden_Anim.png";
+        inline static constexpr Vector2 disappearing_wall_anim_size = {16.0f, 64.0f};
+        inline static constexpr int disappearing_wall_anim_frame_count = 8;
+        inline static constexpr float disappearing_wall_anim_speed = 10.0f;
 
         // ------ DEBUGGING ------
         inline static constexpr bool visualize_Player_Hitbox = false;
