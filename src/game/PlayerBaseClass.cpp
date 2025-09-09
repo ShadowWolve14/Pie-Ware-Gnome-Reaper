@@ -12,20 +12,20 @@
 #include "../Config.h.in"
 
 Player_Base_Class::Player_Base_Class(int max_Health, float movement_Speed, float damage_multiplier, Vector2 start_Position)
-    : player_Max_Health(max_Health), player_Health((float)max_Health), player_Movement_Speed(movement_Speed),
-      player_Damage_Multiplier(damage_multiplier),
-      previous_Position(start_Position), melee_Cooldown(0.0f), range_Attack_Cooldown(0.0f),
-      inventory_Is_Full(false), facing_Direction(Facing_Direction::DOWN), is_Moving(false)
+        : player_Max_Health(max_Health), player_Health((float)max_Health), player_Movement_Speed(movement_Speed),
+          player_Damage_Multiplier(damage_multiplier),
+          previous_Position(start_Position), melee_Cooldown(0.0f), range_Attack_Cooldown(0.0f),
+          inventory_Is_Full(false), facing_Direction(Facing_Direction::DOWN), is_Moving(false)
 {
     this->original_movement_speed = movement_Speed;
     this->original_damage_multiplier = damage_multiplier;
     this->hitbox =
-    {
-        start_Position.x,
-        start_Position.y,
-        game::Config::player_Hittbox.x,
-        game::Config::player_Hittbox.y
-    };
+            {
+                    start_Position.x,
+                    start_Position.y,
+                    game::Config::player_Hittbox.x,
+                    game::Config::player_Hittbox.y
+            };
 
     this->projectile_Speed = game::Config::player_Class_One_Projectile_Speed;
 }
@@ -112,13 +112,13 @@ void Player_Base_Class::Tick(float delta_time)
 
 void Player_Base_Class::On_Collision(Collidable* other)
 {
-	Collision_Type otherType = other->Get_Collision_Type();
+    Collision_Type otherType = other->Get_Collision_Type();
 
     if (otherType == Collision_Type::WALL ||
         otherType == Collision_Type::ENEMY_SPAWNER)
     {
         CollisionResponse::Resolve_Overlap(this, other);
-	}
+    }
     else if (otherType == Collision_Type::CONSUMABLE)
     {
         if (auto* item = dynamic_cast<ItemBase*>(other))
@@ -168,10 +168,10 @@ void Player_Base_Class::Ranged_Attack()
     int final_damage = static_cast<int>(game::Config::player_Ranged_Damage_Value * this->player_Damage_Multiplier);
 
     auto* projectile = new game::Player_Projectile(
-        spawn_position,
-        fire_direction,
-        projectile_Speed,
-        final_damage
+            spawn_position,
+            fire_direction,
+            projectile_Speed,
+            final_damage
     );
 
     if (object_manager_ptr) {
@@ -227,6 +227,7 @@ void Player_Base_Class::Take_Damage(int damage_amount)
 {
     if (is_buffed && damage_amount > 0) return;
 
+    PlaySound(hits);
     player_Health -= damage_amount;
     player_Health = std::min(player_Health, (float)player_Max_Health);
 }
@@ -294,6 +295,7 @@ bool Player_Base_Class::HasItem() const
 
 void Player_Base_Class::PickUpItem(ItemBase* item_to_pick_up)
 {
+    PlaySound(itoS);
     if (!HasItem() && object_manager_ptr != nullptr)
     {
         held_item = item_to_pick_up;

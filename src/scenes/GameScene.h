@@ -36,6 +36,12 @@ namespace game::scenes
 
         HUD hud{nullptr};
 
+        Music Song1= LoadMusicStream("assets/audio/tracks/GameMusic_Lv1.mp3");
+        Music Song2= LoadMusicStream("assets/audio/tracks/GameMusic_Lv2.mp3");
+        Music Song3= LoadMusicStream("assets/audio/tracks/GameMusic_Lv3.mp3");
+
+        Music* Active_Song;
+
 
     public:
         explicit GameScene(int level_to_load = 1);

@@ -28,6 +28,16 @@ using namespace std::string_literals;
 
 game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
 {
+    if (Level_Nbr==1){
+        Active_Song=&Song1;
+    }
+    if (Level_Nbr==2){
+        Active_Song=&Song2;
+    }
+    if (Level_Nbr==3){
+        Active_Song=&Song3;
+    }
+    PlayMusicStream(*Active_Song);
     enemy::Melee_Enemy::Load_All_Melee_Assets();
     puzzle_one = std::make_unique<PuzzleOne>(objectManager);
     puzzle_one->Load(this->current_level);
