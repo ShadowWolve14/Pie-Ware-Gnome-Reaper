@@ -161,7 +161,7 @@ namespace game
 
         inline static constexpr float melee_enemy_1_attack_anim_speed = 3.0f;
         inline static constexpr int melee_enemy_1_attack_frame_count = 10;
-        inline static constexpr Vector2 melee_enemy_1_attack_anim_size = {64, 64};
+        inline static constexpr Vector2 melee_enemy_1_attack_anim_size = {64, 32};
         inline static constexpr const char* kMeleeEnemy1AttackLeftAnim = "PieWare/assets/Spritesheets/EnemyBauer_AttackLeft_Lv1.png";
         inline static constexpr const char* kMeleeEnemy1AttackRightAnim = "PieWare/assets/Spritesheets/EnemyBauer_AttackRightt_Lv1.png"; // Achtung: "Rightt"?
 
