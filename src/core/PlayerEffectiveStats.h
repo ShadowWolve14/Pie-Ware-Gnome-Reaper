@@ -1,5 +1,7 @@
 #pragma once
 #include <cmath>
+#include <iostream>
+
 #include "../config.h.in"
 #include "Store.h"
 struct PlayerEffectiveStats {
@@ -18,7 +20,7 @@ inline PlayerEffectiveStats BuildEffectiveStats(const game::core::UpgradeState &
     // Bases from config (do NOT modify these directly)
     stats.max_health = game::Config::player_Class_One_Max_Health;
     stats.movement_speed = game::Config::player_Class_One_Movement_Speed; // apply later
-    stats.ranged_attack_cooldown = game::Config::player_Melee_Attack_Cooldown;
+    stats.ranged_attack_cooldown = game::Config::player_Ranged_Attack_Cooldown;
     stats.meele_attack_cooldown = game::Config::player_Melee_Attack_Cooldown;
     stats.meleeDamage = game::Config::player_Melee_Damage_Value;
     stats.rangedDamage = game::Config::player_Ranged_Damage_Value;
@@ -37,29 +39,38 @@ inline PlayerEffectiveStats BuildEffectiveStats(const game::core::UpgradeState &
 
     // Health (additive)
     stats.max_health += kHPPerLevel * up.maxhealth_level;
+    std::cout << stats.max_health << "Max Healh" <<  std::endl;
 
     // Movement speed (multiplicative)
     stats.movement_speed *= (1.0f + kSpeedPerLevel * up.speed_level);
+    std::cout << stats.movement_speed << "Movement Speed" <<  std::endl;
 
     // meele Attack cooldown (multiplicative reduction, then clamp)
     const float atk_cd_factor = std::max(0.0f, 1.0f - kAtkSpeedPerLevel * up.atkSpeed_level);
     stats.meele_attack_cooldown *= atk_cd_factor;
     if (stats.meele_attack_cooldown < kMinCooldownSeconds) stats.meele_attack_cooldown = kMinCooldownSeconds;
+    std::cout << stats.meele_attack_cooldown << "Meelee Cooldown" <<  std::endl;
 
     // ranged Attack cooldown (multiplicative reduction, then clamp)
     const float rng_cd_factor = std::max(0.0f, 1.0f - kAtkSpeedPerLevel * up.atkSpeed_level);
     stats.ranged_attack_cooldown *= atk_cd_factor;
     if (stats.ranged_attack_cooldown < kMinCooldownSeconds) stats.ranged_attack_cooldown = kMinCooldownSeconds;
+    std::cout << stats.ranged_attack_cooldown << "Ranged Cooldown" <<  std::endl;
 
     //Meele and Ranged Damage
     stats.meleeDamage += kMeleePerLevel * up.meleeDMG_level;
+    std::cout << stats.meleeDamage << "Melee Damage" <<  std::endl;
     stats.rangedDamage += kRangedPerLevel * up.rangedDMG_level;
+    std::cout << stats.rangedDamage << "Ranged Damage" <<  std::endl;
 
     //Global Damage Mult
     const float dmg_global_mult = (1.0f + kDmgMultPerLevel * up.DMGxmult_level);
     stats.meleeDamage = static_cast<int>(std::round(stats.meleeDamage * dmg_global_mult));
+    std::cout << stats.meleeDamage << "Melee Damage Multiplyer" <<  std::endl;
     stats.rangedDamage = static_cast<int>(std::round(stats.rangedDamage * dmg_global_mult));
+    std::cout << stats.rangedDamage << "Ranged Damage Multiplyer" <<  std::endl;
     stats.DMGxMult = dmg_global_mult * game::Config::player_Class_One_Damage_Multiplier;
+    std::cout << stats.DMGxMult << "Multiplyer" <<  std::endl;
 
     return stats;
 }
