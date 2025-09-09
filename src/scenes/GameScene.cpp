@@ -53,6 +53,7 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
     {
         game::core::Store::player_state->player.Set_Position(game::Config::player_Spawn_Position);
         game::core::Store::player_state->player.Heal_To_Full();
+        game::core::Store::player_state->player.ReapplyUpgrades();
         game::core::Store::player_state->player.Reset_For_New_Level();
     }
 
@@ -254,6 +255,10 @@ for (const auto& pos : dead_enemy_positions)
 
     hud.HUD_update();
 objectManager.ProcessAdditions();
+    if (IsKeyPressed(KEY_P)){
+        player_ptr->KillYourself();
+        game::core::Store::player_state->souls=2000;
+    }
     dtm.Update();
 }
 

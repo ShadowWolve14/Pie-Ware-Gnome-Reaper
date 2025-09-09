@@ -97,6 +97,7 @@ void MainMenuScene::main_Update() {
         switch (counter) {
             case 0:{
                 game::core::Store::player_state = nullptr;
+                game::core::upgrades = {};
                 game::core::Store::stage->ReplaceWithNewScene("menu", "game", std::make_unique<game::scenes::GameScene>());
                 break;
             }
@@ -120,7 +121,9 @@ void MainMenuScene::main_Update() {
     }
 }
 void MainMenuScene::main_Draw() {
-    ClearBackground(GREEN);
+    Color grer{100,125,52,255};
+
+    ClearBackground(grer);
     Rectangle dest{game::Config::kStageWidth/2-140,150,280,64};
     DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-315,20+90*3-50},0,3,WHITE);
     DrawTextureEx(sign_button,{game::Config::kStageWidth/2-3*228,20},0,3,WHITE);
