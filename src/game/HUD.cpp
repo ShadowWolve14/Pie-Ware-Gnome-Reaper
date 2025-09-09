@@ -85,6 +85,13 @@ void HUD::HUD_draw() {
     Vector2 v12{208,25};
     Vector2 v13{253,25};
     Vector2 v14{298,25};
+    Vector2 v15{343,25};
+    Vector2 v16{118,65};
+    Vector2 v17{163,65};
+    Vector2 v18{208,65};
+    Vector2 v19{253,65};
+    Vector2 v20{298,65};
+    Vector2 v21{343,65};
 
     v1.x=v1.x+ofs;v1.y=v1.y+ofs;
     v2.x=v2.x+ofs;v2.y=v2.y+ofs;
@@ -183,6 +190,9 @@ void HUD::HUD_draw() {
     DrawTextureEx(AAI,v8,rot,3,WHITE);
     DrawTextureEx(II,v9,rot,3,WHITE);
 
+    if (mp->Get_Health()>109){
+        DrawTextureEx(HH,v15,rot,3,WHITE);
+    }
     if (mp->Get_Health()>89){
         DrawTextureEx(HH,v14,rot,3,WHITE);
     }
@@ -198,6 +208,10 @@ void HUD::HUD_draw() {
     if (mp->Get_Health()>9){
         DrawTextureEx(HH,v10,rot,3,WHITE);
     }
+
+    if (mp->Get_Health()>119){
+        DrawTextureEx(H,v15,rot,3,WHITE);
+    }
     if (mp->Get_Health()>99){
         DrawTextureEx(H,v14,rot,3,WHITE);
     }
@@ -212,6 +226,45 @@ void HUD::HUD_draw() {
     }
     if (mp->Get_Health()>19){
         DrawTextureEx(H,v10,rot,3,WHITE);
+
+    }
+
+    if (mp->Get_Health()>229){
+        DrawTextureEx(HH,v21,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>209){
+        DrawTextureEx(HH,v20,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>189){
+        DrawTextureEx(HH,v19,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>169){
+        DrawTextureEx(HH,v18,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>149){
+        DrawTextureEx(HH,v17,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>129){
+        DrawTextureEx(HH,v16,rot,3,WHITE);
+    }
+
+    if (mp->Get_Health()>239){
+        DrawTextureEx(H,v21,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>219){
+        DrawTextureEx(H,v20,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>199){
+        DrawTextureEx(H,v19,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>179){
+        DrawTextureEx(H,v18,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>159){
+        DrawTextureEx(H,v17,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>139){
+        DrawTextureEx(H,v16,rot,3,WHITE);
 
     }
     std::string temp=std::to_string(game::core::Store::player_state->score);
