@@ -5,10 +5,13 @@
 #include "PlayerClassOne.h"
 #include <math.h>
 #include "../config.h.in"
+#include "PlayerEffectiveStats.h"
 
 Player_Class_One::Player_Class_One(Vector2 start_Position)
-        : Player_Base_Class(game::Config::player_Class_One_Max_Health, game::Config::player_Class_One_Movement_Speed,
-                            game::Config::player_Class_One_Damage_Multiplier, start_Position)
+    : Player_Base_Class(/* maxHealth */ BuildEffectiveStats(game::core::upgrades).max_health,
+                    /* moveSpeed */ BuildEffectiveStats(game::core::upgrades).movement_speed,
+                    /* dmgMult   */ BuildEffectiveStats(game::core::upgrades).DMGxMult,
+                    start_Position)
 {
     int player_Walk_Anim_Speed = game::Config::player_Walk_Anim_Speed;
     Vector2 player_Walk_Anim_Size = game::Config::player_Walk_Anim_Size;
@@ -165,7 +168,6 @@ void Player_Class_One::Draw()
 
     if (currentState == ATTACKING_MELEE)
     {
-
         if (active_melee_map->count(attack_Direction))
         {
             current_attack_anim = &active_melee_map->at(attack_Direction);
@@ -173,7 +175,6 @@ void Player_Class_One::Draw()
     }
     else if (currentState == ATTACKING_RANGED)
     {
-
         if (ranged_Attack_Animations.count(attack_Direction))
         {
             current_attack_anim = &ranged_Attack_Animations.at(attack_Direction);
@@ -235,4 +236,18 @@ void Player_Class_One::Melee_Attack()
     {
         active_melee_map->at(this->attack_Direction).First_Frame();
     }
+}
+
+void Player_Class_One::ReapplyUpgrades()
+{
+    const auto eff = BuildEffectiveStats(game::core::upgrades);
+
+    // Movement/health/dmg mult are stored in base; set what you need:
+    SetMeleeDamage(eff.meleeDamage);
+    SetRangedDamage(eff.rangedDamage);
+    SetAttackCooldown(eff.meele_attack_cooldown);
+    SetRangedCooldown(eff.ranged_attack_cooldown);
+    SetMovementSpeed(eff.movement_speed);
+    SetMaxHealth(eff.max_health);
+    SetDMGMult(eff.DMGxMult);
 }

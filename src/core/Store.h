@@ -23,6 +23,7 @@ namespace game::core
         int meleeDMG_level = 0;
         int rangedDMG_level = 0;
     };
+
     inline UpgradeState upgrades{};
 
     struct Store final
@@ -44,6 +45,5 @@ namespace game::core
         inline static int last_score = 0;
 
         inline static Font font= LoadFont("PieWare/assets/Font/GnomishGame.ttf");
-
     };
 }

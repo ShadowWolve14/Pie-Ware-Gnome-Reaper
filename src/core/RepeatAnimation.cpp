@@ -76,6 +76,5 @@ void RepeatAnimation::Draw_Current_Frame_Pro(Vector2 pos) {
     // draw current frame (target) at pos, scaled x2, no rotation
     const Rectangle dest{ pos.x, pos.y, target.width * 4.0f, target.height * 4.0f };
     const Vector2   origin{ 0.0f, 0.0f };
-
     DrawTexturePro(spritesheet, target, dest, origin, 0.0f, WHITE);
 }
