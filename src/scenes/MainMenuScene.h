@@ -25,6 +25,7 @@ private:
     enum menustate {main,options, credits ,end,list};
     menustate state;
 int counter;
+int input_delay = 0;
 
 bool slider;
 bool prot;

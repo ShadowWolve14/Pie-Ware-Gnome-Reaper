@@ -4,7 +4,6 @@
 
 #include "MainMenuScene.h"
 
-
 MainMenuScene::MainMenuScene() {
     this->counter=0;
     state=main;
