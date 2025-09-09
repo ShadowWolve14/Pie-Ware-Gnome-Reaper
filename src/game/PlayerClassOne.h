@@ -24,6 +24,8 @@ private:
     std::map<Facing_Direction, RepeatAnimation> buff_idle_Animations;
     std::map<Facing_Direction, Animations> buff_melee_Attack_Animations;
     Facing_Direction attack_Direction = DOWN;
+
+
 public:
     PlayerState previousState = IDLE;
     Animations test_animation{size,"assets/graphics/anim_sprite.png",9,3,3};
