@@ -79,6 +79,7 @@ namespace enemy
 
     void Melee_Enemy::Tick_Melee(float delta_time, Vector2 player_center)
     {
+
         Vector2 self_center = { this->hitbox.x + this->hitbox.width / 2.0f, this->hitbox.y + this->hitbox.height / 2.0f };
         if (player_center.x > self_center.x + 2.0f) {
             facing_Direction = RIGHT;
@@ -99,6 +100,7 @@ namespace enemy
                 currentState = (Vector2LengthSqr(this->velocity) > 0.1f) ? E_WALKING : E_IDLE;
             }
         }
+
 
 
 
@@ -130,6 +132,13 @@ namespace enemy
         Animations* hit_anim = nullptr;
         RepeatAnimation* walk_anim = nullptr;
 
+
+        if (tookd) { this->currentState = E_DAMAGED;
+            dc=30;}
+
+        if (dc>0){
+            currentState=E_DAMAGED;
+        }
         switch (currentState) {
             case E_ATTACKING:{
                 attack_anim = &attack_animations.at(attack_Direction);
@@ -142,21 +151,37 @@ namespace enemy
                 walk_anim = &walk_animations.at(facing_Direction);
             }
         }
+        if (tookd){
+            draw_pos.x = this->hitbox.x - (hit_anim->size.x - this->hitbox.width) / 2.0f;
+            draw_pos.y = this->hitbox.y - (hit_anim->size.y - this->hitbox.height) / 2.0f;
+            if (facing_Direction==LEFT){
+                DrawTextureRec(*hit_texture_left,{33,1,32,32},draw_pos,WHITE);
+            } else{
+                DrawTextureRec(*hit_texture_right,{33,1,32,32},draw_pos,WHITE);
+            }
 
-        if (attack_anim != nullptr)
-        {
-            draw_pos.x = this->hitbox.x - (attack_anim->size.x - this->hitbox.width) / 2.0f;
-            draw_pos.y = this->hitbox.y - (attack_anim->size.y - this->hitbox.height) / 2.0f;
-            attack_anim->Draw_Current_Frame(draw_pos);
+
+        } else{
+
+
+            if (attack_anim != nullptr)
+            {
+                draw_pos.x = this->hitbox.x - (attack_anim->size.x - this->hitbox.width) / 2.0f;
+                draw_pos.y = this->hitbox.y - (attack_anim->size.y - this->hitbox.height) / 2.0f;
+                attack_anim->Draw_Current_Frame(draw_pos);
+            }
+            else if (walk_anim != nullptr)
+            {
+                draw_pos.x = this->hitbox.x - (walk_anim->size.x - this->hitbox.width) / 2.0f;
+                draw_pos.y = this->hitbox.y - (walk_anim->size.y - this->hitbox.height) / 2.0f;
+                walk_anim->Draw_Current_Frame(draw_pos);
+            }
         }
-        else if (walk_anim != nullptr)
-        {
-            draw_pos.x = this->hitbox.x - (walk_anim->size.x - this->hitbox.width) / 2.0f;
-            draw_pos.y = this->hitbox.y - (walk_anim->size.y - this->hitbox.height) / 2.0f;
-            walk_anim->Draw_Current_Frame(draw_pos);
-        }
+
+
 
         //DrawRectangleLinesEx(this->hitbox, 2.0f, RED);
+        dc--;
     }
 
     void Melee_Enemy::On_Collision(Collidable* other)

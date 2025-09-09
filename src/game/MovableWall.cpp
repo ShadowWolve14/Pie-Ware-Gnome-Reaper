@@ -130,9 +130,6 @@ void MovableWall::On_Collision(Collidable* other)
         if (!pushing_player)
         {
             PlaySound(pushs);
-
-
-
             pushing_player = static_cast<Player_Base_Class*>(other);
             last_push_direction = pushing_player->Get_Facing_Direction();
             last_player_position = pushing_player->Get_Position();

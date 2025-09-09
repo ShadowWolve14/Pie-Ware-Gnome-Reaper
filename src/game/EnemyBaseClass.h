@@ -38,6 +38,8 @@ namespace enemy
         int score_value;
         int souls_value;
 
+        bool tookd= false;
+
 
 
         Vector2 Calculate_Seek_Force(Vector2 target_pos, float& distance_to_target, float stopping_distance) const;
