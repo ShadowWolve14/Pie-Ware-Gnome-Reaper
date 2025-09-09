@@ -34,6 +34,7 @@ namespace enemy
 
     void Enemy_Base_Class::Tick_AI(float delta_time, Vector2 player_center, const std::vector<Enemy_Base_Class*>& all_enemies)
     {
+        this->tookd= false;
 
         if (attack_Cooldown_Timer > 0) {
             attack_Cooldown_Timer -= delta_time;
@@ -78,6 +79,7 @@ namespace enemy
 
     void Enemy_Base_Class::Take_Damage(int damage_amount)
     {
+        this->tookd= true;
         this->enemy_Health -= damage_amount;
         PlaySound(hitS);
         if (this->enemy_Health <= 0)

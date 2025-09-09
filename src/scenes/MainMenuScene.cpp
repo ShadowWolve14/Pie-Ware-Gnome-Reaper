@@ -118,6 +118,7 @@ void MainMenuScene::main_Update() {
     }
 }
 void MainMenuScene::main_Draw() {
+    ClearBackground(GREEN);
     Rectangle dest{game::Config::kStageWidth/2-140,150,280,64};
     DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-315,20+90*3-50},0,3,WHITE);
     DrawTextureEx(sign_button,{game::Config::kStageWidth/2-3*228,20},0,3,WHITE);
