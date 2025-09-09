@@ -30,6 +30,7 @@ namespace game::scenes
         int souls_to_spend;
         int current_level;
         int counter;
+        int input_delay = 0;
 
         RepeatAnimation fairyAnim{ Vector2{32.0f, 32.0f}, "", 1, 1, 1.0f };
 

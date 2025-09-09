@@ -559,15 +559,18 @@ namespace game::scenes {
     }
 
     void UpgradeScene::Input_Check_Mov() {
-        if (IsKeyPressed(game::Config::key_Up)){
+        if (GetGamepadAxisMovement(0, 1) < -0.5&&input_delay<1){
             this->counter= this->counter-1;
+            input_delay=10;
         }
-        if (IsKeyPressed(game::Config::key_Down)){
+        if (GetGamepadAxisMovement(0, 1) > 0.5&&input_delay<1){
             this->counter= this->counter+1;
+            input_delay=10;
         }
+        input_delay--;
     }
     bool UpgradeScene::Input_Check_Sel() {
-        if (IsKeyPressed(game::Config::key_Melee_Attack)){
+        if (IsGamepadButtonPressed(0,7)){
             return true;
         } else{
             return false;
