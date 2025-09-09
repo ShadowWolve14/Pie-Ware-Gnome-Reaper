@@ -9,6 +9,7 @@
 #include "../game/EnemySpawner.h"
 #include "../game/HUD.h"
 
+class HourglassWall;
 class PuzzleOne;
 
 namespace game::scenes
@@ -28,6 +29,8 @@ namespace game::scenes
         int current_wave = 0;
         int current_level = 1;
         float wave_timer = 0.0f;
+
+        HourglassWall* hourglass_wall_ptr = nullptr;
 
         std::unique_ptr<PuzzleOne> puzzle_one;
         bool fairy_has_spawned = false;

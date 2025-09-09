@@ -24,6 +24,7 @@
 #include "../game/PeasantEnemy.h"
 #include "../game/PuzzleOne.h"
 #include "../game/DisappearingWall.h"
+#include "../game/HourglassWall.h"
 
 using namespace std::string_literals;
 
@@ -93,6 +94,8 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
     objectManager.AddObject(new TestoNeedle(game::Config::initial_Testo_Needle_Position, false));
     objectManager.AddObject(new KeyItem(game::Config::initial_Key_Position));
     objectManager.AddObject(new DisappearingWall(game::Config::disappearing_wall_position));
+    hourglass_wall_ptr = new HourglassWall(game::Config::hourglass_position, this->current_level);
+    objectManager.AddObject(hourglass_wall_ptr);
 }
 game::scenes::GameScene::~GameScene()
 {
@@ -126,6 +129,11 @@ void game::scenes::GameScene::Update()
         wave_timer = game::Config::kWaveInterval;
     }
 
+    if (hourglass_wall_ptr)
+    {
+        float total_time_for_current_wave = (current_wave == 0) ? game::Config::kFirstWave : game::Config::kWaveInterval;
+        hourglass_wall_ptr->UpdateFrame(wave_timer, total_time_for_current_wave);
+    }
     enemySpawner->Update(dtm.Get_Dt());
     player_ptr->Player_Input();
 
