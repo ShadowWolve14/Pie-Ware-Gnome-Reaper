@@ -23,6 +23,7 @@
 #include "../game/DemonKnightEnemy.h"
 #include "../game/PeasantEnemy.h"
 #include "../game/PuzzleOne.h"
+#include "../game/DisappearingWall.h"
 
 using namespace std::string_literals;
 
@@ -91,6 +92,7 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
 
     objectManager.AddObject(new TestoNeedle(game::Config::initial_Testo_Needle_Position, false));
     objectManager.AddObject(new KeyItem(game::Config::initial_Key_Position));
+    objectManager.AddObject(new DisappearingWall(game::Config::disappearing_wall_position));
 }
 game::scenes::GameScene::~GameScene()
 {
