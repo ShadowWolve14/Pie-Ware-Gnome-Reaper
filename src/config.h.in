@@ -161,7 +161,7 @@ namespace game
 
         inline static constexpr float melee_enemy_1_attack_anim_speed = 3.0f;
         inline static constexpr int melee_enemy_1_attack_frame_count = 10;
-        inline static constexpr Vector2 melee_enemy_1_attack_anim_size = {64, 64};
+        inline static constexpr Vector2 melee_enemy_1_attack_anim_size = {64, 32};
         inline static constexpr const char* kMeleeEnemy1AttackLeftAnim = "PieWare/assets/Spritesheets/EnemyBauer_AttackLeft_Lv1.png";
         inline static constexpr const char* kMeleeEnemy1AttackRightAnim = "PieWare/assets/Spritesheets/EnemyBauer_AttackRightt_Lv1.png"; // Achtung: "Rightt"?
 
@@ -485,15 +485,15 @@ namespace game
               inline static constexpr const char* Background_asset ="PieWare/assets/UI/MainMenu/Scroll.png";
 
            // ------Upgrade Screen-------
-            inline static constexpr const char* continue_button_asset = "PieWare/assets/UI/Upgrade/Button_weiter.png";
-            inline static constexpr const char* speed_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_Speed.png";
-            inline static constexpr const char* rangedDMG_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_RangedDMG.png";
-            inline static constexpr const char* meeleDMG_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_MeeleDMG.png";
-            inline static constexpr const char* lives_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_Lives.png";
-            inline static constexpr const char* baseDMG_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_BaseDMG.png";
-            inline static constexpr const char* atkSpeed_upgrade_asset = "PieWare/assets/UI/Upgrade/Button_AtkSpeed.png";
-            inline static constexpr const char* Soulcounter_BG_asset = "PieWare/assets/UI/Upgrade/Banner_SoulCounter.png";
-            inline static constexpr const char* abilityLevel_asset = "PieWare/assets/UI/Upgrade/AbilityLevel.png";
+            inline static constexpr const char* continue_button_asset = "PieWare/assets/UI/UpgradeScreen/Button_weiter.png";
+            inline static constexpr const char* speed_upgrade_asset = "PieWare/assets/UI/UpgradeScreen/Button_Speed.png";
+            inline static constexpr const char* rangedDMG_upgrade_asset = "PieWare/assets/UI/UpgradeScreen/Button_RangedDMG.png";
+            inline static constexpr const char* meeleDMG_upgrade_asset = "PieWare/assets/UI/UpgradeScreen/Button_MeeleDMG.png";
+            inline static constexpr const char* lives_upgrade_asset = "PieWare/assets/UI/UpgradeScreen/Button_Lives.png";
+            inline static constexpr const char* baseDMG_upgrade_asset = "PieWare/assets/UI/UpgradeScreen/Button_BaseDMG.png";
+            inline static constexpr const char* atkSpeed_upgrade_asset = "PieWare/assets/UI/UpgradeScreen/Button_AtkSpeed.png";
+            inline static constexpr const char* Soulcounter_BG_asset = "PieWare/assets/UI/UpgradeScreen/Banner_SoulCounter.png";
+            inline static constexpr const char* abilityLevel_asset = "PieWare/assets/UI/UpgradeScreen/AbilityLevel.png";
             inline static std::string fairy_spritesheet_path(int Lvl_Nbr)
             {
             switch (Lvl_Nbr)
@@ -569,6 +569,18 @@ namespace game
         inline static constexpr Vector2 movable_wall_5_target_pos = {696, 863};
         inline static constexpr const char* movable_wall_5_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Earth.png";
 
+        // --- Disappearing Wall ---
+        inline static constexpr Vector2 disappearing_wall_position = {172.0f, 448.0f};
+
+        // Visuelle und Kollisions-Eigenschaften
+        inline static constexpr Vector2 disappearing_wall_sprite_size = {4.0f, 64.0f}; // Die Größe von Textur & Hitbox der Wand
+        inline static constexpr const char* disappearing_wall_spritesheet = "PieWare/assets/Spritesheets/Door/Temple Door.png";
+
+        // Animations-Eigenschaften
+        inline static constexpr const char* disappearing_wall_anim_path = "PieWare/assets/Spritesheets/Wand/Wand_Verschwinden_Anim.png";
+        inline static constexpr Vector2 disappearing_wall_anim_size = {16.0f, 64.0f};
+        inline static constexpr int disappearing_wall_anim_frame_count = 8;
+        inline static constexpr float disappearing_wall_anim_speed = 10.0f;
 
         // ------ DEBUGGING ------
         inline static constexpr bool visualize_Player_Hitbox = false;
