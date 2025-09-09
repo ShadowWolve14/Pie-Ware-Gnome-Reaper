@@ -503,23 +503,23 @@ namespace game
         // ------ Rätsel-Objekte für Level 1 (und als Vorlage für 2 & 3) ------
         // --- Stein 1 ---
         inline static constexpr Vector2 movable_wall_1_start_pos = {615,  894};
-        inline static constexpr Vector2 movable_wall_1_target_pos = {756, 686};
+        inline static constexpr Vector2 movable_wall_1_target_pos = {760, 687};
         inline static constexpr const char* movable_wall_1_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Spirit.png";
         // --- Stein 2 ---
         inline static constexpr Vector2 movable_wall_2_start_pos = {632, 686};
-        inline static constexpr Vector2 movable_wall_2_target_pos = {821, 862};
+        inline static constexpr Vector2 movable_wall_2_target_pos = {825, 863};
         inline static constexpr const char* movable_wall_2_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Fire.png";
         // --- Stein 3 ---
         inline static constexpr Vector2 movable_wall_3_start_pos = {872, 894};
-        inline static constexpr Vector2 movable_wall_3_target_pos = {660, 750};
+        inline static constexpr Vector2 movable_wall_3_target_pos = {664, 751};
         inline static constexpr const char* movable_wall_3_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Air.png";
         // --- Stein 4 ---
         inline static constexpr Vector2 movable_wall_4_start_pos = {919, 814};
-        inline static constexpr Vector2 movable_wall_4_target_pos = {852, 749};
+        inline static constexpr Vector2 movable_wall_4_target_pos = {856, 750};
         inline static constexpr const char* movable_wall_4_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Water.png";
         // --- Stein 5 ---
         inline static constexpr Vector2 movable_wall_5_start_pos = {887, 703};
-        inline static constexpr Vector2 movable_wall_5_target_pos = {692, 862};
+        inline static constexpr Vector2 movable_wall_5_target_pos = {696, 863};
         inline static constexpr const char* movable_wall_5_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Earth.png";
 
         // ------ DEBUGGING ------

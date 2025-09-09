@@ -73,16 +73,40 @@ void MovableWall::Tick(float delta_time)
         last_player_position = current_player_pos;
     }
 
-    if (Vector2Distance(Get_Position(), target_position) < game::Config::movable_wall_target_snap_radius)
+    Vector2 current_position = { this->hitbox.x, this->hitbox.y };
+    float distance_to_target = Vector2Distance(current_position, target_position);
+
+    if (distance_to_target > 0 && distance_to_target < game::Config::movable_wall_target_snap_radius)
     {
-        if (!is_solved)
+        if (pushing_player)
         {
-            is_activating = true;
-            activation_timer = 0.0f;
+            StopPushing();
         }
-        Set_Position(target_position);
-        is_solved = true;
+
+        Vector2 direction = Vector2Normalize(Vector2Subtract(target_position, current_position));
+
+        Vector2 movement = Vector2Scale(direction, game::Config::movable_wall_move_speed * delta_time);
+
+        if (Vector2LengthSqr(movement) >= distance_to_target * distance_to_target)
+        {
+
+            this->hitbox.x = target_position.x;
+            this->hitbox.y = target_position.y;
+
+            if (!is_solved)
+            {
+                is_activating = true;
+                activation_timer = 0.0f;
+                is_solved = true;
+            }
+        }
+        else
+        {
+            this->hitbox.x += movement.x;
+            this->hitbox.y += movement.y;
+        }
     }
+
 }
 
 void MovableWall::On_Collision(Collidable* other)
@@ -161,4 +185,3 @@ Collision_Type MovableWall::Get_Collision_Type() const
 {
     return Collision_Type::MOVABLE_WALL;
 }
-
