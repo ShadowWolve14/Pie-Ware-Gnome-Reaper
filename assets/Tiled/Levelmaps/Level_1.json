@@ -228,7 +228,7 @@
                  "value":false
                 }],
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":96,
          "x":0,
          "y":0
@@ -382,7 +382,7 @@
                  "value":true
                 }],
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":96,
          "x":0,
          "y":0
@@ -666,61 +666,6 @@
                  "width":4.08695652173915,
                  "x":171.913043478261,
                  "y":460.04347826087
-                }, 
-                {
-                 "height":15.0434782608696,
-                 "id":27,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Movable_Wall_1",
-                 "visible":true,
-                 "width":16.0869565217392,
-                 "x":615.95652173913,
-                 "y":894.95652173913
-                }, 
-                {
-                 "height":15.0434782608695,
-                 "id":28,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Movable_Wall_2",
-                 "visible":true,
-                 "width":16.0869565217391,
-                 "x":632.913043478261,
-                 "y":686.95652173913
-                }, 
-                {
-                 "height":15.0869565217391,
-                 "id":29,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Movable_Wall_3",
-                 "visible":true,
-                 "width":16,
-                 "x":872,
-                 "y":894.913043478261
-                }, 
-                {
-                 "height":15.25,
-                 "id":30,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Movable_Wall_4",
-                 "visible":true,
-                 "width":16.125,
-                 "x":919.9375,
-                 "y":814.8125
-                }, 
-                {
-                 "height":14.9130434782609,
-                 "id":31,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Movable_Wall_5",
-                 "visible":true,
-                 "width":16.1304347826087,
-                 "x":887.913043478261,
-                 "y":703.04347826087
                 }, 
                 {
                  "height":15,
