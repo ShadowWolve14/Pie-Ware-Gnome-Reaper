@@ -65,6 +65,10 @@ add_library(core STATIC game.h game.cpp store.h ../scenes/Scene.h stage.h stage.
         ../game/DemonKnightEnemy.h
         ../game/PeasantEnemy.cpp
         ../game/PeasantEnemy.h
+        ../game/MovableWall.cpp
+        ../game/MovableWall.h
+        ../game/PuzzleOne.cpp
+        ../game/PuzzleOne.h
         PlayerEffectiveStats.h
         FairyAnim.h)
 

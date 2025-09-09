@@ -22,6 +22,9 @@ namespace enemy
         float player_separation_weight;
         float desired_separation;
         float drag;
+        Sound atS= LoadSound("assets/audio/sfx/Enemy_Attack.wav");
+        Sound hitS= LoadSound("assets/audio/sfx/Enemy_Hit.wav");
+
 
         // Zustand
         Vector2 velocity = {0.0f, 0.0f};
@@ -34,6 +37,10 @@ namespace enemy
 
         int score_value;
         int souls_value;
+
+        bool tookd= false;
+
+
 
         Vector2 Calculate_Seek_Force(Vector2 target_pos, float& distance_to_target, float stopping_distance) const;
         Vector2 Calculate_Separation_Force(const std::vector<Enemy_Base_Class*>& all_enemies) const;

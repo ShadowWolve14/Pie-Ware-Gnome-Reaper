@@ -13,16 +13,6 @@ Player_Class_One::Player_Class_One(Vector2 start_Position)
                     /* dmgMult   */ BuildEffectiveStats(game::core::upgrades).DMGxMult,
                     start_Position)
 {
-    const auto effective_stats = BuildEffectiveStats(game::core::upgrades);
-    SetMeleeDamage(effective_stats.meleeDamage);           // or assign to your field
-    SetRangedDamage(effective_stats.rangedDamage);         // "
-    SetAttackCooldown(effective_stats.meele_attack_cooldown);    // where you compute melee/ranged cadence
-    SetRangedCooldown(effective_stats.ranged_attack_cooldown);
-    SetMovementSpeed(effective_stats.movement_speed);
-    SetMovementSpeed(effective_stats.movement_speed);
-    SetDMGMult(effective_stats.max_health);
-
-
     int player_Walk_Anim_Speed = game::Config::player_Walk_Anim_Speed;
     Vector2 player_Walk_Anim_Size = game::Config::player_Walk_Anim_Size;
     int player_Walk_Frame_Count = game::Config::player_Walk_Frame_Count;
@@ -230,6 +220,7 @@ void Player_Class_One::Draw()
 void Player_Class_One::Ranged_Attack()
 {
     this->attack_Direction = this->facing_Direction;
+    PlaySound(rats);
     Player_Base_Class::Ranged_Attack();
     if (ranged_Attack_Animations.count(this->attack_Direction)) {
         ranged_Attack_Animations.at(this->attack_Direction).First_Frame();
@@ -238,6 +229,7 @@ void Player_Class_One::Ranged_Attack()
 void Player_Class_One::Melee_Attack()
 {
     this->attack_Direction = this->facing_Direction;
+    PlaySound(ats);
     Player_Base_Class::Melee_Attack();
     auto* active_melee_map = IsBuffed() ? &buff_melee_Attack_Animations : &melee_Attack_Animations;
     if (active_melee_map->count(this->attack_Direction))

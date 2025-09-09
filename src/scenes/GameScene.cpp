@@ -22,12 +22,28 @@
 #include "../game/KnightEnemy.h"
 #include "../game/DemonKnightEnemy.h"
 #include "../game/PeasantEnemy.h"
+#include "../game/PuzzleOne.h"
 
 using namespace std::string_literals;
 
 game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
 {
+    if (Level_Nbr==1){
+        Active_Song=&Song1;
+        Song1.looping = true;
+    }
+    if (Level_Nbr==2){
+        Active_Song=&Song2;
+        Song2.looping = true;
+    }
+    if (Level_Nbr==3){
+        Active_Song=&Song3;
+        Song3.looping = true;
+    }
+    PlayMusicStream(*Active_Song);
     enemy::Melee_Enemy::Load_All_Melee_Assets();
+    puzzle_one = std::make_unique<PuzzleOne>(objectManager);
+    puzzle_one->Load(this->current_level);
 
     if (!game::core::Store::player_state)
     {
@@ -136,7 +152,13 @@ void game::scenes::GameScene::Update()
             }
         }
     }
-    if (!fairy_has_spawned && !player_ptr->HasFairy())
+    if (Active_Song)
+    {
+        UpdateMusicStream(*Active_Song);
+    }
+    puzzle_one->Update();
+
+    if (puzzle_one->IsSolved() && !fairy_has_spawned && !player_ptr->HasFairy())
     {
         objectManager.AddObjectDeferred(new FairyItem(game::Config::fairy_Spawn_Position, this->current_level));
         fairy_has_spawned = true;

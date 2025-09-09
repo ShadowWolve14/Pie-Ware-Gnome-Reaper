@@ -12,10 +12,6 @@ namespace game { class Player_Projectile; }
 class Object_Manager;
 class Collision_Manager;
 
-enum Facing_Direction {UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, NONE};
-enum PlayerState {IDLE, WALKING, ATTACKING_RANGED, ATTACKING_MELEE};
-enum class Input_Direction { UP, DOWN, LEFT, RIGHT };
-
 class Player_Base_Class : public Collidable
 {
 protected:
@@ -53,6 +49,13 @@ protected:
 
     float projectile_Speed;
     std::vector<std::unique_ptr<game::Player_Projectile>> sp_projectiles;
+
+	Sound ats= LoadSound("assets/audio/sfx/Gnome_CloseAttack.wav");
+	Sound rats= LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
+	Sound hits= LoadSound("assets/audio/sfx/Gnome_Hit.wav");
+	Sound deaths= LoadSound("assets/audio/sfx/Gnome_Death.wav");
+	Sound itoS= LoadSound("assets/audio/sfx/Item_Obtained.wav");
+
 
 public:
 
@@ -92,6 +95,7 @@ public:
 	void Reset_For_New_Level();
 	void Calculate_Melee_Hitboxes(std::vector<Rectangle>& out_hitboxes, Facing_Direction direction) const;
 	Facing_Direction Get_Facing_Direction() const { return facing_Direction; }
+	bool IsMoving() const { return is_Moving; }
 
 
 	// --- setters/getters for upgrades ---
@@ -111,3 +115,4 @@ public:
 	int GetMaxHealth() { return player_Max_Health; }
 	float GetDMGMult() { return player_Damage_Multiplier; }
 };
+

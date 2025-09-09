@@ -228,7 +228,7 @@
                  "value":false
                 }],
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":96,
          "x":0,
          "y":0
@@ -382,7 +382,7 @@
                  "value":true
                 }],
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":96,
          "x":0,
          "y":0
@@ -688,28 +688,6 @@
                  "width":16.0625,
                  "x":663.9375,
                  "y":746.875
-                }, 
-                {
-                 "height":24,
-                 "id":30,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Hourglass",
-                 "visible":true,
-                 "width":28.1875,
-                 "x":753.9375,
-                 "y":149
-                }, 
-                {
-                 "height":39.1304347826087,
-                 "id":31,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Disapearing_Wall",
-                 "visible":true,
-                 "width":4,
-                 "x":172,
-                 "y":456.869565217391
                 }, 
                 {
                  "height":24.1818,

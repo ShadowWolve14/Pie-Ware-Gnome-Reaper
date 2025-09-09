@@ -9,6 +9,8 @@
 
 class HealthPotion : public ItemBase
 {
+private:
+    Sound us= LoadSound("assets/audio/sfx/Healpotion_Used.wav");
 public:
     HealthPotion(Vector2 position);
     void Activate(Player_Base_Class* player) override;

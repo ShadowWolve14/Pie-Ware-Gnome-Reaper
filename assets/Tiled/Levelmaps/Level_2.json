@@ -228,7 +228,7 @@
                  "value":false
                 }],
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":96,
          "x":0,
          "y":0
@@ -382,7 +382,7 @@
                  "value":true
                 }],
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":96,
          "x":0,
          "y":0
@@ -622,83 +622,6 @@
                  "width":4.00000000000001,
                  "x":48,
                  "y":416
-                }, 
-                {
-                 "height":38.2173913043478,
-                 "id":90,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Disapearing_Wall",
-                 "visible":true,
-                 "width":4,
-                 "x":172,
-                 "y":457.782608695652
-                }, 
-                {
-                 "height":20.03125,
-                 "id":91,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Hourglass",
-                 "visible":true,
-                 "width":28.0625,
-                 "x":754,
-                 "y":150
-                }, 
-                {
-                 "height":15.0869565217392,
-                 "id":92,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Change_Sprite_Wall_1",
-                 "visible":true,
-                 "width":16,
-                 "x":760.04347826087,
-                 "y":687
-                }, 
-                {
-                 "height":15.09375,
-                 "id":93,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Change_Sprite_Wall_4",
-                 "visible":true,
-                 "width":16.03125,
-                 "x":855.96875,
-                 "y":750.9375
-                }, 
-                {
-                 "height":15,
-                 "id":94,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Change_Sprite_Wall_2",
-                 "visible":true,
-                 "width":16.1304347826086,
-                 "x":824.95652173913,
-                 "y":863.04347826087
-                }, 
-                {
-                 "height":14.9565217391304,
-                 "id":95,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Change_Sprite_Wall_5",
-                 "visible":true,
-                 "width":16,
-                 "x":695.95652173913,
-                 "y":863.04347826087
-                }, 
-                {
-                 "height":15.0434782608696,
-                 "id":96,
-                 "name":"",
-                 "rotation":0,
-                 "type":"Change_Sprite_Wall_3",
-                 "visible":true,
-                 "width":16.1739130434783,
-                 "x":663.95652173913,
-                 "y":751
                 }, 
                 {
                  "height":23.25,

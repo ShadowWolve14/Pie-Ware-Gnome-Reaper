@@ -1,6 +1,6 @@
 #ifndef FAIRYANIM_H
 #define FAIRYANIM_H
-
+#include "raylib.h"
 
 struct FairyAnimMeta {
     Vector2 frameSize;   // size of one frame in the sheet

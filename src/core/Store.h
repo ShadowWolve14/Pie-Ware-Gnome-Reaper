@@ -25,8 +25,8 @@ namespace game::core
     };
 
     inline UpgradeState upgrades{};
-    struct Store final
 
+    struct Store final
     {
         /// The Stage object is responsible for the scene change and for updating and drawing the scene contents
         inline static std::unique_ptr<game::core::Stage> stage = nullptr;
@@ -44,5 +44,6 @@ namespace game::core
         inline static std::unique_ptr<PlayerState> player_state = nullptr;
         inline static int last_score = 0;
 
+        inline static Font font= LoadFont("PieWare/assets/Font/GnomishGame.ttf");
     };
 }
