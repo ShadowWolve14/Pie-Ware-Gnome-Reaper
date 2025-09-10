@@ -26,6 +26,7 @@ namespace game::scenes
         int souls_to_spend;
         int current_level;
         int counter;
+        Music song= LoadMusicStream("assets/audio/tracks/CutsceneMusic.wav");
 
         Font GnomeFont = LoadFont("../../PieWare/assets/Font/GnomishGame.ttf");
 

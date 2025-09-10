@@ -26,6 +26,8 @@ private:
     menustate state;
 int counter;
 
+Music song = LoadMusicStream("assets/audio/tracks/MainMenuMusic.wav");
+
 bool slider;
 bool prot;
 

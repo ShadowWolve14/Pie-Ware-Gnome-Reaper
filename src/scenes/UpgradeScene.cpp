@@ -25,6 +25,8 @@ namespace game::scenes {
             );
             fairyAnim.First_Frame();
         }
+        song.looping= true;
+        PlayMusicStream(song);
     }
 
     UpgradeScene::~UpgradeScene() {}
@@ -210,6 +212,7 @@ namespace game::scenes {
 
     void UpgradeScene::Update()
     {
+        UpdateMusicStream(song);
         // tick fail flash timer
         // tick fail flash timer
         for (int i = 0; i < kRows; ++i) {

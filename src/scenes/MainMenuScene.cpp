@@ -8,11 +8,15 @@
 MainMenuScene::MainMenuScene() {
     this->counter=0;
     state=main;
+    song.looping= true;
+    PlayMusicStream(song);
 }
 MainMenuScene::~MainMenuScene() { }
 
 void MainMenuScene::Update()
 {
+    UpdateMusicStream(song);
+
 Input_Check_Mov();
     switch (state) {
         case main:{
@@ -60,7 +64,6 @@ void MainMenuScene::Draw()
             break;
         }
     }
-
 }
 void MainMenuScene::Input_Check_Mov() {
     if (IsKeyPressed(game::Config::key_Up)){
