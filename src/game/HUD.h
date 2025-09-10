@@ -50,7 +50,7 @@ class HUD {
     Texture2D IPU= LoadTexture(game::Config::Symbol_IPU);
     Texture2D IT= LoadTexture(game::Config::Symbol_IT);
     Texture2D ITU= LoadTexture(game::Config::Symbol_ITU);
-
+    Texture2D damge=LoadTexture("PieWare/assets/Spritesheets/VFX/Damage_Taken_Overlay.png");
 
 
 
@@ -59,7 +59,6 @@ HUD(Player_Class_One* mp);
 void HUD_update();
 void HUD_draw();
 void HUD_shake();
-
 };
 
 

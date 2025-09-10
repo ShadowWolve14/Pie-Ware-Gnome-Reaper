@@ -49,6 +49,12 @@ protected:
 
     float projectile_Speed;
     std::vector<std::unique_ptr<game::Player_Projectile>> sp_projectiles;
+    Texture2D potionvfx= LoadTexture("PieWare/assets/Spritesheets/VFX/Healing Effect.png");
+    Texture2D testovfx= LoadTexture("PieWare/assets/Spritesheets/VFX/Smoke.png");
+
+
+    Texture2D* itemvfx= nullptr;
+    int vfxtype=0;
 
 	Sound ats= LoadSound("assets/audio/sfx/Gnome_CloseAttack.wav");
 	Sound rats= LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");

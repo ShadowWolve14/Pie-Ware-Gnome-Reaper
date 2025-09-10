@@ -29,6 +29,12 @@ private:
     Sound pushs= LoadSound("assets/audio/sfx/Pushing_Stone.wav");
     std::vector<Sound> sav;
 
+    Texture2D spr= LoadTexture("PieWare/assets/Spritesheets/VFX/Stone_Moving_Effect.png");
+    Texture2D spl= LoadTexture("PieWare/assets/Spritesheets/VFX/Stone_Moving_Effect_Left.png");
+    float vfxfc=0;
+
+    bool moving= false;
+
 
 public:
     MovableWall(Vector2 position, Vector2 size, Vector2 target, const char* spritesheet_path, Object_Manager& obj_manager);

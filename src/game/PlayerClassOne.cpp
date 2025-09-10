@@ -202,6 +202,8 @@ void Player_Class_One::Draw()
     }
 
 
+
+
     if (current_attack_anim != nullptr) {
         draw_pos.x = this->hitbox.x - (current_attack_anim->size.x - this->hitbox.width) / 2.0f;
         draw_pos.y = this->hitbox.y - (current_attack_anim->size.y - this->hitbox.height) / 2.0f;
@@ -215,6 +217,27 @@ void Player_Class_One::Draw()
     {
         DrawRectangleLinesEx(this->hitbox, 1.0f, BLUE);
     }
+
+    if (itemvfx!= nullptr){
+        if (vfxtype==1){
+            clim=4;
+            b=32;
+        } else{
+            clim=13;
+            b=16;
+
+        }
+        if (c<clim){
+            DrawTextureRec(*itemvfx,{1+b*c,1,(float)b,32},{hitbox.x-6,hitbox.y-6},WHITE);
+        }
+    }
+
+    if (c>=clim){
+        itemvfx= nullptr;
+        c=0;
+    }
+
+    c++;
 }
 
 void Player_Class_One::Ranged_Attack()
