@@ -47,6 +47,7 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
     enemy::Melee_Enemy::Load_All_Melee_Assets();
     game::Player_Projectile::LoadAssets();
     BombExplosionHitbox::LoadAssets();
+    MovableWall::LoadAssets();
     this->current_level = level_to_load;
     puzzle_one = std::make_unique<PuzzleOne>(objectManager);
     puzzle_one->Load(this->current_level);
@@ -106,6 +107,7 @@ game::scenes::GameScene::~GameScene()
     enemy::Melee_Enemy::Unload_All_Melee_Assets();
     game::Player_Projectile::UnloadAssets();
     BombExplosionHitbox::UnloadAssets();
+    MovableWall::UnloadAssets();
 }
 
 void game::scenes::GameScene::Update()
