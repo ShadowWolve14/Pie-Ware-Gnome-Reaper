@@ -188,13 +188,13 @@ namespace game
         inline static constexpr float melee_enemy_2_walk_anim_speed = 1.0f;
         inline static constexpr int melee_enemy_2_walk_frame_count = 12;
         inline static constexpr Vector2 melee_enemy_2_walk_anim_size = {64, 64};
-        inline static constexpr const char* kMeleeEnemy2WalkLeftAnim = "PieWare/assets/Spritesheets/Knight/KnightWalk Left.png";
+        inline static constexpr const char* kMeleeEnemy2WalkLeftAnim = "PieWare/assets/Spritesheets/Knight/Knight Walk Left.png";
         inline static constexpr const char* kMeleeEnemy2WalkRightAnim = "PieWare/assets/Spritesheets/Knight/Knight.png";
 
         inline static constexpr float melee_enemy_2_attack_anim_speed = 3.0f;
         inline static constexpr int melee_enemy_2_attack_frame_count = 16;
         inline static constexpr Vector2 melee_enemy_2_attack_anim_size = {64, 64};
-        inline static constexpr const char* kMeleeEnemy2AttackLeftAnim = "PieWare/assets/Spritesheets/Knight/KnightAttack Left.png";
+        inline static constexpr const char* kMeleeEnemy2AttackLeftAnim = "PieWare/assets/Spritesheets/Knight/Knight Attack Left.png";
         inline static constexpr const char* kMeleeEnemy2AttackRightAnim = "PieWare/assets/Spritesheets/Knight/KnighAttackt.png";
 
         inline static constexpr float melee_enemy_2_hit_anim_speed = 0.1f;
