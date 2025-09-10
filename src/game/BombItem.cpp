@@ -66,7 +66,7 @@ void BombItem::Activate(Player_Base_Class* player)
     player->object_manager_ptr->AddObjectDeferred(new BombExplosionHitbox(bottom_box, damage));
     player->object_manager_ptr->AddObjectDeferred(new BombExplosionHitbox(left_box, damage));
     player->object_manager_ptr->AddObjectDeferred(new BombExplosionHitbox(right_box, damage));
-    player->item_remove_ticker = 1;
+        player->item_removal_timer = game::Config::bomb_Explosion_Damage_Lifetime + 0.1f;
     this->Mark_For_Destruction();
     PlaySound(us);
 }

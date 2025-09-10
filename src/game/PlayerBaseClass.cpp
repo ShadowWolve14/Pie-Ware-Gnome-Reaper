@@ -54,13 +54,12 @@ void Player_Base_Class::Player_Input()
 
 void Player_Base_Class::Tick(float delta_time)
 {
-    if (item_remove_ticker > 0)
+    if (item_removal_timer > 0.0f)
     {
-        item_remove_ticker++;
-        if (item_remove_ticker > 5)
+        item_removal_timer -= delta_time;
+        if (item_removal_timer <= 0.0f)
         {
             RemoveHeldItem();
-            item_remove_ticker = 0;
         }
     }
     if (is_buffed)

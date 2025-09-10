@@ -391,7 +391,7 @@ namespace game
         // ------ Bomben-Item ------
         inline static constexpr int bomb_Damage = 100;                      // Schaden an Gegnern
         inline static constexpr float bomb_Radius_Tiles = 6.0f;             // Radius in "Tiles" (1 Tile = 16 Pixel)
-        inline static constexpr float bomb_Explosion_Damage_Lifetime = 7.5f;   // Dauer der Schadensfläche
+        inline static constexpr float bomb_Explosion_Damage_Lifetime = 2.5f;   // Dauer der Schadensfläche
         inline static constexpr float bomb_Explosion_Visual_Lifetime = 7.5f;   // Dauer der visuellen Fläche
         inline static constexpr int bomb_Max_On_Map = 1;                    // Maximale Anzahl (Map + Inventar)
         inline static constexpr const char* kBombItemAnim = "PieWare/assets/Items/Animations/Animation_Bomb(Aus).png"; // Bomben Item anim
@@ -570,7 +570,7 @@ namespace game
         inline static constexpr const char* movable_wall_5_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Earth.png";
 
         // --- Disappearing Wall ---
-        inline static constexpr Vector2 disappearing_wall_position = {172.0f, 448.0f};
+        inline static constexpr Vector2 disappearing_wall_position = {172.0f, 446.0f};
 
         // Visuelle und Kollisions-Eigenschaften
         inline static constexpr Vector2 disappearing_wall_sprite_size = {4.0f, 64.0f}; // Die Größe von Textur & Hitbox der Wand

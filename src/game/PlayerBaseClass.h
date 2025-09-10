@@ -80,7 +80,7 @@ public:
 	Vector2 Get_Player_Center() const;
 	void Set_Position(Vector2 position) override;
     void Take_Damage(int damage);
-	int item_remove_ticker = 0;
+	float item_removal_timer = 0.0f;
 	Object_Manager* object_manager_ptr = nullptr;
 
 	void Use_Item();
