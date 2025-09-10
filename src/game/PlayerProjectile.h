@@ -15,6 +15,7 @@ namespace game {
         Vector2 velocity;
         bool is_active;
         int damage;
+        static Texture2D projectile_sprite;
 
         Texture2D sprite;
         float rotation;
@@ -22,6 +23,8 @@ namespace game {
         Player_Projectile(Vector2 start_position, Vector2 direction, float projectile_speed, int final_damage);
         ~Player_Projectile() override;
 
+        static void LoadAssets();
+        static void UnloadAssets();
         void Tick(float delta_time) override;
         void Draw() override;
         Collision_Type Get_Collision_Type() const override;

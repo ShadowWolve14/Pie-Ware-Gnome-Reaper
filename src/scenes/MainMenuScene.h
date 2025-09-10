@@ -18,11 +18,15 @@ private:
     Texture2D ranking_button= LoadTexture(game::Config::ranking_button_asset);
     Texture2D credits_button= LoadTexture(game::Config::credits_button_asset);
     Texture2D quit_button= LoadTexture(game::Config::quit_button_asset);
-    Rectangle src{1,1,80,32};
+    Texture2D sign_button= LoadTexture(game::Config::Back_Sign_asset);
+    Texture2D scroll_button= LoadTexture(game::Config::Background_asset);
+    Rectangle src{1,1,140,32};
 
     enum menustate {main,options, credits ,end,list};
     menustate state;
 int counter;
+
+Music song = LoadMusicStream("assets/audio/tracks/MainMenuMusic.wav");
 
 bool slider;
 bool prot;

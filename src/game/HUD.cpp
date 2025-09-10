@@ -6,8 +6,8 @@
 #include "Store.h"
 
 HUD::HUD(Player_Class_One* mp):mp(mp) {
-prevhp=100;
-c=0;
+    prevhp=100;
+    c=0;
 }
 
 void HUD::HUD_update() {
@@ -18,18 +18,18 @@ void HUD::HUD_update() {
     if (!mp->HasItem()){
         this->it=empty;
     } else{
-    if (mp->GetHeldItem()->GetType()==ItemType::BOMB){
-        this->it=bomb;
-    }
-    if (mp->GetHeldItem()->GetType()==ItemType::KEY){
-        this->it=key;
-    }
-    if (mp->GetHeldItem()->GetType()==ItemType::HEALTH_POTION){
-        this->it=potion;
-    }
-    if (mp->GetHeldItem()->GetType()==ItemType::TESTO_NEEDLE){
-        this->it=testo;
-    }
+        if (mp->GetHeldItem()->GetType()==ItemType::BOMB){
+            this->it=bomb;
+        }
+        if (mp->GetHeldItem()->GetType()==ItemType::KEY){
+            this->it=key;
+        }
+        if (mp->GetHeldItem()->GetType()==ItemType::HEALTH_POTION){
+            this->it=potion;
+        }
+        if (mp->GetHeldItem()->GetType()==ItemType::TESTO_NEEDLE){
+            this->it=testo;
+        }
     }
 
 
@@ -64,9 +64,9 @@ void HUD::HUD_update() {
 }
 void HUD::HUD_shake() {
     if (ct<1){
-    ofs=GetRandomValue(-5,5);
-    //rot=GetRandomValue(-5,5);
-    ct=3;
+        ofs=GetRandomValue(-5,5);
+        //rot=GetRandomValue(-5,5);
+        ct=3;
     }
     ct--;
 }
@@ -80,11 +80,18 @@ void HUD::HUD_draw() {
     Vector2 v7{1864,1014};
     Vector2 v8{1714,1014};
     Vector2 v9{1864,864};
-    Vector2 v10{120,45};
-    Vector2 v11{170,45};
-    Vector2 v12{220,45};
-    Vector2 v13{270,45};
-    Vector2 v14{320,45};
+    Vector2 v10{118,25};
+    Vector2 v11{163,25};
+    Vector2 v12{208,25};
+    Vector2 v13{253,25};
+    Vector2 v14{298,25};
+    Vector2 v15{343,25};
+    Vector2 v16{118,65};
+    Vector2 v17{163,65};
+    Vector2 v18{208,65};
+    Vector2 v19{253,65};
+    Vector2 v20{298,65};
+    Vector2 v21{343,65};
 
     v1.x=v1.x+ofs;v1.y=v1.y+ofs;
     v2.x=v2.x+ofs;v2.y=v2.y+ofs;
@@ -117,72 +124,75 @@ void HUD::HUD_draw() {
         if (UC>0){
             DrawTextureEx(SAU,v4,rot,3,WHITE);
         }
-        }
+    }
     if (st==ra){
         if (UC>0){
             DrawTextureEx(AAU,v5,rot,3,WHITE);
         }
-        }
-        if (st==iu){
-            switch (it) {
-                case bomb:{
-                    if (UC>0){
-                        DrawTextureEx(IBU,v6,rot,3,WHITE);}
-                    break;
-                }
-                case key:{
-                    if (UC>0){
-                        DrawTextureEx(IKU,v6,rot,3,WHITE);}
-
-                    break;
-                }
-                case testo:{
-                    if (UC>0){
-                        DrawTextureEx(ITU,v6,rot,3,WHITE);}
-                    break;
-                }
-                case potion:{
-                    if (UC>0){
-                        DrawTextureEx(IPU,v6,rot,3,WHITE);;}
-                    break;
-                }
-
-                default:{
-                    if (UC>0){
-                        DrawTextureEx(IEU,v6,rot,3,WHITE);;}
-                    break;
-                }
+    }
+    if (st==iu){
+        switch (it) {
+            case bomb:{
+                if (UC>0){
+                    DrawTextureEx(IBU,v6,rot,3,WHITE);}
+                break;
             }
-            } else{
-            switch (it) {
-                case bomb:{
-                    DrawTextureEx(IB,v6,rot,3,WHITE);;
-                    break;
-                }
-                case key:{
-                    DrawTextureEx(IK,v6,rot,3,WHITE);;
-                    break;
-                }
-                case testo:{
-                    DrawTextureEx(IT,v6,rot,3,WHITE);;
-                    break;
-                }
-                case potion:{
-                    DrawTextureEx(IP,v6,rot,3,WHITE);;
-                    break;
-                }
-                default:{
-                    DrawTextureEx(IE,v6,rot,3,WHITE);
-                    break;
-                }
+            case key:{
+                if (UC>0){
+                    DrawTextureEx(IKU,v6,rot,3,WHITE);}
 
+                break;
+            }
+            case testo:{
+                if (UC>0){
+                    DrawTextureEx(ITU,v6,rot,3,WHITE);}
+                break;
+            }
+            case potion:{
+                if (UC>0){
+                    DrawTextureEx(IPU,v6,rot,3,WHITE);}
+                break;
+            }
+
+            default:{
+                if (UC>0){
+                    DrawTextureEx(IEU,v6,rot,3,WHITE);}
+                break;
             }
         }
+    } else{
+        switch (it) {
+            case bomb:{
+                DrawTextureEx(IB,v6,rot,3,WHITE);
+                break;
+            }
+            case key:{
+                DrawTextureEx(IK,v6,rot,3,WHITE);
+                break;
+            }
+            case testo:{
+                DrawTextureEx(IT,v6,rot,3,WHITE);
+                break;
+            }
+            case potion:{
+                DrawTextureEx(IP,v6,rot,3,WHITE);
+                break;
+            }
+            default:{
+                DrawTextureEx(IE,v6,rot,3,WHITE);
+                break;
+            }
+
+        }
+    }
 
     DrawTextureEx(SAI,v7,rot,3,WHITE);
     DrawTextureEx(AAI,v8,rot,3,WHITE);
     DrawTextureEx(II,v9,rot,3,WHITE);
 
+    if (mp->Get_Health()>109){
+        DrawTextureEx(HH,v15,rot,3,WHITE);
+    }
     if (mp->Get_Health()>89){
         DrawTextureEx(HH,v14,rot,3,WHITE);
     }
@@ -195,11 +205,15 @@ void HUD::HUD_draw() {
     if (mp->Get_Health()>29){
         DrawTextureEx(HH,v11,rot,3,WHITE);
     }
-    if (mp->Get_Health()>99){
-        DrawTextureEx(H,v14,rot,3,WHITE);
-    }
     if (mp->Get_Health()>9){
         DrawTextureEx(HH,v10,rot,3,WHITE);
+    }
+
+    if (mp->Get_Health()>119){
+        DrawTextureEx(H,v15,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>99){
+        DrawTextureEx(H,v14,rot,3,WHITE);
     }
     if (mp->Get_Health()>79){
         DrawTextureEx(H,v13,rot,3,WHITE);
@@ -212,6 +226,49 @@ void HUD::HUD_draw() {
     }
     if (mp->Get_Health()>19){
         DrawTextureEx(H,v10,rot,3,WHITE);
+
     }
-    //Writing the values sc and scc on the two counters
+
+    if (mp->Get_Health()>229){
+        DrawTextureEx(HH,v21,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>209){
+        DrawTextureEx(HH,v20,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>189){
+        DrawTextureEx(HH,v19,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>169){
+        DrawTextureEx(HH,v18,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>149){
+        DrawTextureEx(HH,v17,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>129){
+        DrawTextureEx(HH,v16,rot,3,WHITE);
+    }
+
+    if (mp->Get_Health()>239){
+        DrawTextureEx(H,v21,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>219){
+        DrawTextureEx(H,v20,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>199){
+        DrawTextureEx(H,v19,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>179){
+        DrawTextureEx(H,v18,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>159){
+        DrawTextureEx(H,v17,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>139){
+        DrawTextureEx(H,v16,rot,3,WHITE);
+
+    }
+    std::string temp=std::to_string(game::core::Store::player_state->score);
+    DrawTextEx(game::core::Store::font,temp.c_str(),{v2.x+85,v2.y+36},30,1,WHITE);
+    temp=std::to_string(game::core::Store::player_state->souls);
+    DrawTextEx(game::core::Store::font,temp.c_str(),{v3.x+85,v3.y+36},30,1,WHITE);
 }

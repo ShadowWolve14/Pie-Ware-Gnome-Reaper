@@ -12,10 +12,6 @@ namespace game { class Player_Projectile; }
 class Object_Manager;
 class Collision_Manager;
 
-enum Facing_Direction {UP, DOWN, LEFT, RIGHT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, NONE};
-enum PlayerState {IDLE, WALKING, ATTACKING_RANGED, ATTACKING_MELEE};
-enum class Input_Direction { UP, DOWN, LEFT, RIGHT };
-
 class Player_Base_Class : public Collidable
 {
 protected:
@@ -25,6 +21,11 @@ protected:
 	int player_Max_Health;
 	float player_Movement_Speed;
 	float player_Damage_Multiplier;
+
+	int melee_Base_Damage;
+	int ranged_Base_Damage;
+	float melee_Base_Cooldown;
+	float ranged_Base_Cooldown;
 
 	ItemBase* held_item = nullptr;
 	bool is_buffed = false;
@@ -49,6 +50,13 @@ protected:
     float projectile_Speed;
     std::vector<std::unique_ptr<game::Player_Projectile>> sp_projectiles;
 
+	Sound ats= LoadSound("assets/audio/sfx/Gnome_CloseAttack.wav");
+	Sound rats= LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
+	Sound hits= LoadSound("assets/audio/sfx/Gnome_Hit.wav");
+	Sound deaths= LoadSound("assets/audio/sfx/Gnome_Death.wav");
+	Sound itoS= LoadSound("assets/audio/sfx/Item_Obtained.wav");
+
+
 public:
 
 	Player_Base_Class(int max_Health, float movement_Speed, float damage_multiplier, Vector2 start_Position);
@@ -72,7 +80,7 @@ public:
 	Vector2 Get_Player_Center() const;
 	void Set_Position(Vector2 position) override;
     void Take_Damage(int damage);
-	int item_remove_ticker = 0;
+	float item_removal_timer = 0.0f;
 	Object_Manager* object_manager_ptr = nullptr;
 
 	void Use_Item();
@@ -87,5 +95,26 @@ public:
 	void Reset_For_New_Level();
 	void Calculate_Melee_Hitboxes(std::vector<Rectangle>& out_hitboxes, Facing_Direction direction) const;
 	Facing_Direction Get_Facing_Direction() const { return facing_Direction; }
+	bool IsMoving() const { return is_Moving; }
+    void KillYourself();
+
+	static bool LineIntersectsLine(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4);
+	static bool CheckCollisionLineRec(Vector2 startPos, Vector2 endPos, Rectangle rec);
+
+	void SetMeleeDamage(int dmg) { melee_Base_Damage = dmg; }
+	void SetRangedDamage(int dmg) { ranged_Base_Damage = dmg; }
+	void SetAttackCooldown(float cd) { melee_Base_Cooldown = cd; }
+	void SetRangedCooldown(float cd) { ranged_Base_Cooldown = cd; }
+	void SetMovementSpeed(float speed) { player_Movement_Speed = speed; }
+	void SetMaxHealth(int health) { player_Max_Health = health; }
+	void SetDMGMult(float DMGMult) { player_Damage_Multiplier = DMGMult; }
+
+	int GetMeleeDamage() const { return melee_Base_Damage; }
+	int GetRangedDamage() const { return ranged_Base_Damage; }
+	float GetAttackCooldown() const { return melee_Base_Cooldown; }
+	float GetRangedCooldown() const { return ranged_Base_Cooldown; }
+	float GetMovementSpeed() const {return  player_Movement_Speed; }
+	int GetMaxHealth() { return player_Max_Health; }
+	float GetDMGMult() { return player_Damage_Multiplier; }
 };
 

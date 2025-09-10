@@ -64,7 +64,17 @@ add_library(core STATIC game.h game.cpp store.h ../scenes/Scene.h stage.h stage.
         ../game/DemonKnightEnemy.cpp
         ../game/DemonKnightEnemy.h
         ../game/PeasantEnemy.cpp
-        ../game/PeasantEnemy.h)
+        ../game/PeasantEnemy.h
+        ../game/MovableWall.cpp
+        ../game/MovableWall.h
+        ../game/PuzzleOne.cpp
+        ../game/PuzzleOne.h
+        PlayerEffectiveStats.h
+        FairyAnim.h
+        ../game/DisappearingWall.cpp
+        ../game/DisappearingWall.h
+        ../game/HourglassWall.cpp
+        ../game/HourglassWall.h)
 
 target_include_directories(core PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 

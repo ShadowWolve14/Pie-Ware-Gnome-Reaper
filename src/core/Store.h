@@ -15,6 +15,16 @@ namespace game::core
         explicit PlayerState(Vector2 start_pos) : player(start_pos) {}
     };
 
+    struct UpgradeState {
+        int maxhealth_level = 0;
+        int speed_level = 0;
+        float atkSpeed_level = 0;
+        float DMGxmult_level = 0;
+        int meleeDMG_level = 0;
+        int rangedDMG_level = 0;
+    };
+
+    inline UpgradeState upgrades{};
 
     struct Store final
     {
@@ -34,5 +44,6 @@ namespace game::core
         inline static std::unique_ptr<PlayerState> player_state = nullptr;
         inline static int last_score = 0;
 
+        inline static Font font= LoadFont("PieWare/assets/Font/GnomishGame.ttf");
     };
 }

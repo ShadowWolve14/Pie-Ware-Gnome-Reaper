@@ -9,6 +9,9 @@
 #include "../game/EnemySpawner.h"
 #include "../game/HUD.h"
 
+class HourglassWall;
+class PuzzleOne;
+
 namespace game::scenes
 {
     class GameScene final : public game::core::Scene
@@ -17,6 +20,8 @@ namespace game::scenes
         Object_Manager objectManager;
 
     private:
+        float y_sort_timer = 0.0f;
+
         Vector2 sp = game::Config::player_Spawn_Position;
         Rectangle wb{0,0,game::Config::kStageWidth,game::Config::kStageHeight};
         Player_Class_One* player_ptr = nullptr;
@@ -27,11 +32,20 @@ namespace game::scenes
         int current_level = 1;
         float wave_timer = 0.0f;
 
+        HourglassWall* hourglass_wall_ptr = nullptr;
+
+        std::unique_ptr<PuzzleOne> puzzle_one;
         bool fairy_has_spawned = false;
         float score_timer = 0.0f;
         std::string debug_text = "Debug Info:";
 
         HUD hud{nullptr};
+
+        Music Song1= LoadMusicStream("assets/audio/tracks/GameMusic_Lv1.wav");
+        Music Song2= LoadMusicStream("assets/audio/tracks/GameMusic_Lv2.wav");
+        Music Song3= LoadMusicStream("assets/audio/tracks/GameMusic_Lv3.wav");
+
+        Music* Active_Song;
 
 
     public:

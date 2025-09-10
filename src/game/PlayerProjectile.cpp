@@ -5,10 +5,12 @@
 
 namespace game
 {
+    Texture2D Player_Projectile::projectile_sprite;
+
     Player_Projectile::Player_Projectile(Vector2 start_position, Vector2 direction, float projectile_speed, int final_damage)
         : is_active(true), damage(final_damage)
     {
-        this->sprite = LoadTexture(game::Config::kProjectileSprite);
+        this->sprite = projectile_sprite;
 
         this->velocity = Vector2Scale(direction, projectile_speed);
 
@@ -22,9 +24,7 @@ namespace game
         };
     }
 
-    Player_Projectile::~Player_Projectile() {
-        UnloadTexture(this->sprite);
-    }
+    Player_Projectile::~Player_Projectile() {  }
 
     void Player_Projectile::Tick(float delta_time) {
         if (!is_active) return;
@@ -43,7 +43,7 @@ namespace game
         destRec.x = roundf(destRec.x);
         destRec.y = roundf(destRec.y);
 
-        DrawTexturePro(this->sprite, sourceRec, destRec, origin, this->rotation, WHITE);
+        DrawTexturePro(projectile_sprite, sourceRec, destRec, origin, this->rotation, WHITE);
         if (game::Config::visualize_Attack_Hitboxes)
         {
             DrawRectangleLinesEx(this->hitbox, 1.0f, RED);
@@ -61,4 +61,14 @@ namespace game
             this->Mark_For_Destruction();
         }
     }
+    void Player_Projectile::LoadAssets()
+    {
+        projectile_sprite = LoadTexture(game::Config::kProjectileSprite);
+    }
+
+    void Player_Projectile::UnloadAssets()
+    {
+        UnloadTexture(projectile_sprite);
+    }
+
 }

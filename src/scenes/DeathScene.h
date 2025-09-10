@@ -6,6 +6,7 @@
 #define DEATHSCENE_H
 
 #include "Scene.h"
+#include "Animations.h"
 
 namespace game::scenes
 {
@@ -16,6 +17,29 @@ namespace game::scenes
         int final_souls;
         bool has_fairy;
         int current_level;
+        float frame=0;
+        float xframe=-1;
+        float yframe=0;
+        int de;
+        bool right;
+        float sa=0;
+        int limy=0;
+        int limx=0;
+        int fc=0;
+        int f=0;
+
+        Texture dsprite= LoadTexture("PieWare/assets/Spritesheets/Gnome_Dying.png");
+        Texture good1= LoadTexture("PieWare/assets/UI/DeathScreem/Level_1_Upgradet.png");
+        Texture good2= LoadTexture("PieWare/assets/UI/DeathScreem/Level_2_Upgradet.png");
+        Texture good3= LoadTexture("PieWare/assets/UI/DeathScreem/Level_3_Badt.png");
+        Texture bad1= LoadTexture("PieWare/assets/UI/DeathScreem/Level_1_Deatht.png");
+        Texture bad2= LoadTexture("PieWare/assets/UI/DeathScreem/Level_2_Deatht.png");
+        Texture bad3= LoadTexture("PieWare/assets/UI/DeathScreem/Level_3_Goodt.png");
+
+        Sound deaths= LoadSound("assets/audio/sfx/Gnome_Death.wav");
+        Texture* act_anim;
+
+
 
     public:
         DeathScene(int score, int souls, bool fairy_status, int level);

@@ -13,9 +13,11 @@
 
 Player_Base_Class::Player_Base_Class(int max_Health, float movement_Speed, float damage_multiplier, Vector2 start_Position)
     : player_Max_Health(max_Health), player_Health((float)max_Health), player_Movement_Speed(movement_Speed),
-      player_Damage_Multiplier(damage_multiplier),
-      previous_Position(start_Position), melee_Cooldown(0.0f), range_Attack_Cooldown(0.0f),
-      inventory_Is_Full(false), facing_Direction(Facing_Direction::DOWN), is_Moving(false)
+        player_Damage_Multiplier(damage_multiplier), melee_Base_Damage(game::Config::player_Melee_Damage_Value),
+        ranged_Base_Damage(game::Config::player_Ranged_Damage_Value), melee_Base_Cooldown(game::Config::player_Melee_Attack_Cooldown),
+        ranged_Base_Cooldown(game::Config::player_Ranged_Attack_Cooldown),
+        previous_Position(start_Position), melee_Cooldown(0.0f), range_Attack_Cooldown(0.0f),
+        inventory_Is_Full(false), facing_Direction(Facing_Direction::DOWN), is_Moving(false)
 {
     this->original_movement_speed = movement_Speed;
     this->original_damage_multiplier = damage_multiplier;
@@ -52,13 +54,12 @@ void Player_Base_Class::Player_Input()
 
 void Player_Base_Class::Tick(float delta_time)
 {
-    if (item_remove_ticker > 0)
+    if (item_removal_timer > 0.0f)
     {
-        item_remove_ticker++;
-        if (item_remove_ticker > 5)
+        item_removal_timer -= delta_time;
+        if (item_removal_timer <= 0.0f)
         {
             RemoveHeldItem();
-            item_remove_ticker = 0;
         }
     }
     if (is_buffed)
@@ -99,10 +100,54 @@ void Player_Base_Class::Tick(float delta_time)
         }
 
         is_Moving = (move_Direction.x != 0.0f || move_Direction.y != 0.0f);
-        if(is_Moving) {
+        is_Moving = (move_Direction.x != 0.0f || move_Direction.y != 0.0f);
+
+        if(is_Moving)
+        {
             move_Direction = Vector2Normalize(move_Direction);
-            hitbox.x += move_Direction.x * player_Movement_Speed * delta_time;
-            hitbox.y += move_Direction.y * player_Movement_Speed * delta_time;
+            Vector2 potential_movement = Vector2Scale(move_Direction, player_Movement_Speed * delta_time);
+            const float tunneling_threshold = 1.0f;
+
+            if (Vector2Length(potential_movement) > tunneling_threshold)
+            {
+                std::vector<Collidable*> walls;
+                if (object_manager_ptr) {
+                    for (auto* obj : object_manager_ptr->managed_objects) {
+                        if (obj->Get_Collision_Type() == Collision_Type::WALL) {
+                            walls.push_back(obj);
+                        }
+                    }
+                }
+
+                Vector2 start_pos = Get_Player_Center();
+                Vector2 end_pos = Vector2Add(start_pos, potential_movement);
+
+                bool will_tunnel_wall = false;
+                for (const auto& wall : walls) {
+                    if (CheckCollisionLineRec(start_pos, end_pos, wall->Get_Hitbox()))
+                    {
+                        will_tunnel_wall = true;
+                        break;
+                    }
+                }
+
+                if (will_tunnel_wall)
+                {
+                    hitbox.x = previous_Position.x;
+                    hitbox.y = previous_Position.y;
+                }
+                else
+                {
+
+                    hitbox.x += potential_movement.x;
+                    hitbox.y += potential_movement.y;
+                }
+            }
+            else
+            {
+                hitbox.x += potential_movement.x;
+                hitbox.y += potential_movement.y;
+            }
         }
     }
     player_Pos = {hitbox.x, hitbox.y};
@@ -115,7 +160,7 @@ void Player_Base_Class::On_Collision(Collidable* other)
 	Collision_Type otherType = other->Get_Collision_Type();
 
     if (otherType == Collision_Type::WALL ||
-        otherType == Collision_Type::ENEMY_SPAWNER)
+    otherType == Collision_Type::ENEMY_SPAWNER)
     {
         CollisionResponse::Resolve_Overlap(this, other);
 	}
@@ -145,7 +190,7 @@ void Player_Base_Class::Draw()
 void Player_Base_Class::Ranged_Attack()
 {
     if (is_buffed) return;
-    this->range_Attack_Cooldown = game::Config::player_Ranged_Attack_Cooldown;
+    this->range_Attack_Cooldown = ranged_Base_Cooldown;
 
     this->currentState = ATTACKING_RANGED;
 
@@ -159,13 +204,13 @@ void Player_Base_Class::Ranged_Attack()
         case UP_RIGHT:   fire_direction = Vector2Normalize({1.0f, -1.0f});  break;
         case DOWN_LEFT:  fire_direction = Vector2Normalize({-1.0f, 1.0f});  break;
         case DOWN_RIGHT: fire_direction = Vector2Normalize({1.0f, 1.0f});   break;
-        case NONE:       return;
+        case FACING_NONE:       return;
     }
 
     float offset_distance = (hitbox.width / 2.0f) + 1;
     Vector2 spawn_position = Vector2Add(Get_Player_Center(), Vector2Scale(fire_direction, offset_distance));
 
-    int final_damage = static_cast<int>(game::Config::player_Ranged_Damage_Value * this->player_Damage_Multiplier);
+    int final_damage = static_cast<int>(ranged_Base_Damage * this->player_Damage_Multiplier);
 
     auto* projectile = new game::Player_Projectile(
         spawn_position,
@@ -227,6 +272,7 @@ void Player_Base_Class::Take_Damage(int damage_amount)
 {
     if (is_buffed && damage_amount > 0) return;
 
+    PlaySound(hits);
     player_Health -= damage_amount;
     player_Health = std::min(player_Health, (float)player_Max_Health);
 }
@@ -276,9 +322,9 @@ void Player_Base_Class::Update_Input_Stacks()
 
 void Player_Base_Class::Melee_Attack()
 {
-    this->melee_Cooldown = game::Config::player_Melee_Attack_Cooldown;
+    this->melee_Cooldown = melee_Base_Cooldown;
     this->currentState = ATTACKING_MELEE;
-    int final_damage = static_cast<int>(game::Config::player_Melee_Damage_Value * this->player_Damage_Multiplier);
+    int final_damage = static_cast<int>(melee_Base_Damage * this->player_Damage_Multiplier);
     auto* melee_box = new game::Player_Melee_Hitbox(this, final_damage, this->facing_Direction);
 
     if (object_manager_ptr)
@@ -294,6 +340,7 @@ bool Player_Base_Class::HasItem() const
 
 void Player_Base_Class::PickUpItem(ItemBase* item_to_pick_up)
 {
+    PlaySound(itoS);
     if (!HasItem() && object_manager_ptr != nullptr)
     {
         held_item = item_to_pick_up;
@@ -303,7 +350,7 @@ void Player_Base_Class::PickUpItem(ItemBase* item_to_pick_up)
 
 void Player_Base_Class::Use_Item()
 {
-    if (IsKeyPressed(game::Config::key_Use_Item) && HasItem()&& !is_buffed)
+    if (IsKeyPressed(game::Config::key_Use_Item) && HasItem() && held_item->GetType() != ItemType::KEY && !is_buffed && item_removal_timer <= 0.0f)
     {
         held_item->Activate(this);
     }
@@ -398,7 +445,7 @@ void Player_Base_Class::Calculate_Melee_Hitboxes(std::vector<Rectangle>& out_hit
             break;
         }
 
-        case NONE:
+        case FACING_NONE:
             return;
     }
 }
@@ -410,4 +457,39 @@ void Player_Base_Class::Reset_For_New_Level()
     this->facing_Direction = DOWN;
     this->horizontal_inputs.clear();
     this->vertical_inputs.clear();
+}
+void Player_Base_Class::KillYourself() {
+    this->SetHasFairy(true);
+    this->player_Health=0;
+}
+
+bool Player_Base_Class::LineIntersectsLine(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
+{
+    float den = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
+    if (std::abs(den) < 0.0001f) {
+        return false;
+    }
+    float t_num = (p1.x - p3.x) * (p3.y - p4.y) - (p1.y - p3.y) * (p3.x - p4.x);
+    float u_num = -((p1.x - p2.x) * (p1.y - p3.y) - (p1.y - p2.y) * (p1.x - p3.x));
+    float t = t_num / den;
+    float u = u_num / den;
+    return (t >= 0.0f && t <= 1.0f && u >= 0.0f && u <= 1.0f);
+}
+
+bool Player_Base_Class::CheckCollisionLineRec(Vector2 startPos, Vector2 endPos, Rectangle rec)
+{
+    if (CheckCollisionPointRec(startPos, rec)) {
+        return true;
+    }
+    Vector2 topLeft = { rec.x, rec.y };
+    Vector2 topRight = { rec.x + rec.width, rec.y };
+    Vector2 bottomLeft = { rec.x, rec.y + rec.height };
+    Vector2 bottomRight = { rec.x + rec.width, rec.y + rec.height };
+
+    if (LineIntersectsLine(startPos, endPos, topLeft, topRight)) return true;
+    if (LineIntersectsLine(startPos, endPos, bottomLeft, bottomRight)) return true;
+    if (LineIntersectsLine(startPos, endPos, topLeft, bottomLeft)) return true;
+    if (LineIntersectsLine(startPos, endPos, topRight, bottomRight)) return true;
+
+    return false;
 }

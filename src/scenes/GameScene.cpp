@@ -22,12 +22,33 @@
 #include "../game/KnightEnemy.h"
 #include "../game/DemonKnightEnemy.h"
 #include "../game/PeasantEnemy.h"
+#include "../game/PuzzleOne.h"
+#include "../game/DisappearingWall.h"
+#include "../game/HourglassWall.h"
+#include "../game/BombExplosionHitbox.h"
 
 using namespace std::string_literals;
 
 game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
 {
+    if (Level_Nbr==1){
+        Active_Song=&Song1;
+        Song1.looping = true;
+    }
+    if (Level_Nbr==2){
+        Active_Song=&Song2;
+        Song2.looping = true;
+    }
+    if (Level_Nbr==3){
+        Active_Song=&Song3;
+        Song3.looping = true;
+    }
+    PlayMusicStream(*Active_Song);
     enemy::Melee_Enemy::Load_All_Melee_Assets();
+    game::Player_Projectile::LoadAssets();
+    BombExplosionHitbox::LoadAssets();
+    puzzle_one = std::make_unique<PuzzleOne>(objectManager);
+    puzzle_one->Load(this->current_level);
 
     if (!game::core::Store::player_state)
     {
@@ -37,6 +58,7 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
     {
         game::core::Store::player_state->player.Set_Position(game::Config::player_Spawn_Position);
         game::core::Store::player_state->player.Heal_To_Full();
+        game::core::Store::player_state->player.ReapplyUpgrades();
         game::core::Store::player_state->player.Reset_For_New_Level();
     }
 
@@ -74,10 +96,15 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
 
     objectManager.AddObject(new TestoNeedle(game::Config::initial_Testo_Needle_Position, false));
     objectManager.AddObject(new KeyItem(game::Config::initial_Key_Position));
+    objectManager.AddObject(new DisappearingWall(game::Config::disappearing_wall_position));
+    hourglass_wall_ptr = new HourglassWall(game::Config::hourglass_position, this->current_level);
+    objectManager.AddObject(hourglass_wall_ptr);
 }
 game::scenes::GameScene::~GameScene()
 {
     enemy::Melee_Enemy::Unload_All_Melee_Assets();
+    game::Player_Projectile::UnloadAssets();
+    BombExplosionHitbox::UnloadAssets();
 }
 
 void game::scenes::GameScene::Update()
@@ -107,6 +134,11 @@ void game::scenes::GameScene::Update()
         wave_timer = game::Config::kWaveInterval;
     }
 
+    if (hourglass_wall_ptr)
+    {
+        float total_time_for_current_wave = (current_wave == 0) ? game::Config::kFirstWave : game::Config::kWaveInterval;
+        hourglass_wall_ptr->UpdateFrame(wave_timer, total_time_for_current_wave);
+    }
     enemySpawner->Update(dtm.Get_Dt());
     player_ptr->Player_Input();
 
@@ -135,7 +167,13 @@ void game::scenes::GameScene::Update()
             }
         }
     }
-    if (!fairy_has_spawned && !player_ptr->HasFairy())
+    if (Active_Song)
+    {
+        UpdateMusicStream(*Active_Song);
+    }
+    puzzle_one->Update();
+
+    if (puzzle_one->IsSolved() && !fairy_has_spawned && !player_ptr->HasFairy())
     {
         objectManager.AddObjectDeferred(new FairyItem(game::Config::fairy_Spawn_Position, this->current_level));
         fairy_has_spawned = true;
@@ -157,6 +195,19 @@ void game::scenes::GameScene::Update()
             }
         }
     }
+    const float Y_SORT_INTERVAL = 1.0f / 15.0f;
+    y_sort_timer += dtm.Get_Dt();
+
+    if (y_sort_timer >= Y_SORT_INTERVAL)
+    {
+        y_sort_timer -= Y_SORT_INTERVAL;
+
+        std::sort(objectManager.managed_objects.begin(), objectManager.managed_objects.end(),
+            [](const Collidable* a, const Collidable* b) {
+                return a->GetYSortPosition() < b->GetYSortPosition();
+            });
+    }
+
     p_cm->Check_Collisions();
     cam->Cam_Movement(dtm.Get_Dt(), screen.Get_Map_Dimensions());
     std::vector<Vector2> dead_enemy_positions;
@@ -231,7 +282,11 @@ for (const auto& pos : dead_enemy_positions)
 }
 
     hud.HUD_update();
-objectManager.ProcessAdditions();
+    objectManager.ProcessAdditions();
+    if (IsKeyPressed(KEY_P)){
+        player_ptr->KillYourself();
+        game::core::Store::player_state->souls=2000;
+    }
     dtm.Update();
 }
 
@@ -239,10 +294,6 @@ void game::scenes::GameScene::Draw()
 {
     BeginMode2D(this->cam->cam);
     screen.Draw_Level(this->cam, false);
-    std::sort(objectManager.managed_objects.begin(), objectManager.managed_objects.end(),
-        [](const Collidable* a, const Collidable* b) {
-            return a->GetYSortPosition() < b->GetYSortPosition();
-        });
     for(auto* obj : objectManager.managed_objects)
     {
         obj->Draw();
