@@ -76,17 +76,18 @@ namespace game::scenes {
         if (frame>=13&&sa>=300){
             if (f<=fc){
                 xframe++;
-                if(xframe==limx){
+                if(xframe>=limx){
                     yframe++;
                     xframe=0;
                 }
             }
             f++;
 
-            if (f==fc+250){
+            if (IsKeyPressed(game::Config::key_Melee_Attack)){
                 auto upgradeScene = std::make_shared<UpgradeScene>(final_souls, current_level);
                 game::core::Store::stage->SwitchToNewScene("UpgradeScene", upgradeScene);
             }
+
         }
 
     }
@@ -140,9 +141,11 @@ namespace game::scenes {
                 sa = sa + 5;
             } else {
                 DrawTexturePro(*act_anim, {xframe * 512 + 1, 1+208*yframe, 512, 208},
-                {1920 / 2 - 256 * 2, 1080 / 2 - sa + 150, 512 * 2, 208 * 2}, {0, 0}, 0, WHITE);
+                {1920 / 2 - 256 , 1080 / 2 - sa + 150, 512 * 2, 208 * 2}, {0, 0}, 0, WHITE);
             }
-            
+            if (f>fc+50){
+                DrawTextEx(game::core::Store::font,"Press Attack to continue",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
+            }
 
         }
         de--;
