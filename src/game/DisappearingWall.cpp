@@ -43,7 +43,7 @@ DisappearingWall::~DisappearingWall()
 
 Collision_Type DisappearingWall::Get_Collision_Type() const
 {
-    return Collision_Type::DISAPPEARING_WALL;
+    return Collision_Type::WALL;
 }
 
 void DisappearingWall::Tick(float delta_time)

@@ -54,7 +54,7 @@ void MovableWall::Tick(float delta_time)
         for (auto* obj : object_manager_ref.managed_objects) {
             if (obj == this) continue;
             Collision_Type type = obj->Get_Collision_Type();
-            if (type == Collision_Type::WALL || type == Collision_Type::MOVABLE_WALL) {
+            if (type == Collision_Type::WALL) {
                 if (CheckCollisionRecs(this->hitbox, obj->Get_Hitbox())) {
                     this->hitbox.x = original_hitbox.x;
                     break;
@@ -66,7 +66,8 @@ void MovableWall::Tick(float delta_time)
         for (auto* obj : object_manager_ref.managed_objects) {
             if (obj == this) continue;
             Collision_Type type = obj->Get_Collision_Type();
-            if (type == Collision_Type::WALL || type == Collision_Type::MOVABLE_WALL) {
+            if (type == Collision_Type::WALL)
+            {
                 if (CheckCollisionRecs(this->hitbox, obj->Get_Hitbox())) {
                     this->hitbox.y = original_hitbox.y;
                     break;
@@ -140,7 +141,7 @@ void MovableWall::On_Collision(Collidable* other)
     {
         CollisionResponse::Resolve_Overlap(other, this);
     }
-    else if (other_type == Collision_Type::WALL || other_type == Collision_Type::MOVABLE_WALL)
+    else if (other_type == Collision_Type::WALL)
     {
         CollisionResponse::Resolve_Overlap(this, other);
     }
@@ -190,5 +191,5 @@ void MovableWall::Draw()
 
 Collision_Type MovableWall::Get_Collision_Type() const
 {
-    return Collision_Type::MOVABLE_WALL;
+    return Collision_Type::WALL;
 }

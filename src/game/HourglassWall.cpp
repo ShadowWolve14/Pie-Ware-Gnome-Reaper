@@ -66,7 +66,7 @@ void HourglassWall::UpdateFrame(float wave_timer_remaining, float total_wave_tim
 
 Collision_Type HourglassWall::Get_Collision_Type() const
 {
-    return Collision_Type::HOURGLASS_WALL;
+    return Collision_Type::WALL;
 }
 
 void HourglassWall::Tick(float delta_time) { }
