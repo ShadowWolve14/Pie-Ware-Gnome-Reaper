@@ -191,7 +191,7 @@ void MovableWall::Draw()
     }
     else
     {
-        if (vfxfc>7){
+        /*if (vfxfc>7){
             vfxfc=0;
         }
         if (moving&&pushing_player->Get_Facing_Direction()==Facing_Direction::RIGHT){
@@ -202,7 +202,8 @@ void MovableWall::Draw()
         }
         if (moving){
             vfxfc++;
-        }
+        }*/
+
         DrawTextureRec(spritesheet, inactive_frame, draw_pos, WHITE);
 
     }
