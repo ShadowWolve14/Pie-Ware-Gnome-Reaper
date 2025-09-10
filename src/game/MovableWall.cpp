@@ -26,6 +26,7 @@ MovableWall::~MovableWall()
 
 void MovableWall::Tick(float delta_time)
 {
+    moving= false;
     if (is_solved) return;
 
     if (pushing_player)
@@ -54,6 +55,7 @@ void MovableWall::Tick(float delta_time)
         else if (last_push_direction == DOWN) move_vec.y = 1;
         else if (last_push_direction == LEFT) move_vec.x = -1;
         else if (last_push_direction == RIGHT) move_vec.x = 1;
+        moving= true;
 
         Vector2 delta_pos = Vector2Scale(move_vec, game::Config::movable_wall_move_speed * delta_time);
         Rectangle original_hitbox = this->hitbox;
@@ -189,7 +191,20 @@ void MovableWall::Draw()
     }
     else
     {
+        if (vfxfc>7){
+            vfxfc=0;
+        }
+        if (moving&&pushing_player->Get_Facing_Direction()==Facing_Direction::RIGHT){
+            DrawTextureRec(spr,{1+32*vfxfc,1,32,32},draw_pos,WHITE);
+        }
+        if (moving&&pushing_player->Get_Facing_Direction()==Facing_Direction::LEFT){
+            DrawTextureRec(spl,{1+32*vfxfc,1,32,32},{draw_pos.x+16,draw_pos.y},WHITE);
+        }
+        if (moving){
+            vfxfc++;
+        }
         DrawTextureRec(spritesheet, inactive_frame, draw_pos, WHITE);
+
     }
 }
 

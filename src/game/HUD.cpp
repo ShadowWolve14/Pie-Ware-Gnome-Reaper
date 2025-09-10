@@ -109,7 +109,9 @@ void HUD::HUD_draw() {
     v14.x=v14.x+ofs;v14.y=v14.y+ofs;
 
 
-
+   /* if (c>0){
+        DrawTexturePro(damge,{1+(float)c*512,1,512,320},{0,0,512*4,320*4},{0,0},0,WHITE);
+    }*/
 
 
 

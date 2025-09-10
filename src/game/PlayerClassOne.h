@@ -25,6 +25,13 @@ private:
     std::map<Facing_Direction, Animations> buff_melee_Attack_Animations;
     Facing_Direction attack_Direction = DOWN;
 
+    Texture2D walkvfx= LoadTexture("PieWare/assets/Spritesheets/VFX/Walk_VFX.png");
+
+
+    int c=0;
+    int b=1;
+    int clim=0;
+
 
 public:
     PlayerState previousState = IDLE;

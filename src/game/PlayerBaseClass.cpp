@@ -353,6 +353,14 @@ void Player_Base_Class::Use_Item()
 {
     if (IsKeyPressed(game::Config::key_Use_Item) && HasItem() && held_item->GetType() != ItemType::KEY && !is_buffed && item_removal_timer <= 0.0f)
     {
+        if (held_item->GetType()==ItemType::HEALTH_POTION){
+            itemvfx=&potionvfx;
+            vfxtype=1;
+        }
+        if (held_item->GetType()==ItemType::TESTO_NEEDLE){
+            itemvfx=&testovfx;
+            vfxtype=2;
+        }
         held_item->Activate(this);
     }
 }
