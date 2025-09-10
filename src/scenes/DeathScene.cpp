@@ -15,6 +15,19 @@ namespace game::scenes {
         this->has_fairy = fairy_status;
         this->current_level = level;
         this->de = 0;
+        // load fairy animation depending on level
+        const std::string path = game::Config::fairy_spritesheet_path(level);
+        if (path != "no sprite found") {
+            const FairyAnimMeta meta = GetFairyMetaForLevel(level);
+            fairyAnim = RepeatAnimation(
+                    meta.frameSize,
+                    path.c_str(),
+                    meta.frames,
+                    meta.columns,
+                    meta.fps
+            );
+            fairyAnim.First_Frame();
+        }
 
 
         if (has_fairy) {
@@ -23,7 +36,7 @@ namespace game::scenes {
                     act_anim=&good1;
                     limx=10;
                     limy=33;
-                    fc=330-2;
+                    fc=330-10;
                     break;
                 }
                 case 2: {
@@ -31,7 +44,7 @@ namespace game::scenes {
                                    //{1920 / 2 - 256 * 2, 1080 / 2 - sa + 150, 512 * 2, 208 * 2}, {0, 0}, 0, WHITE);
                     act_anim=&good2;
                     limx=30;
-                    fc=9*30-16;
+                    fc=9*30-12;
                     limy=9;
                     break;
                 }
@@ -39,7 +52,7 @@ namespace game::scenes {
                     act_anim=&good3;
                     limx=30;
                     limy=9;
-                    fc=9*30-20;
+                    fc=9*30-21;
                     break;
                 }
             }
@@ -49,21 +62,21 @@ namespace game::scenes {
                     act_anim=&bad1;
                     limx=10;
                     limy=21;
-                    fc=210-9;
+                    fc=210-2;
                     break;
                 }
                 case 2: {
                     act_anim=&bad2;
                     limx=30;
                     limy=11;
-                    fc=11*30-11;
+                    fc=11*30-17;
                     break;
                 }
                 case 3: {
                     act_anim=&bad3;
                     limx=30;
                     limy=8;
-                    fc=8*30-28;
+                    fc=8*30-29;
                     break;
                 }
             }
@@ -73,6 +86,7 @@ namespace game::scenes {
     DeathScene::~DeathScene() {}
 
     void DeathScene::Update() {
+        fairyAnim.Update_Frame(GetFrameTime());
         if (frame>=13&&sa>=300){
             if (f<=fc){
                 xframe++;
@@ -83,9 +97,20 @@ namespace game::scenes {
             }
             f++;
 
+
             if (IsKeyPressed(game::Config::key_Melee_Attack)){
-                auto upgradeScene = std::make_shared<UpgradeScene>(final_souls, current_level);
-                game::core::Store::stage->SwitchToNewScene("UpgradeScene", upgradeScene);
+                if (!has_fairy&&current_level!=3){
+                    auto upgradeScene = std::make_shared<MainMenuScene>();
+                    game::core::Store::stage->SwitchToNewScene("MainMenu", upgradeScene);
+                }
+                if (has_fairy&&current_level!=3){
+                    auto upgradeScene = std::make_shared<UpgradeScene>(final_souls, current_level);
+                    game::core::Store::stage->SwitchToNewScene("MainMenu", upgradeScene);
+                }
+                if (current_level==3){
+                    auto upgradeScene = std::make_shared<MainMenuScene>();
+                    game::core::Store::stage->SwitchToNewScene("MainMenu", upgradeScene);
+                }
             }
 
         }
@@ -94,6 +119,7 @@ namespace game::scenes {
 
 
     void DeathScene::Draw() {
+
 
         float y = 3;
 
@@ -140,11 +166,24 @@ namespace game::scenes {
             if (sa < 300) {
                 sa = sa + 5;
             } else {
+                fairyAnim.Draw_Current_Frame_Pro(Vector2{ 140.0f, 400 });
                 DrawTexturePro(*act_anim, {xframe * 512 + 1, 1+208*yframe, 512, 208},
                 {1920 / 2 - 256 , 1080 / 2 - sa + 150, 512 * 2, 208 * 2}, {0, 0}, 0, WHITE);
             }
             if (f>fc+50){
-                DrawTextEx(game::core::Store::font,"Drücke J um weiter zu Spielen",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
+                if (has_fairy&&current_level==3){
+                    DrawTextEx(game::core::Store::font,"Drücke J um weiter zu Spielen",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
+                }
+                if (!has_fairy&&current_level==3){
+                    DrawTextEx(game::core::Store::font,"Drücke J um weiter zu Spielen",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
+                }
+                if (has_fairy&&current_level!=3){
+                    DrawTextEx(game::core::Store::font,"Drücke J um weiter zu Spielen",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
+                }
+                if (!has_fairy&&current_level!=3){
+                    DrawTextEx(game::core::Store::font,"Drücke J um weiter zu Spielen",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
+                }
+
             }
 
         }
