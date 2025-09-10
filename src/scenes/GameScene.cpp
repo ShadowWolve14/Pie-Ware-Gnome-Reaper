@@ -294,10 +294,6 @@ void game::scenes::GameScene::Draw()
 {
     BeginMode2D(this->cam->cam);
     screen.Draw_Level(this->cam, false);
-    std::sort(objectManager.managed_objects.begin(), objectManager.managed_objects.end(),
-        [](const Collidable* a, const Collidable* b) {
-            return a->GetYSortPosition() < b->GetYSortPosition();
-        });
     for(auto* obj : objectManager.managed_objects)
     {
         obj->Draw();
