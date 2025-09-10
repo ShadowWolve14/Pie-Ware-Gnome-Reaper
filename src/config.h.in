@@ -245,6 +245,13 @@ namespace game
         inline static constexpr float kScore_Time_Interval = 5.0f;      // Sekunden pro Punkt also 0.5 heißt 2 Punkte
                                                                         // pro Sekunde weil er alle 0.5 Sekunden einen Punkt addiert.
 
+        // ------ Gegner-Spawn-Bereich ------
+        // Definiert den gültigen Bereich, in dem Gegner spawnen dürfen.
+        inline static constexpr Rectangle kEnemySpawnArea = { 16.0f, 16.0f, 1504.0f, 928.0f };
+
+        // Definiert eine Zone innerhalb des Spawn-Bereichs, in der KEINE Gegner spawnen dürfen
+        inline static constexpr Rectangle kEnemySpawnExclusionZone = { 48.0f, 416.0f, 128.0f, 128.0f };
+
         //____________________Wellen Spawner Level 1____________________________
 
         //------ Gegner: Bauer ------

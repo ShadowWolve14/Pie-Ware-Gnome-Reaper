@@ -1,16 +1,12 @@
 #include "EnemySpawner.h"
-
 #include <iostream>
-
 #include "../core/Object_Manager.h"
 #include "Cam.h"
 #include "../Config.h.in"
 #include <random>
 
 EnemySpawner::EnemySpawner(Object_Manager& obj_manager, std::shared_ptr<Cam> main_cam)
-    : objectManager(obj_manager), cam(main_cam)
-{
-}
+    : objectManager(obj_manager), cam(main_cam) { }
 
 void EnemySpawner::Register_Enemy_Type(const std::string& type_id, std::function<enemy::Enemy_Base_Class*(Vector2)> factory_func)
 {
@@ -301,35 +297,54 @@ void EnemySpawner::Update(float delta_time)
     }
 }
 
+bool Is_Spawn_Position_Valid(Vector2 pos)
+{
+    bool is_in_main_area = CheckCollisionPointRec(pos, game::Config::kEnemySpawnArea);
+    bool is_in_exclusion_zone = CheckCollisionPointRec(pos, game::Config::kEnemySpawnExclusionZone);
+    return is_in_main_area && !is_in_exclusion_zone;
+}
+
 Vector2 EnemySpawner::Get_Random_Spawn_Position() const
 {
-    float screen_width = GetScreenWidth();
-    float screen_height = GetScreenHeight();
-    float offset = 50.0f;
-    Vector2 camera_target = cam->cam.target;
-    float zoom = cam->cam.zoom;
-
-    float world_view_width = screen_width / zoom;
-    float world_view_height = screen_height / zoom;
-
-    Vector2 top_left = { camera_target.x - world_view_width / 2, camera_target.y - world_view_height / 2 };
-
-    int side = GetRandomValue(0, 3);
     Vector2 spawn_pos;
+    const int max_attempts = 50;
 
-    switch (side) {
-        case 0:
-            spawn_pos = { (float)GetRandomValue(top_left.x, top_left.x + world_view_width), top_left.y - offset };
-            break;
-        case 1:
-            spawn_pos = { top_left.x + world_view_width + offset, (float)GetRandomValue(top_left.y, top_left.y + world_view_height) };
-            break;
-        case 2:
-            spawn_pos = { (float)GetRandomValue(top_left.x, top_left.x + world_view_width), top_left.y + world_view_height + offset };
-            break;
-        case 3:
-            spawn_pos = { top_left.x - offset, (float)GetRandomValue(top_left.y, top_left.y + world_view_height) };
-            break;
+    for (int i = 0; i < max_attempts; ++i)
+    {
+        float screen_width = GetScreenWidth();
+        float screen_height = GetScreenHeight();
+        float offset = 50.0f;
+        Vector2 camera_target = cam->cam.target;
+        float zoom = cam->cam.zoom;
+
+        float world_view_width = screen_width / zoom;
+        float world_view_height = screen_height / zoom;
+
+        Vector2 top_left = { camera_target.x - world_view_width / 2, camera_target.y - world_view_height / 2 };
+
+        int side = GetRandomValue(0, 3);
+        switch (side) {
+            case 0:
+                spawn_pos = { (float)GetRandomValue(top_left.x, top_left.x + world_view_width), top_left.y - offset };
+                break;
+            case 1:
+                spawn_pos = { top_left.x + world_view_width + offset, (float)GetRandomValue(top_left.y, top_left.y + world_view_height) };
+                break;
+            case 2:
+                spawn_pos = { (float)GetRandomValue(top_left.x, top_left.x + world_view_width), top_left.y + world_view_height + offset };
+                break;
+            case 3:
+                spawn_pos = { top_left.x - offset, (float)GetRandomValue(top_left.y, top_left.y + world_view_height) };
+                break;
+        }
+
+        if (Is_Spawn_Position_Valid(spawn_pos))
+        {
+            return spawn_pos;
+        }
     }
-    return spawn_pos;
+    return {
+        game::Config::kEnemySpawnArea.x + game::Config::kEnemySpawnArea.width / 2,
+        game::Config::kEnemySpawnArea.y + game::Config::kEnemySpawnArea.height / 2
+    };
 }
