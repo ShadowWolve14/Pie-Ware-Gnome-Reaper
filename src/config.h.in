@@ -415,33 +415,33 @@ namespace game
 
         // ------ Testonadel Buff-Animationen ------
         // Hier definieren wir alle 16 neuen Animationspfade, wie du es wolltest.
-        inline static constexpr const char* kPlayerBuffWalkUpAnim = "PieWare/assets/Spritesheets/Gnome_Walking_Up.png";
-        inline static constexpr const char* kPlayerBuffWalkDownAnim = "PieWare/assets/Spritesheets/Gnome_Walking_Down.png";
-        inline static constexpr const char* kPlayerBuffWalkLeftAnim = "PieWare/assets/Spritesheets/Gnome_Walking_Left.png";
-        inline static constexpr const char* kPlayerBuffWalkRightAnim = "PieWare/assets/Spritesheets/Gnome_Walking_Right.png";
+        inline static constexpr const char* kPlayerBuffWalkUpAnim = "PieWare/assets/Spritesheets/Testognom_Walking_Up.png";
+        inline static constexpr const char* kPlayerBuffWalkDownAnim = "PieWare/assets/Spritesheets/Testognom_Walking_Down.png";
+        inline static constexpr const char* kPlayerBuffWalkLeftAnim = "PieWare/assets/Spritesheets/Testognom_Walking_Left.png";
+        inline static constexpr const char* kPlayerBuffWalkRightAnim = "PieWare/assets/Spritesheets/Testognom_Walking_Right.png";
         inline static constexpr float player_Buff_Walk_Anim_Speed = 2.4f;
-        inline static constexpr int player_Buff_Walk_Frame_Count = 14;
-        inline static constexpr Vector2 player_Buff_Walk_Anim_Size = {16,16};
+        inline static constexpr int player_Buff_Walk_Frame_Count = 6;
+        inline static constexpr Vector2 player_Buff_Walk_Anim_Size = {24,24};
 
-        inline static constexpr const char* kPlayerBuffIdleUpAnim = "PieWare/assets/Spritesheets/Gnome_IdleAnimation_Up.png";
-        inline static constexpr const char* kPlayerBuffIdleDownAnim = "PieWare/assets/Spritesheets/Gnome_IdleAnimation_Down.png";
-        inline static constexpr const char* kPlayerBuffIdleLeftAnim = "PieWare/assets/Spritesheets/Gnome_IdleAnimation_Left.png";
-        inline static constexpr const char* kPlayerBuffIdleRightAnim = "PieWare/assets/Spritesheets/Gnome_IdleAnimation_Right.png";
+        inline static constexpr const char* kPlayerBuffIdleUpAnim = "PieWare/assets/Spritesheets/Testognom_Idle_Up.png";
+        inline static constexpr const char* kPlayerBuffIdleDownAnim = "PieWare/assets/Spritesheets/Testognom_Idle_Down.png";
+        inline static constexpr const char* kPlayerBuffIdleLeftAnim = "PieWare/assets/Spritesheets/Testognom_Idle_Left.png";
+        inline static constexpr const char* kPlayerBuffIdleRightAnim = "PieWare/assets/Spritesheets/Testognom_Idle_Right.png";
         inline static constexpr float player_Buff_Idle_Anim_Speed = 1.0f;
-        inline static constexpr int player_Buff_Idle_Frame_Count = 9;
-        inline static constexpr Vector2 player_Buff_Idle_Anim_Size = {16,16};
+        inline static constexpr int player_Buff_Idle_Frame_Count = 6;
+        inline static constexpr Vector2 player_Buff_Idle_Anim_Size = {24,24};
 
-        inline static constexpr const char* kPlayerBuffMeleeUpAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_Up.png";
-        inline static constexpr const char* kPlayerBuffMeleeDownAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_Down.png";
-        inline static constexpr const char* kPlayerBuffMeleeLeftAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_Left.png";
-        inline static constexpr const char* kPlayerBuffMeleeRightAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_Right.png";
-        inline static constexpr const char* kPlayerBuffMeleeUpLeftAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_LeftUp.png";
-        inline static constexpr const char* kPlayerBuffMeleeUpRightAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_RightUp.png";
-        inline static constexpr const char* kPlayerBuffMeleeDownLeftAnim = "PieWare/assets/Spritesheets/GnomeSwordAttack_LeftDown.png";
-        inline static constexpr const char* kPlayerBuffMeleeDownRightAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_RightDown.png";
+        inline static constexpr const char* kPlayerBuffMeleeUpAnim = "PieWare/assets/Spritesheets/Testognom_Attacking_Up.png";
+        inline static constexpr const char* kPlayerBuffMeleeDownAnim = "PieWare/assets/Spritesheets/Testognom_Attacking_Down.png";
+        inline static constexpr const char* kPlayerBuffMeleeLeftAnim = "PieWare/assets/Spritesheets/Testognom_Attacking_Left.png";
+        inline static constexpr const char* kPlayerBuffMeleeRightAnim = "PieWare/assets/Spritesheets/Testognom_Attacking_Right.png";
+        inline static constexpr const char* kPlayerBuffMeleeUpLeftAnim = "PieWare/assets/Spritesheets/Testognom_Attacking_Left_Up.png";
+        inline static constexpr const char* kPlayerBuffMeleeUpRightAnim = "PieWare/assets/Spritesheets/Testognom_Attacking_Right_Up.png";
+        inline static constexpr const char* kPlayerBuffMeleeDownLeftAnim = "PieWare/assets/Spritesheets/Testognom_Attacking_Left_Down.png";
+        inline static constexpr const char* kPlayerBuffMeleeDownRightAnim = "PieWare/assets/Spritesheets/Testognom_Attacking_Right_Down.png";
         inline static constexpr float player_Buff_Melee_Attack_Anim_Speed =  1.85f;
-        inline static constexpr int player_Buff_Melee_Attack_Frame_Count = 13;
-        inline static constexpr Vector2 player_Buff_Melee_Attack_Anim_Size = {48, 48};
+        inline static constexpr int player_Buff_Melee_Attack_Frame_Count = 9;
+        inline static constexpr Vector2 player_Buff_Melee_Attack_Anim_Size = {32, 32};
 
         // ------ Schlüssel-Item ------
         inline static constexpr int key_Max_On_Map = 1; // Maximale Anzahl (Map + Inventar)
@@ -460,7 +460,7 @@ namespace game
         inline static constexpr float fairy_Anim_Speed = 1.0f;
 
         // ------ Hard-coded Item Positions ------
-        inline static constexpr Vector2 initial_Testo_Needle_Position = {184.0f, 472.0f}; // Position Testonadel im Tempel
+        inline static constexpr Vector2 initial_Testo_Needle_Position = {104.0f, 464.0f}; // Position Testonadel im Tempel
         inline static constexpr Vector2 initial_Key_Position = {1408.0f, 464.0f}; // Position Schlüssel zu Beginn
 
 
