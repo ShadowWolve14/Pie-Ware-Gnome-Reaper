@@ -191,18 +191,21 @@ void MovableWall::Draw()
     }
     else
     {
-        /*if (vfxfc>7){
+        if (vfxfc>7){
             vfxfc=0;
         }
-        if (moving&&pushing_player->Get_Facing_Direction()==Facing_Direction::RIGHT){
-            DrawTextureRec(spr,{1+32*vfxfc,1,32,32},draw_pos,WHITE);
+        if (is_solved==false){
+            if (moving&&pushing_player->Get_Facing_Direction()==Facing_Direction::RIGHT){
+                DrawTextureRec(spr,{1+32*vfxfc,1,32,32},draw_pos,WHITE);
+            }
+            if (moving&&pushing_player->Get_Facing_Direction()==Facing_Direction::LEFT){
+                DrawTextureRec(spl,{1+32*vfxfc,1,32,32},{draw_pos.x+16,draw_pos.y},WHITE);
+            }
         }
-        if (moving&&pushing_player->Get_Facing_Direction()==Facing_Direction::LEFT){
-            DrawTextureRec(spl,{1+32*vfxfc,1,32,32},{draw_pos.x+16,draw_pos.y},WHITE);
-        }
+
         if (moving){
             vfxfc++;
-        }*/
+        }
 
         DrawTextureRec(spritesheet, inactive_frame, draw_pos, WHITE);
 
