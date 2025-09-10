@@ -103,7 +103,7 @@ void MainMenuScene::main_Update() {
                 break;
             }
             case 1:{
-                state=options;
+                //state=options;
                 break;
             }
             case 2:{

@@ -34,6 +34,7 @@ private:
     float vfxfc=0;
 
     bool moving= false;
+    bool done= false;
 
 
 public:

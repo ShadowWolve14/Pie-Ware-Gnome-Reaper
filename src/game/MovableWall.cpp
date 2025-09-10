@@ -95,13 +95,14 @@ void MovableWall::Tick(float delta_time)
         Vector2 direction = Vector2Normalize(Vector2Subtract(target_position, current_position));
 
         Vector2 movement = Vector2Scale(direction, game::Config::movable_wall_move_speed * delta_time);
-
+        moving= false;
         if (Vector2LengthSqr(movement) >= distance_to_target * distance_to_target)
         {
 
 
             this->hitbox.x = target_position.x;
             this->hitbox.y = target_position.y;
+
 
             if (!is_solved)
             {
@@ -194,11 +195,11 @@ void MovableWall::Draw()
         if (vfxfc>7){
             vfxfc=0;
         }
-        if (is_solved==false){
-            if (moving&&pushing_player->Get_Facing_Direction()==Facing_Direction::RIGHT){
+        if (moving){
+            if (pushing_player->Get_Facing_Direction()==Facing_Direction::RIGHT){
                 DrawTextureRec(spr,{1+32*vfxfc,1,32,32},draw_pos,WHITE);
             }
-            if (moving&&pushing_player->Get_Facing_Direction()==Facing_Direction::LEFT){
+            if (pushing_player->Get_Facing_Direction()==Facing_Direction::LEFT){
                 DrawTextureRec(spl,{1+32*vfxfc,1,32,32},{draw_pos.x+16,draw_pos.y},WHITE);
             }
         }
