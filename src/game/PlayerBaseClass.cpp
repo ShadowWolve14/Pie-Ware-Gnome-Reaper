@@ -7,6 +7,7 @@
 #include "PlayerProjectile.h"
 #include "CollisionResponse.h"
 #include "Object_Manager.h"
+#include "PlayerEffectiveStats.h"
 #include "PlayerMeleeHitbox.h"
 #include "raymath.h"
 #include "../Config.h.in"
@@ -291,7 +292,7 @@ void Player_Base_Class::Set_Position(Vector2 position)
 
 void Player_Base_Class::Heal_To_Full()
 {
-    this->player_Health = this->player_Max_Health;
+    this->player_Health = BuildEffectiveStats(game::core::upgrades).max_health;
 }
 
 float Player_Base_Class::Get_Health() const
