@@ -187,19 +187,19 @@ namespace game
         // ------Melee_Enemy_Type2 Animations ------
         inline static constexpr float melee_enemy_2_walk_anim_speed = 1.0f;
         inline static constexpr int melee_enemy_2_walk_frame_count = 12;
-        inline static constexpr Vector2 melee_enemy_2_walk_anim_size = {64, 64};
+        inline static constexpr Vector2 melee_enemy_2_walk_anim_size = {48, 32};
         inline static constexpr const char* kMeleeEnemy2WalkLeftAnim = "PieWare/assets/Spritesheets/Knight/Knight Walk Left.png";
         inline static constexpr const char* kMeleeEnemy2WalkRightAnim = "PieWare/assets/Spritesheets/Knight/Knight.png";
 
         inline static constexpr float melee_enemy_2_attack_anim_speed = 3.0f;
         inline static constexpr int melee_enemy_2_attack_frame_count = 16;
-        inline static constexpr Vector2 melee_enemy_2_attack_anim_size = {64, 64};
+        inline static constexpr Vector2 melee_enemy_2_attack_anim_size = {48, 32};
         inline static constexpr const char* kMeleeEnemy2AttackLeftAnim = "PieWare/assets/Spritesheets/Knight/Knight Attack Left.png";
         inline static constexpr const char* kMeleeEnemy2AttackRightAnim = "PieWare/assets/Spritesheets/Knight/KnighAttackt.png";
 
         inline static constexpr float melee_enemy_2_hit_anim_speed = 0.1f;
         inline static constexpr int melee_enemy_2_hit_frame_count = 1;
-        inline static constexpr Vector2 melee_enemy_2_hit_anim_size = {64, 64};
+        inline static constexpr Vector2 melee_enemy_2_hit_anim_size = {48, 32};
         inline static constexpr const char* kMeleeEnemy2HitLeft="PieWare/assets/Spritesheets/Knight/KnightHitLeft.png";
         inline static constexpr const char* kMeleeEnemy2HitRight ="PieWare/assets/Spritesheets/Knight/KnightHit.png";
 
@@ -583,7 +583,7 @@ namespace game
         inline static constexpr float disappearing_wall_anim_speed = 10.0f;
 
         // --- Hourglass Wall ---
-        inline static constexpr Vector2 hourglass_position = {754.0f, 150.27f};
+        inline static constexpr Vector2 hourglass_position = {756.0f, 148.0f};
 
         // Größe eines einzelnen Frames im Spritesheet
         inline static constexpr Vector2 hourglass_frame_size = {32.0f, 32.0f};

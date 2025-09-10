@@ -20,6 +20,8 @@ namespace game::scenes
         Object_Manager objectManager;
 
     private:
+        float y_sort_timer = 0.0f;
+
         Vector2 sp = game::Config::player_Spawn_Position;
         Rectangle wb{0,0,game::Config::kStageWidth,game::Config::kStageHeight};
         Player_Class_One* player_ptr = nullptr;

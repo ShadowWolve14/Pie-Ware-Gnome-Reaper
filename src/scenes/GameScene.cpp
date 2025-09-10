@@ -25,6 +25,7 @@
 #include "../game/PuzzleOne.h"
 #include "../game/DisappearingWall.h"
 #include "../game/HourglassWall.h"
+#include "../game/BombExplosionHitbox.h"
 
 using namespace std::string_literals;
 
@@ -44,6 +45,8 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
     }
     PlayMusicStream(*Active_Song);
     enemy::Melee_Enemy::Load_All_Melee_Assets();
+    game::Player_Projectile::LoadAssets();
+    BombExplosionHitbox::LoadAssets();
     puzzle_one = std::make_unique<PuzzleOne>(objectManager);
     puzzle_one->Load(this->current_level);
 
@@ -100,6 +103,8 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
 game::scenes::GameScene::~GameScene()
 {
     enemy::Melee_Enemy::Unload_All_Melee_Assets();
+    game::Player_Projectile::UnloadAssets();
+    BombExplosionHitbox::UnloadAssets();
 }
 
 void game::scenes::GameScene::Update()
@@ -190,6 +195,19 @@ void game::scenes::GameScene::Update()
             }
         }
     }
+    const float Y_SORT_INTERVAL = 1.0f / 15.0f;
+    y_sort_timer += dtm.Get_Dt();
+
+    if (y_sort_timer >= Y_SORT_INTERVAL)
+    {
+        y_sort_timer -= Y_SORT_INTERVAL;
+
+        std::sort(objectManager.managed_objects.begin(), objectManager.managed_objects.end(),
+            [](const Collidable* a, const Collidable* b) {
+                return a->GetYSortPosition() < b->GetYSortPosition();
+            });
+    }
+
     p_cm->Check_Collisions();
     cam->Cam_Movement(dtm.Get_Dt(), screen.Get_Map_Dimensions());
     std::vector<Vector2> dead_enemy_positions;

@@ -15,11 +15,13 @@ private:
     float lifetime;
     float damage_active_timer;
     Animations animation;
+    static Texture2D explosion_texture;
 
 public:
     BombExplosionHitbox(Rectangle rect, int dmg);
     ~BombExplosionHitbox() override = default;
-
+    static void LoadAssets();
+    static void UnloadAssets();
     void Tick(float delta_time) override;
     void On_Collision(Collidable* other) override;
     void Draw() override;

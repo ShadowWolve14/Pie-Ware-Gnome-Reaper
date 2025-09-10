@@ -98,8 +98,9 @@ public:
 	bool IsMoving() const { return is_Moving; }
     void KillYourself();
 
+	static bool LineIntersectsLine(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4);
+	static bool CheckCollisionLineRec(Vector2 startPos, Vector2 endPos, Rectangle rec);
 
-	// --- setters/getters for upgrades ---
 	void SetMeleeDamage(int dmg) { melee_Base_Damage = dmg; }
 	void SetRangedDamage(int dmg) { ranged_Base_Damage = dmg; }
 	void SetAttackCooldown(float cd) { melee_Base_Cooldown = cd; }

@@ -100,10 +100,54 @@ void Player_Base_Class::Tick(float delta_time)
         }
 
         is_Moving = (move_Direction.x != 0.0f || move_Direction.y != 0.0f);
-        if(is_Moving) {
+        is_Moving = (move_Direction.x != 0.0f || move_Direction.y != 0.0f);
+
+        if(is_Moving)
+        {
             move_Direction = Vector2Normalize(move_Direction);
-            hitbox.x += move_Direction.x * player_Movement_Speed * delta_time;
-            hitbox.y += move_Direction.y * player_Movement_Speed * delta_time;
+            Vector2 potential_movement = Vector2Scale(move_Direction, player_Movement_Speed * delta_time);
+            const float tunneling_threshold = 1.0f;
+
+            if (Vector2Length(potential_movement) > tunneling_threshold)
+            {
+                std::vector<Collidable*> walls;
+                if (object_manager_ptr) {
+                    for (auto* obj : object_manager_ptr->managed_objects) {
+                        if (obj->Get_Collision_Type() == Collision_Type::WALL) {
+                            walls.push_back(obj);
+                        }
+                    }
+                }
+
+                Vector2 start_pos = Get_Player_Center();
+                Vector2 end_pos = Vector2Add(start_pos, potential_movement);
+
+                bool will_tunnel_wall = false;
+                for (const auto& wall : walls) {
+                    if (CheckCollisionLineRec(start_pos, end_pos, wall->Get_Hitbox()))
+                    {
+                        will_tunnel_wall = true;
+                        break;
+                    }
+                }
+
+                if (will_tunnel_wall)
+                {
+                    hitbox.x = previous_Position.x;
+                    hitbox.y = previous_Position.y;
+                }
+                else
+                {
+
+                    hitbox.x += potential_movement.x;
+                    hitbox.y += potential_movement.y;
+                }
+            }
+            else
+            {
+                hitbox.x += potential_movement.x;
+                hitbox.y += potential_movement.y;
+            }
         }
     }
     player_Pos = {hitbox.x, hitbox.y};
@@ -417,4 +461,35 @@ void Player_Base_Class::Reset_For_New_Level()
 void Player_Base_Class::KillYourself() {
     this->SetHasFairy(true);
     this->player_Health=0;
+}
+
+bool Player_Base_Class::LineIntersectsLine(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
+{
+    float den = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
+    if (std::abs(den) < 0.0001f) {
+        return false;
+    }
+    float t_num = (p1.x - p3.x) * (p3.y - p4.y) - (p1.y - p3.y) * (p3.x - p4.x);
+    float u_num = -((p1.x - p2.x) * (p1.y - p3.y) - (p1.y - p2.y) * (p1.x - p3.x));
+    float t = t_num / den;
+    float u = u_num / den;
+    return (t >= 0.0f && t <= 1.0f && u >= 0.0f && u <= 1.0f);
+}
+
+bool Player_Base_Class::CheckCollisionLineRec(Vector2 startPos, Vector2 endPos, Rectangle rec)
+{
+    if (CheckCollisionPointRec(startPos, rec)) {
+        return true;
+    }
+    Vector2 topLeft = { rec.x, rec.y };
+    Vector2 topRight = { rec.x + rec.width, rec.y };
+    Vector2 bottomLeft = { rec.x, rec.y + rec.height };
+    Vector2 bottomRight = { rec.x + rec.width, rec.y + rec.height };
+
+    if (LineIntersectsLine(startPos, endPos, topLeft, topRight)) return true;
+    if (LineIntersectsLine(startPos, endPos, bottomLeft, bottomRight)) return true;
+    if (LineIntersectsLine(startPos, endPos, topLeft, bottomLeft)) return true;
+    if (LineIntersectsLine(startPos, endPos, topRight, bottomRight)) return true;
+
+    return false;
 }
