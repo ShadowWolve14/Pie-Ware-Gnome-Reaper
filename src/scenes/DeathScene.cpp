@@ -144,7 +144,7 @@ namespace game::scenes {
                 {1920 / 2 - 256 , 1080 / 2 - sa + 150, 512 * 2, 208 * 2}, {0, 0}, 0, WHITE);
             }
             if (f>fc+50){
-                DrawTextEx(game::core::Store::font,"Press Attack to continue",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
+                DrawTextEx(game::core::Store::font,"Drücke J um weiter zu Spielen",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
             }
 
         }
