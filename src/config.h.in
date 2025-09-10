@@ -192,13 +192,13 @@ namespace game
         inline static constexpr const char* kMeleeEnemy2WalkRightAnim = "PieWare/assets/Spritesheets/Knight/Knight.png";
 
         inline static constexpr float melee_enemy_2_attack_anim_speed = 3.0f;
-        inline static constexpr int melee_enemy_2_attack_frame_count = 16;
+        inline static constexpr int melee_enemy_2_attack_frame_count = 11;
         inline static constexpr Vector2 melee_enemy_2_attack_anim_size = {48, 48};
         inline static constexpr const char* kMeleeEnemy2AttackLeftAnim = "PieWare/assets/Spritesheets/Knight/Knight Attack Left.png";
         inline static constexpr const char* kMeleeEnemy2AttackRightAnim = "PieWare/assets/Spritesheets/Knight/KnighAttackt.png";
 
         inline static constexpr float melee_enemy_2_hit_anim_speed = 0.1f;
-        inline static constexpr int melee_enemy_2_hit_frame_count = 1;
+        inline static constexpr int melee_enemy_2_hit_frame_count = 2;
         inline static constexpr Vector2 melee_enemy_2_hit_anim_size = {48, 48};
         inline static constexpr const char* kMeleeEnemy2HitLeft="PieWare/assets/Spritesheets/Knight/KnightHitLeft.png";
         inline static constexpr const char* kMeleeEnemy2HitRight ="PieWare/assets/Spritesheets/Knight/KnightHit.png";
@@ -221,17 +221,17 @@ namespace game
         inline static constexpr float melee_enemy_3_walk_anim_speed = 1.0f;
         inline static constexpr int melee_enemy_3_walk_frame_count = 12;
         inline static constexpr Vector2 melee_enemy_3_walk_anim_size = {48, 48};
-        inline static constexpr const char* kMeleeEnemy3WalkLeftAnim = "PieWare/assets/Spritesheets/DemonKnight/DemonKnigtWalkLeft.png";
-        inline static constexpr const char* kMeleeEnemy3WalkRightAnim = "PieWare/assets/Spritesheets/DemonKnight/DemonKnight.png";
+        inline static constexpr const char* kMeleeEnemy3WalkLeftAnim = "PieWare/assets/Spritesheets/DemonKnight/Demon Knigt Walk Left.png";
+        inline static constexpr const char* kMeleeEnemy3WalkRightAnim = "PieWare/assets/Spritesheets/DemonKnight/Demon Knight.png";
 
         inline static constexpr float melee_enemy_3_attack_anim_speed = 3.0f;
         inline static constexpr int melee_enemy_3_attack_frame_count = 16;
         inline static constexpr Vector2 melee_enemy_3_attack_anim_size = {48, 48};
-        inline static constexpr const char* kMeleeEnemy3AttackLeftAnim = "PieWare/assets/Spritesheets/DemonKnight/DemonKnightAttackLeft.png";
-        inline static constexpr const char* kMeleeEnemy3AttackRightAnim = "PieWare/assets/Spritesheets/DemonKnight/DemonKnightAttack.png";
+        inline static constexpr const char* kMeleeEnemy3AttackLeftAnim = "PieWare/assets/Spritesheets/DemonKnight/Demon Knight Attack Left.png";
+        inline static constexpr const char* kMeleeEnemy3AttackRightAnim = "PieWare/assets/Spritesheets/DemonKnight/Demon KnightAttack.png";
 
         inline static constexpr float melee_enemy_3_hit_anim_speed = 0.1f;
-        inline static constexpr int melee_enemy_3_hit_frame_count = 1;
+        inline static constexpr int melee_enemy_3_hit_frame_count = 2;
         inline static constexpr Vector2 melee_enemy_3_hit_anim_size = {48, 48};
         inline static constexpr const char* kMeleeEnemy3HitLeft="PieWare/assets/Spritesheets/DemonKnight/Demon Knight HitLeft.png";
         inline static constexpr const char* kMeleeEnemy3HitRight ="PieWare/assets/Spritesheets/DemonKnight/Demon Knight Hit.png";
@@ -458,11 +458,13 @@ namespace game
         inline static constexpr float key_Anim_Speed = 1.0f;
 
         // ------ Feen-Item ------
-        inline static constexpr Vector2 fairy_Spawn_Position = {752.0f, 772.0f}; // Spawn Position des Feenitems
+        inline static constexpr Vector2 fairy_Spawn_Position = {768.0f, 788.0f}; // Spawn Position des Feenitems
         inline static constexpr const char* kFairyAnimLvl1 = "PieWare/assets/Items/Animations/FeenFluegel_animation.png"; // Asset für Level 1 (flügel)
         inline static constexpr const char* kFairyAnimLvl2 = "PieWare/assets/Items/Animations/FeenHoerner_animation.png"; // Asset für Level 2
-        inline static constexpr const char* kFairyAnimLvl3 = "PieWare/assets/Spritesheets/Zepter_animation.png"; // Natürlich für Level 3 lul
-        inline static constexpr Vector2 fairy_Anim_Size = {32.0f, 16.0f};
+        inline static constexpr const char* kFairyAnimLvl3 = "PieWare/assets/Items/Animations/Zepter_animation.png"; // Natürlich für Level 3 lul
+        inline static constexpr Vector2 fairy_Anim_Size_Lvl1 = {32.0f, 16.0f};
+        inline static constexpr Vector2 fairy_Anim_Size_Lvl2 = {16.0f, 16.0f};
+        inline static constexpr Vector2 fairy_Anim_Size_Lvl3 = {16.0f, 32.0f};
         inline static constexpr int fairy_Frame_Count = 9;
         inline static constexpr float fairy_Anim_Speed = 1.0f;
 
@@ -556,23 +558,33 @@ namespace game
         inline static constexpr float movable_wall_activation_duration = 10.0f; // Dauer in 1/10s (10 = 1 Sekunde)
         // ------ Rätsel-Objekte für Level 1 (und als Vorlage für 2 & 3) ------
         // --- Stein 1 ---
-        inline static constexpr Vector2 movable_wall_1_start_pos = {615,  894};
+        inline static constexpr Vector2 movable_wall_1_start_pos_L1 = {615,  894};  // Stein 1 in Level 1
+        inline static constexpr Vector2 movable_wall_1_start_pos_L2 = {615,  894};  // Stein 1 in Level 2
+        inline static constexpr Vector2 movable_wall_1_start_pos_L3 = {615,  894};  // Stein 1 in Level 3
         inline static constexpr Vector2 movable_wall_1_target_pos = {760, 687};
         inline static constexpr const char* movable_wall_1_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Spirit.png";
         // --- Stein 2 ---
-        inline static constexpr Vector2 movable_wall_2_start_pos = {632, 686};
+        inline static constexpr Vector2 movable_wall_2_start_pos_L1 = {817, 855};   // Stein 2 in Level 1 direkt am Ziel
+        inline static constexpr Vector2 movable_wall_2_start_pos_L2 = {632, 686};
+        inline static constexpr Vector2 movable_wall_2_start_pos_L3 = {632, 686};
         inline static constexpr Vector2 movable_wall_2_target_pos = {825, 863};
         inline static constexpr const char* movable_wall_2_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Fire.png";
         // --- Stein 3 ---
-        inline static constexpr Vector2 movable_wall_3_start_pos = {872, 894};
+        inline static constexpr Vector2 movable_wall_3_start_pos_L1 {872, 894};
+        inline static constexpr Vector2 movable_wall_3_start_pos_L2 {872, 894};
+        inline static constexpr Vector2 movable_wall_3_start_pos_L3 {872, 894};
         inline static constexpr Vector2 movable_wall_3_target_pos = {664, 751};
         inline static constexpr const char* movable_wall_3_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Air.png";
         // --- Stein 4 ---
-        inline static constexpr Vector2 movable_wall_4_start_pos = {919, 814};
+        inline static constexpr Vector2 movable_wall_4_start_pos_L1 = {848, 742};   // Stein 4 in Level 1 direkt am Ziel
+        inline static constexpr Vector2 movable_wall_4_start_pos_L2 = {919, 814};
+        inline static constexpr Vector2 movable_wall_4_start_pos_L3 = {919, 814};
         inline static constexpr Vector2 movable_wall_4_target_pos = {856, 750};
         inline static constexpr const char* movable_wall_4_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Water.png";
         // --- Stein 5 ---
-        inline static constexpr Vector2 movable_wall_5_start_pos = {887, 703};
+        inline static constexpr Vector2 movable_wall_5_start_pos_L1 = {887, 703};
+        inline static constexpr Vector2 movable_wall_5_start_pos_L2 = {688, 855};   // Stein 5 in Level 2 direkt am Ziel
+        inline static constexpr Vector2 movable_wall_5_start_pos_L3 = {887, 703};
         inline static constexpr Vector2 movable_wall_5_target_pos = {696, 863};
         inline static constexpr const char* movable_wall_5_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Earth.png";
 

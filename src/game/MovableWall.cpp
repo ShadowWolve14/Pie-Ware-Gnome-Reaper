@@ -28,19 +28,27 @@ void MovableWall::Tick(float delta_time)
 {
     if (is_solved) return;
 
-   if (pushing_player)
+    if (pushing_player)
     {
+        Rectangle tolerance_box = {
+            this->hitbox.x - 1.0f,
+            this->hitbox.y - 1.0f,
+            this->hitbox.width + 2.0f,
+            this->hitbox.height + 2.0f
+        };
 
-        Facing_Direction current_push_direction = pushing_player->Get_Facing_Direction();
-        Vector2 current_player_pos = pushing_player->Get_Position();
-
-
-        if (!pushing_player->IsMoving() || current_push_direction != last_push_direction)
+        if (!CheckCollisionRecs(tolerance_box, pushing_player->Get_Hitbox()))
         {
             StopPushing();
             return;
         }
 
+        Facing_Direction current_push_direction = pushing_player->Get_Facing_Direction();
+        if (!pushing_player->IsMoving() || current_push_direction != last_push_direction)
+        {
+            StopPushing();
+            return;
+        }
         Vector2 move_vec = {0,0};
         if (last_push_direction == UP) move_vec.y = -1;
         else if (last_push_direction == DOWN) move_vec.y = 1;
@@ -52,7 +60,7 @@ void MovableWall::Tick(float delta_time)
 
         this->hitbox.x += delta_pos.x;
         for (auto* obj : object_manager_ref.managed_objects) {
-            if (obj == this) continue;
+            if (obj == this || obj == pushing_player) continue;
             Collision_Type type = obj->Get_Collision_Type();
             if (type == Collision_Type::WALL) {
                 if (CheckCollisionRecs(this->hitbox, obj->Get_Hitbox())) {
@@ -64,17 +72,15 @@ void MovableWall::Tick(float delta_time)
 
         this->hitbox.y += delta_pos.y;
         for (auto* obj : object_manager_ref.managed_objects) {
-            if (obj == this) continue;
+            if (obj == this || obj == pushing_player) continue;
             Collision_Type type = obj->Get_Collision_Type();
-            if (type == Collision_Type::WALL)
-            {
+            if (type == Collision_Type::WALL) {
                 if (CheckCollisionRecs(this->hitbox, obj->Get_Hitbox())) {
                     this->hitbox.y = original_hitbox.y;
                     break;
                 }
             }
         }
-        last_player_position = current_player_pos;
     }
 
     Vector2 current_position = { this->hitbox.x, this->hitbox.y };
@@ -82,10 +88,7 @@ void MovableWall::Tick(float delta_time)
 
     if (distance_to_target > 0 && distance_to_target < game::Config::movable_wall_target_snap_radius)
     {
-        if (pushing_player)
-        {
-            StopPushing();
-        }
+        if (pushing_player) { StopPushing(); }
 
         Vector2 direction = Vector2Normalize(Vector2Subtract(target_position, current_position));
 
@@ -127,6 +130,7 @@ void MovableWall::On_Collision(Collidable* other)
 
     if (other_type == Collision_Type::PLAYER)
     {
+        player_is_colliding_this_frame = true;
 
         if (!pushing_player)
         {
