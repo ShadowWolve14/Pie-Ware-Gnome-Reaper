@@ -588,6 +588,17 @@ namespace game
         inline static constexpr Vector2 movable_wall_5_target_pos = {696, 863};
         inline static constexpr const char* movable_wall_5_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Earth.png";
 
+        // ------ Rätsel-Bewegungsgrenzen ------
+        // Definiert den Bereich, in dem sich die Steine aufhalten dürfen.
+        // Verlassen sie ihn, werden sie auf ihre Startposition zurückgesetzt.
+        inline static constexpr Rectangle kMovableWallBounds = { 550.0f, 620.0f, 435.0f, 290.0f };
+
+        // ------ Rauch-Animation für das Zurücksetzen ------
+        inline static constexpr const char* kSmokeVFXSpritesheet = "PieWare/assets/Spritesheets/VFX/Smoke.png";
+        inline static constexpr Vector2 kSmokeVFXSize = { 16.0f, 32.0f };
+        inline static constexpr int kSmokeVFXFrameCount = 14;
+        inline static constexpr float kSmokeVFXAnimSpeed = 5.0f;
+
         // --- Disappearing Wall ---
         inline static constexpr Vector2 disappearing_wall_position = {172.0f, 446.0f};
 
