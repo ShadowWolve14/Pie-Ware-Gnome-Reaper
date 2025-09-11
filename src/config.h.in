@@ -394,7 +394,7 @@ namespace game
         inline static constexpr Vector2 health_Potion_Anim_Size = {16.0f, 16.0f};
         inline static constexpr int health_Potion_Frame_Count = 9;
         inline static constexpr float health_Potion_Anim_Speed = 1.0f;
-        inline static constexpr float kHealVFXAnimSpeed = 3.0f;
+        inline static constexpr float kHealVFXAnimSpeed = 1.5f;
         // ------ Bomben-Item ------
         inline static constexpr int bomb_Damage = 100;                      // Schaden an Gegnern
         inline static constexpr float bomb_Radius_Tiles = 6.0f;             // Radius in "Tiles" (1 Tile = 16 Pixel)
