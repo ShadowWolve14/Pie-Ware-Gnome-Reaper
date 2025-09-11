@@ -172,16 +172,16 @@ namespace game::scenes {
             }
             if (f>fc+50){
                 if (has_fairy&&current_level==3){
-                    DrawTextEx(game::core::Store::font,"Drücke J um weiter zu Spielen",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
+                    DrawTextEx(game::core::Store::font,"Drücke J um zum Main Menu zurück zu kehren",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
                 }
                 if (!has_fairy&&current_level==3){
-                    DrawTextEx(game::core::Store::font,"Drücke J um weiter zu Spielen",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
+                    DrawTextEx(game::core::Store::font,"Drücke J um zum Main Menu zurück zu kehren",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
                 }
                 if (has_fairy&&current_level!=3){
-                    DrawTextEx(game::core::Store::font,"Drücke J um weiter zu Spielen",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
+                    DrawTextEx(game::core::Store::font,"Drücke J um weiter zu kommen",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
                 }
                 if (!has_fairy&&current_level!=3){
-                    DrawTextEx(game::core::Store::font,"Drücke J um weiter zu Spielen",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
+                    DrawTextEx(game::core::Store::font,"Drücke J um zum Main Menu zurück zu kehren",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
                 }
 
             }
