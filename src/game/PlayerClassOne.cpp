@@ -97,6 +97,11 @@ void Player_Class_One::Tick(float delta_time)
 {
     Player_Base_Class::Tick(delta_time);
 
+    if (itemvfx != nullptr)
+    {
+        vfx_timer += delta_time;
+    }
+
     if (currentState == ATTACKING_MELEE)
     {
         auto* active_melee_map = IsBuffed() ? &buff_melee_Attack_Animations : &melee_Attack_Animations;
@@ -218,26 +223,39 @@ void Player_Class_One::Draw()
         DrawRectangleLinesEx(this->hitbox, 1.0f, BLUE);
     }
 
-    if (itemvfx!= nullptr){
-        if (vfxtype==1){
-            clim=4;
-            b=32;
-        } else{
-            clim=13;
-            b=16;
+    if (itemvfx != nullptr)
+    {
+        int frame_limit = 0;
+        int sprite_width = 0;
+        float anim_speed = 1.0f;
 
+        if (vfxtype == 1)
+        {
+            frame_limit = 4;
+            sprite_width = 32;
+            anim_speed = game::Config::kHealVFXAnimSpeed;
         }
-        if (c<clim){
-            DrawTextureRec(*itemvfx,{1+b*c,1,(float)b,32},{hitbox.x-6,hitbox.y-6},WHITE);
+        else if (vfxtype == 2)
+        {
+            frame_limit = 14;
+            sprite_width = 16;
+            anim_speed = game::Config::kSmokeVFXAnimSpeed;
+        }
+
+        int current_frame = static_cast<int>(vfx_timer * anim_speed);
+
+        if (current_frame < frame_limit)
+        {
+            Rectangle source_rec = { 1.0f + sprite_width * current_frame, 1.0f, (float)sprite_width, 32.0f };
+            Vector2 draw_pos = { hitbox.x - (sprite_width - hitbox.width)/2.0f, hitbox.y - 6 };
+            DrawTextureRec(*itemvfx, source_rec, draw_pos, WHITE);
+        }
+        else
+        {
+            itemvfx = nullptr;
+            vfx_timer = 0.0f;
         }
     }
-
-    if (c>=clim){
-        itemvfx= nullptr;
-        c=0;
-    }
-
-    c++;
 }
 
 void Player_Class_One::Ranged_Attack()

@@ -28,7 +28,7 @@ private:
     Texture2D walkvfx= LoadTexture("PieWare/assets/Spritesheets/VFX/Walk_VFX.png");
 
 
-    int c=0;
+    float vfx_timer = 0.0f;
     int b=1;
     int clim=0;
 
