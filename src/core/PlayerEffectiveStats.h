@@ -30,8 +30,8 @@ inline PlayerEffectiveStats BuildEffectiveStats(const game::core::UpgradeState &
     constexpr int kHPPerLevel = 20; // +10 HP per level
     constexpr float kSpeedPerLevel = 0.07f; // +5% movespeed / level
     constexpr float kDmgMultPerLevel = 0.15f; // +5% all dmg / level
-    constexpr int kMeleePerLevel = 30; // +10 melee per level (additive)
-    constexpr int kRangedPerLevel = 30; // +10 ranged per level (additive)
+    constexpr int kMeleePerLevel = 25; // +10 melee per level (additive)
+    constexpr int kRangedPerLevel = 25; // +10 ranged per level (additive)
     constexpr float kAtkSpeedPerLevel = 0.07f; // -8% cooldown / level (multiplicative)
     constexpr float kMinCooldownSeconds = 0.15f; // never go below this
 
