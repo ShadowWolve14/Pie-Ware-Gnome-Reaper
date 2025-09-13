@@ -206,7 +206,7 @@ namespace game
 
         //____________________Gegner Demonenritter____________________________
         // ------Melee_Enemy_Type3 Settings------
-        inline static constexpr int melee_enemy_3_health = 210;
+        inline static constexpr int melee_enemy_3_health = 240;
         inline static constexpr float melee_enemy_3_movement_speed = 8.0f;
         inline static constexpr Vector2 melee_enemy_3_hitbox = {16, 24};
         inline static constexpr int melee_enemy_3_score_value = 500;
@@ -396,7 +396,7 @@ namespace game
         inline static constexpr float health_Potion_Anim_Speed = 1.0f;
         inline static constexpr float kHealVFXAnimSpeed = 1.5f;
         // ------ Bomben-Item ------
-        inline static constexpr int bomb_Damage = 100;                      // Schaden an Gegnern
+        inline static constexpr int bomb_Damage = 240;                      // Schaden an Gegnern
         inline static constexpr float bomb_Radius_Tiles = 6.0f;             // Radius in "Tiles" (1 Tile = 16 Pixel)
         inline static constexpr float bomb_Explosion_Damage_Lifetime = 2.5f;   // Dauer der Schadensfläche
         inline static constexpr float bomb_Explosion_Visual_Lifetime = 7.5f;   // Dauer der visuellen Fläche
