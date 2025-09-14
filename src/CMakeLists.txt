@@ -39,8 +39,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME} core scenes nlohmann_json::nlohmann_json)
 set(FINAL_FOLDER_NAME "${CMAKE_BINARY_DIR}/Gnome_Reaper_Spiel")
 
-add_custom_command
-(
+add_custom_command(
         TARGET game POST_BUILD
 
         COMMAND ${CMAKE_COMMAND} -E make_directory ${FINAL_FOLDER_NAME}
