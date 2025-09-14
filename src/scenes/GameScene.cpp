@@ -234,52 +234,55 @@ for (const auto& pos : dead_enemy_positions)
 {
     if (GetRandomValue(1, 100) <= game::Config::enemy_Item_Drop_Chance_Percent)
     {
-        std::vector<std::pair<ItemType, int>> weighted_list;
-        int total_weight = 0;
+        std::vector<std::pair<ItemType, int>> full_weighted_list = {
+            {ItemType::HEALTH_POTION, game::Config::item_Drop_Weight_Heal},
+            {ItemType::BOMB,          game::Config::item_Drop_Weight_Bomb},
+            {ItemType::TESTO_NEEDLE,  game::Config::item_Drop_Weight_TestoNeedle}
+        };
+        int total_weight = game::Config::item_Drop_Weight_Heal +
+                           game::Config::item_Drop_Weight_Bomb +
+                           game::Config::item_Drop_Weight_TestoNeedle;
 
-        if (CountItemsOfType(ItemType::HEALTH_POTION, objectManager, *player_ptr) + potions_to_spawn < game::Config::health_Potion_Max_On_Map) {
-            weighted_list.push_back({ItemType::HEALTH_POTION, game::Config::item_Drop_Weight_Heal});
-            total_weight += game::Config::item_Drop_Weight_Heal;
-        }
-        if (CountItemsOfType(ItemType::BOMB, objectManager, *player_ptr) + bombs_to_spawn < game::Config::bomb_Max_On_Map) {
-            weighted_list.push_back({ItemType::BOMB, game::Config::item_Drop_Weight_Bomb});
-            total_weight += game::Config::item_Drop_Weight_Bomb;
-        }
-        if (CountItemsOfType(ItemType::TESTO_NEEDLE, objectManager, *player_ptr) + needles_to_spawn < game::Config::testo_Needle_Max_On_Map) {
-            weighted_list.push_back({ItemType::TESTO_NEEDLE, game::Config::item_Drop_Weight_TestoNeedle});
-            total_weight += game::Config::item_Drop_Weight_TestoNeedle;
-        }
+        if (total_weight <= 0) continue;
 
-        if (total_weight > 0)
+        int roll = GetRandomValue(1, total_weight);
+        ItemType selected_item_type = ItemType::HEALTH_POTION;
+
+        for (const auto& pair : full_weighted_list)
         {
-            int roll = GetRandomValue(1, total_weight);
-            for (const auto& pair : weighted_list)
+            roll -= pair.second;
+            if (roll <= 0)
             {
-                roll -= pair.second;
-                if (roll <= 0)
-                {
-                    ItemBase* spawned_item = nullptr;
-                    switch (pair.first)
-                    {
-                        case ItemType::HEALTH_POTION:
-                            spawned_item = new HealthPotion(pos);
-                            potions_to_spawn++;
-                            break;
-                        case ItemType::BOMB:
-                            spawned_item = new BombItem(pos);
-                            bombs_to_spawn++;
-                            break;
-                        case ItemType::TESTO_NEEDLE:
-                            spawned_item = new TestoNeedle(pos);
-                            needles_to_spawn++;
-                            break;
-                    }
-                    if (spawned_item) {
-                        objectManager.AddObjectDeferred(spawned_item);
-                    }
-                    break;
-                }
+                selected_item_type = pair.first;
+                break;
             }
+        }
+
+        ItemBase* spawned_item = nullptr;
+        switch (selected_item_type)
+        {
+            case ItemType::HEALTH_POTION:
+                if (CountItemsOfType(ItemType::HEALTH_POTION, objectManager, *player_ptr) + potions_to_spawn < game::Config::health_Potion_Max_On_Map) {
+                    spawned_item = new HealthPotion(pos);
+                    potions_to_spawn++;
+                }
+                break;
+            case ItemType::BOMB:
+                if (CountItemsOfType(ItemType::BOMB, objectManager, *player_ptr) + bombs_to_spawn < game::Config::bomb_Max_On_Map) {
+                    spawned_item = new BombItem(pos);
+                    bombs_to_spawn++;
+                }
+                break;
+            case ItemType::TESTO_NEEDLE:
+                if (CountItemsOfType(ItemType::TESTO_NEEDLE, objectManager, *player_ptr) + needles_to_spawn < game::Config::testo_Needle_Max_On_Map) {
+                    spawned_item = new TestoNeedle(pos);
+                    needles_to_spawn++;
+                }
+                break;
+        }
+        if (spawned_item)
+        {
+            objectManager.AddObjectDeferred(spawned_item);
         }
     }
 }

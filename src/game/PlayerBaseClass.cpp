@@ -379,6 +379,9 @@ void Player_Base_Class::ApplyTestoBuff()
     if (!is_buffed)
     {
         is_buffed = true;
+        original_movement_speed = player_Movement_Speed;
+        original_damage_multiplier = player_Damage_Multiplier;
+
         player_Movement_Speed *= game::Config::testo_Needle_Speed_Boost;
         player_Damage_Multiplier *= game::Config::testo_Needle_Damage_Boost;
     }

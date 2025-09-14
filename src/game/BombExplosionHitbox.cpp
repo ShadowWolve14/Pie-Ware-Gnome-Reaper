@@ -6,6 +6,7 @@
 #include "../game/CollisionResponse.h"
 #include "../Config.h.in"
 #include <raylib.h>
+#include <algorithm>
 
 Texture2D BombExplosionHitbox::explosion_texture;
 
@@ -38,7 +39,11 @@ void BombExplosionHitbox::On_Collision(Collidable* other)
 {
     if (damage_active_timer > 0 && other->Get_Collision_Type() == Collision_Type::ENEMY)
     {
-        CollisionResponse::Apply_Damage(other, damage);
+        if (std::find(already_hit_enemies.begin(), already_hit_enemies.end(), other) == already_hit_enemies.end())
+        {
+            CollisionResponse::Apply_Damage(other, damage);
+            already_hit_enemies.push_back(other);
+        }
     }
 }
 

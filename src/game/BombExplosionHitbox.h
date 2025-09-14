@@ -5,6 +5,7 @@
 #ifndef BOMBEXPLOSIONHITBOX_H
 #define BOMBEXPLOSIONHITBOX_H
 
+#include <vector>
 #include "../game/Collidable.h"
 #include "../core/Animations.h"
 
@@ -16,6 +17,7 @@ private:
     float damage_active_timer;
     Animations animation;
     static Texture2D explosion_texture;
+    std::vector<Collidable*> already_hit_enemies;
 
 public:
     BombExplosionHitbox(Rectangle rect, int dmg);
