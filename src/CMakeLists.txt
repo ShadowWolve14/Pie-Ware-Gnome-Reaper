@@ -37,17 +37,19 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 # Link to libraries
 target_link_libraries(${PROJECT_NAME} core scenes nlohmann_json::nlohmann_json)
+set(FINAL_FOLDER_NAME "${CMAKE_BINARY_DIR}/Gnome_Reaper_Spiel")
 
-file(COPY "${CMAKE_SOURCE_DIR}/assets" DESTINATION "${CMAKE_BINARY_DIR}/src")
-file(COPY "${CMAKE_SOURCE_DIR}/PieWare/assets" DESTINATION "${CMAKE_BINARY_DIR}/src/PieWare")
+add_custom_command
+(
+        TARGET game POST_BUILD
 
-if (APPLE)
-target_link_libraries(${PROJECT_NAME} "-framework IOKit")
-target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
-target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
-endif ()
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${FINAL_FOLDER_NAME}
 
-# CPack instructions
-# call e.g. cpack -G ZIP -C Debug to create a binary distribution
-install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "${PROJECT_NAME}_Bundle")
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/assets" DESTINATION "${PROJECT_NAME}_Bundle")
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:game> ${FINAL_FOLDER_NAME}
+
+        COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different ${CMAKE_SOURCE_DIR}/assets ${FINAL_FOLDER_NAME}/assets
+
+        COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different ${CMAKE_SOURCE_DIR}/PieWare ${FINAL_FOLDER_NAME}/PieWare
+
+        COMMENT "Erstelle finalen Spiel-Ordner unter ${FINAL_FOLDER_NAME}"
+)
