@@ -80,15 +80,12 @@ namespace enemy
     void Enemy_Base_Class::Take_Damage(int damage_amount)
     {
         if (enemy_Health <= 0) return;
-        this->tookd= true;
         this->enemy_Health -= damage_amount;
         PlaySound(hitS);
+        this->Take_Damage_Check(damage_amount);
     }
 
-    void enemy::Enemy_Base_Class::Melee_Attack()
-    {
-
-    }
+    void enemy::Enemy_Base_Class::Melee_Attack() { }
 
     void enemy::Enemy_Base_Class::Set_Position(Vector2 position)
     {

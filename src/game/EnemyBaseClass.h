@@ -53,7 +53,6 @@ namespace enemy
 
         virtual ~Enemy_Base_Class();
 
-        // Öffentliche Methoden
         void Set_Position(Vector2 position) override;
         void Take_Damage(int damage_amount);
 
@@ -63,6 +62,7 @@ namespace enemy
         void On_Collision(Collidable* other) override;
         virtual void Draw() = 0;
         virtual void Melee_Attack();
+        virtual void Take_Damage_Check(int damage_amount) {}
 
         int Get_Score_Value() const { return score_value; }
         int Get_Souls_Value() const { return souls_value; }

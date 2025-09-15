@@ -85,69 +85,53 @@ namespace enemy
     }
 
     void Melee_Enemy::Tick_Melee(float delta_time, Vector2 player_center)
+{
+
+    if (currentState == E_DYING)
     {
-        if (this->enemy_Health <= 0 && currentState != E_DYING)
-        {
-            currentState = E_DYING;
-            death_timer = this->hit_animation_duration;
+        death_timer -= delta_time;
+        if (death_timer <= 0.0f) {
+            this->Mark_For_Destruction();
         }
-        if (currentState == E_DYING)
-        {
-            death_timer -= delta_time;
-            if (death_timer <= 0.0f)
-            {
-                this->Mark_For_Destruction();
-                return;
-            }
-            hit_animations.at(facing_Direction).Update_Frame(delta_time);
-            return;
-        }
-        Vector2 self_center = { this->hitbox.x + this->hitbox.width / 2.0f, this->hitbox.y + this->hitbox.height / 2.0f };
-        if (player_center.x > self_center.x + 2.0f) {
-            facing_Direction = RIGHT;
-        } else if (player_center.x < self_center.x - 2.0f) {
-            facing_Direction = LEFT;
-        }
+        hit_animations.at(facing_Direction).Update_Frame(delta_time);
+        return;
+    }
 
-        if (currentState == E_DAMAGED)
-        {
-            if (hit_animations.at(facing_Direction).IsFinished()) {
-                currentState = E_IDLE;
-            }
+    if (currentState == E_DAMAGED)
+    {
+        if (hit_animations.at(facing_Direction).IsFinished()) {
+            currentState = E_IDLE;
         }
-        else if (currentState == E_ATTACKING)
-        {
-            if (attack_animations.at(attack_Direction).IsFinished()) {
-                currentState = E_IDLE;
-            }
-        }
-        else
-        {
-            float distance_to_target = Vector2Distance(self_center, player_center);
-            float stopping_distance = (this->hitbox.width / 2.0f) + (game::Config::player_Hittbox.x / 2.0f);
+        hit_animations.at(facing_Direction).Update_Frame(delta_time);
+        return;
+    }
 
-            if (distance_to_target <= stopping_distance + 5.0f && attack_Cooldown_Timer <= 0) {
-                Melee_Attack();
-            } else {
-                currentState = (Vector2LengthSqr(this->velocity) > 0.1f) ? E_WALKING : E_IDLE;
-            }
+    Vector2 self_center = { this->hitbox.x + this->hitbox.width / 2.0f, this->hitbox.y + this->hitbox.height / 2.0f };
+    if (player_center.x > self_center.x + 2.0f) {
+        facing_Direction = RIGHT;
+    } else if (player_center.x < self_center.x - 2.0f) {
+        facing_Direction = LEFT;
+    }
+    if (currentState == E_ATTACKING) {
+        if (attack_animations.at(attack_Direction).IsFinished()) {
+            currentState = E_IDLE;
         }
-
-        switch (currentState)
-        {
-            case E_ATTACKING:
-                attack_animations.at(attack_Direction).Update_Frame(delta_time);
-            break;
-            case E_WALKING:
-                walk_animations.at(facing_Direction).Update_Frame(delta_time);
-            break;
-            case E_DAMAGED:
-                hit_animations.at(facing_Direction).Update_Frame(delta_time);
-            break;
-            default:
-                    break;
+    } else {
+        float distance_to_target = Vector2Distance(self_center, player_center);
+        float stopping_distance = (this->hitbox.width / 2.0f) + (game::Config::player_Hittbox.x / 2.0f);
+        if (distance_to_target <= stopping_distance + 5.0f && attack_Cooldown_Timer <= 0) {
+            Melee_Attack();
+        } else {
+            currentState = (Vector2LengthSqr(this->velocity) > 0.1f) ? E_WALKING : E_IDLE;
         }
     }
+
+    if (currentState == E_ATTACKING) {
+        attack_animations.at(attack_Direction).Update_Frame(delta_time);
+    } else if (currentState == E_WALKING) {
+        walk_animations.at(facing_Direction).Update_Frame(delta_time);
+    }
+}
 
     void Melee_Enemy::Melee_Attack()
     {
@@ -222,7 +206,17 @@ namespace enemy
     }
     void Melee_Enemy::Take_Damage_Check(int damage_amount)
     {
-        this->currentState = E_DAMAGED;
+
+        if (currentState == E_DYING) return;
+        if (this->enemy_Health <= 0)
+        {
+            currentState = E_DYING;
+            death_timer = this->hit_animation_duration;
+        }
+        else
+        {
+            currentState = E_DAMAGED;
+        }
         if (hit_animations.count(this->facing_Direction))
         {
             hit_animations.at(this->facing_Direction).First_Frame();
