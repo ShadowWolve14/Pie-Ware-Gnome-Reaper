@@ -33,11 +33,17 @@ namespace enemy
     void Enemy_Base_Class::Tick(float delta_time) { }
 
     void Enemy_Base_Class::Tick_AI(float delta_time, Vector2 player_center, const std::vector<Enemy_Base_Class*>& all_enemies)
+{
+    ai_update_timer -= delta_time;
+    if (ai_update_timer <= 0.0f)
     {
-        this->tookd= false;
+        ai_update_timer = 0.2;
 
-        if (attack_Cooldown_Timer > 0) {
-            attack_Cooldown_Timer -= delta_time;
+        this->tookd = false;
+
+        if (attack_Cooldown_Timer > 0)
+        {
+            attack_Cooldown_Timer -= 0.2;
         }
 
         Vector2 self_center = { this->hitbox.x + this->hitbox.width / 2.0f, this->hitbox.y + this->hitbox.height / 2.0f };
@@ -54,18 +60,18 @@ namespace enemy
         total_force = Vector2Add(total_force, Vector2Scale(seek_force, this->seek_weight));
         total_force = Vector2Add(total_force, Vector2Scale(separation_force, this->separation_weight));
         total_force = Vector2Add(total_force, Vector2Scale(player_separation_force, this->player_separation_weight));
-
         Vector2 acceleration = total_force;
-        this->velocity = Vector2Add(this->velocity, Vector2Scale(acceleration, this->enemy_Movement_Speed * delta_time));
+        this->velocity = Vector2Add(this->velocity, Vector2Scale(acceleration, this->enemy_Movement_Speed * 0.2));
         float max_speed = this->enemy_Movement_Speed;
         if (Vector2Length(this->velocity) > max_speed)
         {
             this->velocity = Vector2Scale(Vector2Normalize(this->velocity), max_speed);
         }
-        this->hitbox.x += this->velocity.x * delta_time;
-        this->hitbox.y += this->velocity.y * delta_time;
-        this->velocity = Vector2Scale(this->velocity, this->drag);
     }
+    this->hitbox.x += this->velocity.x * delta_time;
+    this->hitbox.y += this->velocity.y * delta_time;
+    this->velocity = Vector2Scale(this->velocity, this->drag);
+}
 
     void Enemy_Base_Class::On_Collision(Collidable* other)
     {

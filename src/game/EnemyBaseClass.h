@@ -24,7 +24,9 @@ namespace enemy
         float drag;
         Sound atS= LoadSound("assets/audio/sfx/Enemy_Attack.wav");
         Sound hitS= LoadSound("assets/audio/sfx/Enemy_Hit.wav");
-
+        Vector2 knockback_velocity = {0.0f, 0.0f};
+        float knockback_timer = 0.0f;
+        float ai_update_timer = 0.0f;
 
         // Zustand
         Vector2 velocity = {0.0f, 0.0f};
@@ -41,7 +43,7 @@ namespace enemy
         bool tookd= false;
 
 
-
+        Vector2 last_known_player_center = {0.0f, 0.0f};
         Vector2 Calculate_Seek_Force(Vector2 target_pos, float& distance_to_target, float stopping_distance) const;
         Vector2 Calculate_Separation_Force(const std::vector<Enemy_Base_Class*>& all_enemies) const;
         Vector2 Calculate_Player_Separation_Force(Vector2 player_center) const;

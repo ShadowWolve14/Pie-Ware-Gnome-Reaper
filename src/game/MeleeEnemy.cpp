@@ -86,7 +86,7 @@ namespace enemy
 
     void Melee_Enemy::Tick_Melee(float delta_time, Vector2 player_center)
 {
-
+    this->last_known_player_center = player_center;
     if (currentState == E_DYING)
     {
         death_timer -= delta_time;
@@ -96,15 +96,22 @@ namespace enemy
         hit_animations.at(facing_Direction).Update_Frame(delta_time);
         return;
     }
-
-    if (currentState == E_DAMAGED)
-    {
-        if (hit_animations.at(facing_Direction).IsFinished()) {
-            currentState = E_IDLE;
+        if (currentState == E_KNOCKBACK)
+        {
+            hit_stun_timer -= delta_time;
+            if (knockback_timer > 0.0f)
+            {
+                knockback_timer -= delta_time;
+                this->hitbox.x += knockback_velocity.x * delta_time;
+                this->hitbox.y += knockback_velocity.y * delta_time;
+            }
+            hit_animations.at(facing_Direction).Update_Frame(delta_time);
+            if (hit_stun_timer <= 0.0f)
+            {
+                currentState = E_IDLE;
+            }
+            return;
         }
-        hit_animations.at(facing_Direction).Update_Frame(delta_time);
-        return;
-    }
 
     Vector2 self_center = { this->hitbox.x + this->hitbox.width / 2.0f, this->hitbox.y + this->hitbox.height / 2.0f };
     if (player_center.x > self_center.x + 2.0f) {
@@ -159,7 +166,8 @@ namespace enemy
             break;
             case E_DAMAGED:
                 case E_DYING:
-                            hit_anim = &hit_animations.at(facing_Direction);
+                case E_KNOCKBACK:
+                hit_anim = &hit_animations.at(facing_Direction);
             break;
             case E_WALKING:
             case E_IDLE:
@@ -206,7 +214,6 @@ namespace enemy
     }
     void Melee_Enemy::Take_Damage_Check(int damage_amount)
     {
-
         if (currentState == E_DYING) return;
         if (this->enemy_Health <= 0)
         {
@@ -215,8 +222,16 @@ namespace enemy
         }
         else
         {
-            currentState = E_DAMAGED;
+            currentState = E_KNOCKBACK;
+            knockback_timer = game::Config::kAIBase_Knockback_Duration;
+            hit_stun_timer = this->hit_animation_duration;
+
+            Vector2 self_center = { this->hitbox.x + hitbox.width / 2.0f, this->hitbox.y + hitbox.height / 2.0f };
+            Vector2 direction_away_from_player = Vector2Normalize(Vector2Subtract(self_center, this->last_known_player_center));
+
+            knockback_velocity = Vector2Scale(direction_away_from_player, game::Config::kAIBase_Knockback_Speed);
         }
+
         if (hit_animations.count(this->facing_Direction))
         {
             hit_animations.at(this->facing_Direction).First_Frame();

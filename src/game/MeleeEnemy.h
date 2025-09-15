@@ -5,7 +5,7 @@
 #include <map>
 #include "PlayerBaseClass.h"
 
-enum EnemyState { E_IDLE, E_WALKING, E_ATTACKING, E_DAMAGED,E_DYING };
+enum EnemyState { E_IDLE, E_WALKING, E_ATTACKING, E_DAMAGED, E_DYING, E_KNOCKBACK };
 
 namespace enemy
 {
@@ -19,6 +19,7 @@ namespace enemy
         std::map<Facing_Direction, Animations> attack_animations;
         std::map<Facing_Direction, Animations> hit_animations;
         bool damage_applied_this_attack = false;
+        float hit_stun_timer = 0.0f;
 
         Texture2D* walk_texture_left;
         Texture2D* walk_texture_right;

@@ -139,7 +139,9 @@ namespace game
        inline static constexpr float player_Melee_Buff_Diag_Reach_Tiles = 1.0f;
        inline static constexpr float player_Melee_Buff_Diag_Width_Tiles = 2.5f;
 
-
+        // Gegner Rückstoß
+        inline static constexpr float kAIBase_Knockback_Speed = 90.0f;     // Wie schnell der Gegner zurückgestoßen wird.
+        inline static constexpr float kAIBase_Knockback_Duration = 0.4f;  // Wie lange der Rückstoß dauert (in Sekunden).
         //____________________Gegner Bauer____________________________
         // ------Melee_Enemy_Type1 Settings------
         inline static constexpr int melee_enemy_1_health = 30;
@@ -197,7 +199,7 @@ namespace game
         inline static constexpr const char* kMeleeEnemy2AttackLeftAnim = "PieWare/assets/Spritesheets/Knight/Knight Attack Left.png";
         inline static constexpr const char* kMeleeEnemy2AttackRightAnim = "PieWare/assets/Spritesheets/Knight/KnighAttackt.png";
 
-         inline static constexpr float melee_enemy_2_hit_anim_duration = 1.5f; // Gesamtdauer der Animation in Sekunden
+        inline static constexpr float melee_enemy_2_hit_anim_duration = 1.5f; // Gesamtdauer der Animation in Sekunden
         inline static constexpr int melee_enemy_2_hit_frame_count = 2;
         inline static constexpr Vector2 melee_enemy_2_hit_anim_size = {48, 48};
         inline static constexpr const char* kMeleeEnemy2HitLeft="PieWare/assets/Spritesheets/Knight/KnightHitLeft.png";
