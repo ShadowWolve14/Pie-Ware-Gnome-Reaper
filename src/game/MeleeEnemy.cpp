@@ -48,7 +48,7 @@ namespace enemy
                              int score, int souls, float cooldown, Vector2 hitbox_size, const char* walk_left_path,
                              const char* walk_right_path, const char* attack_left_path, const char* attack_right_path, Vector2 walk_anim_size,
                              int walk_frame_count, float walk_anim_speed, Vector2 attack_anim_size, int attack_frame_count, float attack_anim_speed,
-                             Vector2 hit_anim_size, int hit_frame_count, float hit_anim_speed)
+                             Vector2 hit_anim_size, int hit_frame_count, float hit_anim_speed, float hit_anim_duration)
 
             : Enemy_Base_Class(name, health, speed, damage, score, souls, start_position, hitbox_size.x, hitbox_size.y, cooldown,
                                game::Config::kAIBase_SeekWeight, game::Config::kAIBase_SeparationWeight, game::Config::kAIBase_PlayerSeparationWeight,
@@ -75,25 +75,57 @@ namespace enemy
                                    hit_frame_count, hit_frame_count, hit_anim_speed);
         hit_animations.try_emplace(RIGHT, hit_anim_size, *this->hit_texture_right,
                                    hit_frame_count, hit_frame_count, hit_anim_speed);
+
+        this->hit_animation_duration = hit_anim_duration;
+
+        hit_animations.try_emplace(LEFT, hit_anim_size, *this->hit_texture_left,
+                                   hit_frame_count, hit_frame_count, hit_anim_speed);
+        hit_animations.try_emplace(RIGHT, hit_anim_size, *this->hit_texture_right,
+                                   hit_frame_count, hit_frame_count, hit_anim_speed);
     }
 
     void Melee_Enemy::Tick_Melee(float delta_time, Vector2 player_center)
     {
-
+        if (this->enemy_Health <= 0 && currentState != E_DYING)
+        {
+            currentState = E_DYING;
+            death_timer = this->hit_animation_duration;
+        }
+        if (currentState == E_DYING)
+        {
+            death_timer -= delta_time;
+            if (death_timer <= 0.0f)
+            {
+                this->Mark_For_Destruction();
+                return;
+            }
+            hit_animations.at(facing_Direction).Update_Frame(delta_time);
+            return;
+        }
         Vector2 self_center = { this->hitbox.x + this->hitbox.width / 2.0f, this->hitbox.y + this->hitbox.height / 2.0f };
         if (player_center.x > self_center.x + 2.0f) {
             facing_Direction = RIGHT;
         } else if (player_center.x < self_center.x - 2.0f) {
             facing_Direction = LEFT;
         }
-        float distance_to_target = Vector2Distance(self_center, player_center);
-        float stopping_distance = (this->hitbox.width / 2.0f) + (game::Config::player_Hittbox.x / 2.0f);
 
-        if (currentState == E_ATTACKING) {
+        if (currentState == E_DAMAGED)
+        {
+            if (hit_animations.at(facing_Direction).IsFinished()) {
+                currentState = E_IDLE;
+            }
+        }
+        else if (currentState == E_ATTACKING)
+        {
             if (attack_animations.at(attack_Direction).IsFinished()) {
                 currentState = E_IDLE;
             }
-        } else {
+        }
+        else
+        {
+            float distance_to_target = Vector2Distance(self_center, player_center);
+            float stopping_distance = (this->hitbox.width / 2.0f) + (game::Config::player_Hittbox.x / 2.0f);
+
             if (distance_to_target <= stopping_distance + 5.0f && attack_Cooldown_Timer <= 0) {
                 Melee_Attack();
             } else {
@@ -101,14 +133,19 @@ namespace enemy
             }
         }
 
-
-
-
-
-        if (currentState == E_ATTACKING) {
-            attack_animations.at(attack_Direction).Update_Frame(delta_time);
-        } else if (currentState == E_WALKING) {
-            walk_animations.at(facing_Direction).Update_Frame(delta_time);
+        switch (currentState)
+        {
+            case E_ATTACKING:
+                attack_animations.at(attack_Direction).Update_Frame(delta_time);
+            break;
+            case E_WALKING:
+                walk_animations.at(facing_Direction).Update_Frame(delta_time);
+            break;
+            case E_DAMAGED:
+                hit_animations.at(facing_Direction).Update_Frame(delta_time);
+            break;
+            default:
+                    break;
         }
     }
 
@@ -132,56 +169,41 @@ namespace enemy
         Animations* hit_anim = nullptr;
         RepeatAnimation* walk_anim = nullptr;
 
-
-        if (tookd) { this->currentState = E_DAMAGED;
-            dc=30;}
-
-        if (dc>0){
-            currentState=E_DAMAGED;
-        }
         switch (currentState) {
-            case E_ATTACKING:{
+            case E_ATTACKING:
                 attack_anim = &attack_animations.at(attack_Direction);
-                break;
-            }
-            case E_DAMAGED:{
-                hit_anim=&hit_animations.at(facing_Direction);
-            }
-            default:{
+            break;
+            case E_DAMAGED:
+                case E_DYING:
+                            hit_anim = &hit_animations.at(facing_Direction);
+            break;
+            case E_WALKING:
+            case E_IDLE:
+            default:
                 walk_anim = &walk_animations.at(facing_Direction);
-            }
+            break;
         }
-        if (tookd){
+
+        if (attack_anim != nullptr)
+        {
+            draw_pos.x = this->hitbox.x - (attack_anim->size.x - this->hitbox.width) / 2.0f;
+            draw_pos.y = this->hitbox.y - (attack_anim->size.y - this->hitbox.height) / 2.0f;
+            attack_anim->Draw_Current_Frame(draw_pos);
+        }
+        else if (hit_anim != nullptr)
+        {
             draw_pos.x = this->hitbox.x - (hit_anim->size.x - this->hitbox.width) / 2.0f;
             draw_pos.y = this->hitbox.y - (hit_anim->size.y - this->hitbox.height) / 2.0f;
-            if (facing_Direction==LEFT){
-                DrawTextureRec(*hit_texture_left,{33,1,32,32},draw_pos,WHITE);
-            } else{
-                DrawTextureRec(*hit_texture_right,{33,1,32,32},draw_pos,WHITE);
-            }
-
-
-        } else{
-
-
-            if (attack_anim != nullptr)
-            {
-                draw_pos.x = this->hitbox.x - (attack_anim->size.x - this->hitbox.width) / 2.0f;
-                draw_pos.y = this->hitbox.y - (attack_anim->size.y - this->hitbox.height) / 2.0f;
-                attack_anim->Draw_Current_Frame(draw_pos);
-            }
-            else if (walk_anim != nullptr)
-            {
-                draw_pos.x = this->hitbox.x - (walk_anim->size.x - this->hitbox.width) / 2.0f;
-                draw_pos.y = this->hitbox.y - (walk_anim->size.y - this->hitbox.height) / 2.0f;
-                walk_anim->Draw_Current_Frame(draw_pos);
-            }
+            hit_anim->Draw_Current_Frame(draw_pos);
+        }
+        else if (walk_anim != nullptr)
+        {
+            draw_pos.x = this->hitbox.x - (walk_anim->size.x - this->hitbox.width) / 2.0f;
+            draw_pos.y = this->hitbox.y - (walk_anim->size.y - this->hitbox.height) / 2.0f;
+            walk_anim->Draw_Current_Frame(draw_pos);
         }
 
-
-
         //DrawRectangleLinesEx(this->hitbox, 2.0f, RED);
-        dc--;
     }
 
     void Melee_Enemy::On_Collision(Collidable* other)
@@ -198,7 +220,12 @@ namespace enemy
         Enemy_Base_Class::On_Collision(other);
 
     }
-    void Melee_Enemy::Take_Damage_Check(int damage_amount) {
-        this->currentState=E_DAMAGED;
+    void Melee_Enemy::Take_Damage_Check(int damage_amount)
+    {
+        this->currentState = E_DAMAGED;
+        if (hit_animations.count(this->facing_Direction))
+        {
+            hit_animations.at(this->facing_Direction).First_Frame();
+        }
     }
 }

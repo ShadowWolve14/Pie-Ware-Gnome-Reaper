@@ -18,6 +18,7 @@ namespace enemy
                           game::Config::melee_enemy_2_walk_frame_count, game::Config::melee_enemy_2_walk_anim_speed,
                           game::Config::melee_enemy_2_attack_anim_size, game::Config::melee_enemy_2_attack_frame_count,
                           game::Config::melee_enemy_2_attack_anim_speed,game::Config::melee_enemy_2_hit_anim_size,
-                          game::Config::melee_enemy_2_hit_frame_count,game::Config::melee_enemy_2_hit_anim_speed)
+                          game::Config::melee_enemy_2_hit_frame_count,game::Config::melee_enemy_2_hit_frame_count /
+                          game::Config::melee_enemy_2_hit_anim_duration, game::Config::melee_enemy_2_hit_anim_duration)
     {}
 }

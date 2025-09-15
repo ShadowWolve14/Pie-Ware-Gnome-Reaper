@@ -79,13 +79,10 @@ namespace enemy
 
     void Enemy_Base_Class::Take_Damage(int damage_amount)
     {
+        if (enemy_Health <= 0) return;
         this->tookd= true;
         this->enemy_Health -= damage_amount;
         PlaySound(hitS);
-        if (this->enemy_Health <= 0)
-        {
-            this->Mark_For_Destruction();
-        }
     }
 
     void enemy::Enemy_Base_Class::Melee_Attack()

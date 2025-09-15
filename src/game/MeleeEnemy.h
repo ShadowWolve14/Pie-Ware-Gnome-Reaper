@@ -5,7 +5,7 @@
 #include <map>
 #include "PlayerBaseClass.h"
 
-enum EnemyState { E_IDLE, E_WALKING, E_ATTACKING, E_DAMAGED };
+enum EnemyState { E_IDLE, E_WALKING, E_ATTACKING, E_DAMAGED,E_DYING };
 
 namespace enemy
 {
@@ -29,12 +29,16 @@ namespace enemy
 
         int dc;
 
+        float hit_animation_duration;
+        float death_timer = 0.0f;
+
         static std::map<std::string, Texture2D> s_melee_textures;
 
         Melee_Enemy(Vector2 start_position, const std::string& name, int health, float speed, int damage, int score,
                     int souls, float cooldown, Vector2 hitbox_size, const char* walk_left_path, const char* walk_right_path,
                     const char* attack_left_path, const char* attack_right_path, Vector2 walk_anim_size, int walk_frame_count,
-                    float walk_anim_speed, Vector2 attack_anim_size, int attack_frame_count, float attack_anim_speed,Vector2 hit_anim_size, int hit_frame_count, float hit_anim_speed);
+                    float walk_anim_speed, Vector2 attack_anim_size, int attack_frame_count, float attack_anim_speed,
+                    Vector2 hit_anim_size, int hit_frame_count, float hit_anim_speed, float hit_anim_duration);
 
     public:
 
