@@ -113,6 +113,11 @@ namespace game
 
         inline static constexpr const char* kProjectileSprite = "PieWare/assets/Items/Projectile_Right_White.png";
 
+        // ------Player_Projectile Piercing Settings------
+        inline static constexpr bool enable_piercing_upgrades = true;     // Sollen Upgrades die Anzahl der Durchschläge erhöhen?
+        inline static constexpr int base_projectile_pierce_count = 2;      // Wie viele Gegner durchschlägt ein Pfeil standardmäßig? (1 = kein Durchschlag)
+        inline static constexpr int projectile_pierce_damage_multiplier_percent = 75; // Wie viel % Schaden machen Treffer nach dem ersten? (100 = kein Schadensverlust)
+
        // ------Player_Melee_Attack------
        // Diese Werte gelten für den normalen Zustand.
        inline static constexpr float player_Melee_Attack_Cooldown = 10.0f;

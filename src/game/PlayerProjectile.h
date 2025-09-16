@@ -20,9 +20,12 @@ namespace game {
         Texture2D sprite;
         float rotation;
 
-        Player_Projectile(Vector2 start_position, Vector2 direction, float projectile_speed, int final_damage);
+        Player_Projectile(Vector2 start_position, Vector2 direction, float projectile_speed, int final_damage, int pierce_count);
         ~Player_Projectile() override;
 
+        int pierce_count_remaining;
+        float damage_falloff_multiplier;
+        std::vector<Collidable*> hit_enemies;
         static void LoadAssets();
         static void UnloadAssets();
         void Tick(float delta_time) override;

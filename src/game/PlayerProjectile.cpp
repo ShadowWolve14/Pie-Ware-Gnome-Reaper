@@ -7,9 +7,11 @@ namespace game
 {
     Texture2D Player_Projectile::projectile_sprite;
 
-    Player_Projectile::Player_Projectile(Vector2 start_position, Vector2 direction, float projectile_speed, int final_damage)
+    Player_Projectile::Player_Projectile(Vector2 start_position, Vector2 direction, float projectile_speed, int final_damage, int pierce_count)
         : is_active(true), damage(final_damage)
     {
+        this->pierce_count_remaining = pierce_count;
+        this->damage_falloff_multiplier = game::Config::projectile_pierce_damage_multiplier_percent / 100.0f;
         this->sprite = projectile_sprite;
 
         this->velocity = Vector2Scale(direction, projectile_speed);
@@ -52,13 +54,25 @@ namespace game
 
     Collision_Type Player_Projectile::Get_Collision_Type() const { return Collision_Type::PLAYER_PROJECTILE; }
 
-    void Player_Projectile::On_Collision(Collidable* other) {
+    void Player_Projectile::On_Collision(Collidable* other)
+    {
         Collision_Type other_type = other->Get_Collision_Type();
-        if (other_type == Collision_Type::ENEMY) {
+        if (other_type == Collision_Type::WALL || other_type == Collision_Type::ENEMY_SPAWNER) {
+            this->Mark_For_Destruction();
+            return;
+        }
+        if (other_type == Collision_Type::ENEMY)
+        {
+            if (std::find(hit_enemies.begin(), hit_enemies.end(), other) != hit_enemies.end()) {
+                return;
+            }
             CollisionResponse::Apply_Damage(other, this->damage);
-            this->Mark_For_Destruction();
-        } else if (other_type == Collision_Type::WALL || other_type == Collision_Type::ENEMY_SPAWNER) {
-            this->Mark_For_Destruction();
+            hit_enemies.push_back(other);
+            this->pierce_count_remaining--;
+            this->damage = static_cast<int>(this->damage * this->damage_falloff_multiplier);
+            if (this->pierce_count_remaining <= 0) {
+                this->Mark_For_Destruction();
+            }
         }
     }
     void Player_Projectile::LoadAssets()

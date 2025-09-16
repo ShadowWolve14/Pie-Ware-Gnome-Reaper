@@ -192,7 +192,6 @@ void Player_Base_Class::Ranged_Attack()
 {
     if (is_buffed) return;
     this->range_Attack_Cooldown = ranged_Base_Cooldown;
-
     this->currentState = ATTACKING_RANGED;
 
     Vector2 fire_direction = {0.0f, 0.0f};
@@ -210,14 +209,20 @@ void Player_Base_Class::Ranged_Attack()
 
     float offset_distance = (hitbox.width / 2.0f) + 1;
     Vector2 spawn_position = Vector2Add(Get_Player_Center(), Vector2Scale(fire_direction, offset_distance));
-
     int final_damage = static_cast<int>(ranged_Base_Damage * this->player_Damage_Multiplier);
+
+    int pierce_count = game::Config::base_projectile_pierce_count;
+    if (game::Config::enable_piercing_upgrades)
+    {
+        pierce_count += game::core::upgrades.rangedDMG_level;
+    }
 
     auto* projectile = new game::Player_Projectile(
         spawn_position,
         fire_direction,
         projectile_Speed,
-        final_damage
+        final_damage,
+        pierce_count
     );
 
     if (object_manager_ptr) {
