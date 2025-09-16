@@ -203,15 +203,15 @@ void MainMenuScene::options_Update() {
             slider=!slider;
         }
         if (IsKeyPressed(game::Config::key_Left)){
-            game::core::Store::volume=game::core::Store::volume-1;
+            game::core::Store::volume=game::core::Store::volume-0.5;
             if (game::core::Store::volume<0){
                 game::core::Store::volume=0;
             }
         }
         if (IsKeyPressed(game::Config::key_Right)){
-            game::core::Store::volume=game::core::Store::volume+1;
-            if (game::core::Store::volume>10){
-                game::core::Store::volume=10;
+            game::core::Store::volume=game::core::Store::volume+0.5;
+            if (game::core::Store::volume>5){
+                game::core::Store::volume=5;
             }
         }
 
@@ -255,10 +255,10 @@ void MainMenuScene::options_Draw() {
         }
     }
     if (counter==1){
-        DrawTexturePro(VolumeSlider,{128*10-128*game::core::Store::volume,1,128,48},{game::Config::kStageWidth/2-64*3,500,128*3,48*3},{0,0},0,WHITE);
+        DrawTexturePro(VolumeSlider,{128*10-128*game::core::Store::volume*2,1,128,48},{game::Config::kStageWidth/2-64*3,500,128*3,48*3},{0,0},0,WHITE);
 
     } else{
-        DrawTexturePro(VolumeSlider,{128*10-128*game::core::Store::volume,1,128,48},{game::Config::kStageWidth/2-64*2,500,128*2,48*2},{0,0},0,WHITE);
+        DrawTexturePro(VolumeSlider,{128*10-128*game::core::Store::volume*2,1,128,48},{game::Config::kStageWidth/2-64*2,500,128*2,48*2},{0,0},0,WHITE);
 
     }
 
