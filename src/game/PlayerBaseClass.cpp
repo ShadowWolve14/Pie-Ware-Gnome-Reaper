@@ -292,7 +292,10 @@ void Player_Base_Class::Take_Damage(int damage_amount)
 {
     if (is_buffed && damage_amount > 0) return;
 
-    PlaySound(hits);
+    if (damage_amount > 0)
+    {
+        PlaySound(hits);
+    }
     player_Health -= damage_amount;
     player_Health = std::min(player_Health, (float)player_Max_Health);
 }
