@@ -167,15 +167,15 @@ void HUD::HUD_draw() {
                 break;
             }
             case potion1: {
-                if (UC > 0) { DrawTextureEx(IP1U, v6, rot, 3, WHITE); } // _Use Icon
+                if (UC > 0) { DrawTextureEx(IP1U, v6, rot, 3, WHITE); }
                 break;
             }
             case potion2: {
-                if (UC > 0) { DrawTextureEx(IP2U, v6, rot, 3, WHITE); } // _Use Icon
+                if (UC > 0) { DrawTextureEx(IP2U, v6, rot, 3, WHITE); }
                 break;
             }
             case potion3: {
-                if (UC > 0) { DrawTextureEx(IP3U, v6, rot, 3, WHITE); } // _Use Icon
+                if (UC > 0) { DrawTextureEx(IP3U, v6, rot, 3, WHITE); }
                 break;
             }
             default: {
@@ -198,15 +198,15 @@ void HUD::HUD_draw() {
                 break;
             }
             case potion1: {
-                DrawTextureEx(IP1, v6, rot, 3, WHITE); // Normales Icon
+                DrawTextureEx(IP1, v6, rot, 3, WHITE);
                 break;
             }
             case potion2: {
-                DrawTextureEx(IP2, v6, rot, 3, WHITE); // Normales Icon
+                DrawTextureEx(IP2, v6, rot, 3, WHITE);
                 break;
             }
             case potion3: {
-                DrawTextureEx(IP3, v6, rot, 3, WHITE); // Normales Icon
+                DrawTextureEx(IP3, v6, rot, 3, WHITE);
                 break;
             }
             default: {
