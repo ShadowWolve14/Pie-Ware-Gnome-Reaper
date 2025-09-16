@@ -88,7 +88,7 @@ public:
     void Take_Damage(int damage);
 	float item_removal_timer = 0.0f;
 	Object_Manager* object_manager_ptr = nullptr;
-
+	float GetBuffTimer() const { return buff_timer; }
 	void Use_Item();
 	void PickUpItem(ItemBase* item_to_pick_up);
 	bool HasItem() const;

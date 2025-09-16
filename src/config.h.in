@@ -436,6 +436,7 @@ namespace game
         inline static constexpr float testo_Needle_Speed_Boost = 0.75f;     // Multiplikator für die Geschwindigkeit
         inline static constexpr float testo_Needle_Damage_Boost = 8.0f;    // Multiplikator für den Schaden
         inline static constexpr int testo_Needle_Max_On_Map = 1;
+        inline static constexpr float testo_Needle_Blinking_Start_Time = 30.0f;
         inline static constexpr const char* kTestoNeedleAnim = "PieWare/assets/Items/Animations/Animation_Testonadel.png";
         inline static constexpr Vector2 testo_Needle_Anim_Size = {16.0f, 16.0f};
         inline static constexpr int testo_Needle_Frame_Count = 9;

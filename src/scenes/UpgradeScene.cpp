@@ -583,9 +583,9 @@ namespace game::scenes {
         }
     }
     bool UpgradeScene::Input_Check_Sel() {
-        if (IsKeyPressed(game::Config::key_Melee_Attack)){
+        if (IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_ENTER)) {
             return true;
-        } else{
+        } else {
             return false;
         }
     }

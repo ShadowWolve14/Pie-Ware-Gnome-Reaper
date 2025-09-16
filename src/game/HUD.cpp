@@ -127,7 +127,15 @@ void HUD::HUD_draw() {
     DrawTextureEx(SCC,v2,rot,3,WHITE);
     DrawTextureEx(SOC,v3,rot,3,WHITE);
     DrawTextureEx(SA,v4,rot,3,WHITE);
-    DrawTextureEx(AA,v5,rot,3,WHITE);
+
+    if (mp->IsBuffed())
+    {
+        DrawTextureEx(SA, v5, rot, 3, WHITE);
+    }
+    else
+    {
+        DrawTextureEx(AA, v5, rot, 3, WHITE);
+    }
 
     if (st==ma){
         if (UC>0){
@@ -136,7 +144,14 @@ void HUD::HUD_draw() {
     }
     if (st==ra){
         if (UC>0){
-            DrawTextureEx(AAU,v5,rot,3,WHITE);
+            if (mp->IsBuffed())
+            {
+                DrawTextureEx(SAU, v5, rot, 3, WHITE);
+            }
+            else
+            {
+                DrawTextureEx(AAU, v5, rot, 3, WHITE);
+            }
         }
     }
 
@@ -194,7 +209,23 @@ void HUD::HUD_draw() {
                 break;
             }
             case testo: {
-                DrawTextureEx(IT, v6, rot, 3, WHITE);
+                bool should_draw = true;
+                if (mp->IsBuffed() && mp->GetBuffTimer() <= game::Config::testo_Needle_Blinking_Start_Time)
+                {
+                    if ((int)(GetTime() * 10) % 2 == 0)
+                    {
+                        should_draw = false;
+                    }
+                }
+
+                if (should_draw)
+                {
+                    DrawTextureEx(IT, v6, rot, 3, WHITE);
+                }
+                else
+                {
+                    DrawTextureEx(IE, v6, rot, 3, WHITE);
+                }
                 break;
             }
             case potion1: {

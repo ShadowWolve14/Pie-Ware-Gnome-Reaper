@@ -41,14 +41,28 @@ Player_Base_Class::~Player_Base_Class()
 
 void Player_Base_Class::Player_Input()
 {
+
     if (IsKeyPressed(game::Config::key_Melee_Attack) && melee_Cooldown <= 0)
     {
         Melee_Attack();
     }
 
-    if (IsKeyPressed(game::Config::key_Ranged_Attack) && range_Attack_Cooldown <= 0)
+    if (IsKeyPressed(game::Config::key_Ranged_Attack))
     {
-        Ranged_Attack();
+        if (is_buffed)
+        {
+            if (melee_Cooldown <= 0)
+            {
+                Melee_Attack();
+            }
+        }
+        else
+        {
+            if (range_Attack_Cooldown <= 0)
+            {
+                Ranged_Attack();
+            }
+        }
     }
     Use_Item();
 }

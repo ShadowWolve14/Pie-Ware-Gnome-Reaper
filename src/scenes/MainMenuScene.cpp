@@ -84,9 +84,9 @@ void MainMenuScene::Input_Check_Mov() {
     }
 }
 bool MainMenuScene::Input_Check_Sel() {
-    if (IsKeyPressed(game::Config::key_Melee_Attack)){
+    if (IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_ENTER)) {
         return true;
-    } else{
+    } else {
         return false;
     }
 }
@@ -199,8 +199,8 @@ void MainMenuScene::main_Draw() {
 void MainMenuScene::options_Update() {
 
     if (slider){
-        if (IsKeyPressed(game::Config::key_Melee_Attack)){
-            slider=!slider;
+        if (IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_ENTER)) {
+            slider = !slider;
         }
         if (IsKeyPressed(game::Config::key_Left)){
             game::core::Store::volume=game::core::Store::volume-0.5;
