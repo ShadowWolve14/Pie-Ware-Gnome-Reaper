@@ -45,5 +45,6 @@ namespace game::core
         inline static int last_score = 0;
 
         inline static Font font= LoadFont("PieWare/assets/Font/GnomishGame.ttf");
+        inline static bool running= true;
     };
 }

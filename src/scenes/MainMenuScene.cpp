@@ -36,7 +36,8 @@ Input_Check_Mov();
             break;
         }
         case end:{
-            CloseWindow();
+            game::core::Store::running= false;
+
             break;
         }
     }
