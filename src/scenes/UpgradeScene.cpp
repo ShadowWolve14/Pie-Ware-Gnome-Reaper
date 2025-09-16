@@ -26,6 +26,7 @@ namespace game::scenes {
             fairyAnim.First_Frame();
         }
         song.looping= true;
+        SetMusicVolume(song,game::core::Store::volume);
         PlayMusicStream(song);
     }
 

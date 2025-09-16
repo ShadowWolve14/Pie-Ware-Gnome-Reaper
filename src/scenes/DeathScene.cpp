@@ -28,6 +28,7 @@ namespace game::scenes {
             );
             fairyAnim.First_Frame();
         }
+        SetSoundVolume(deaths,game::core::Store::volume);
 
 
         if (has_fairy) {

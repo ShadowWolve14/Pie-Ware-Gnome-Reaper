@@ -87,6 +87,7 @@ Player_Class_One::Player_Class_One(Vector2 start_Position)
     buff_melee_Attack_Animations.try_emplace(UP_RIGHT, player_Buff_Melee_Attack_Anim_Size, game::Config::kPlayerBuffMeleeUpRightAnim, player_Buff_Melee_Attack_Frame_Count, sprites_Per_Line_Buff_Melee_Attack, player_Buff_Melee_Attack_Anim_Speed);
     buff_melee_Attack_Animations.try_emplace(DOWN_LEFT, player_Buff_Melee_Attack_Anim_Size, game::Config::kPlayerBuffMeleeDownLeftAnim, player_Buff_Melee_Attack_Frame_Count, sprites_Per_Line_Buff_Melee_Attack, player_Buff_Melee_Attack_Anim_Speed);
     buff_melee_Attack_Animations.try_emplace(DOWN_RIGHT, player_Buff_Melee_Attack_Anim_Size, game::Config::kPlayerBuffMeleeDownRightAnim, player_Buff_Melee_Attack_Frame_Count, sprites_Per_Line_Buff_Melee_Attack, player_Buff_Melee_Attack_Anim_Speed);
+
 }
 
 
