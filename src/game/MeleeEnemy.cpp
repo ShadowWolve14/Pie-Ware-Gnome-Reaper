@@ -6,6 +6,7 @@
 #include "CollisionResponse.h"
 #include "raymath.h"
 #include "../Config.h.in"
+#include "Store.h"
 
 namespace enemy
 {
@@ -33,6 +34,7 @@ namespace enemy
         s_melee_textures["Demonenritter_Attack_Right"] = LoadTexture(game::Config::kMeleeEnemy3AttackRightAnim);
         s_melee_textures["Demonenritter_Hit_Right"] = LoadTexture(game::Config::kMeleeEnemy3HitRight);
         s_melee_textures["Demonenritter_Hit_Left"] = LoadTexture(game::Config::kMeleeEnemy3HitLeft);
+
     }
 
     void Melee_Enemy::Unload_All_Melee_Assets()
@@ -54,6 +56,8 @@ namespace enemy
                                game::Config::kAIBase_SeekWeight, game::Config::kAIBase_SeparationWeight, game::Config::kAIBase_PlayerSeparationWeight,
                                game::Config::kAIBase_DesiredSeparation, game::Config::kAIBase_Drag)
     {
+        SetSoundVolume(atS,game::core::Store::volume);
+
         this->walk_texture_left = &s_melee_textures.at(name + "_Walk_Left");
         this->walk_texture_right = &s_melee_textures.at(name + "_Walk_Right");
         this->attack_texture_left = &s_melee_textures.at(name + "_Attack_Left");

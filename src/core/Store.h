@@ -46,5 +46,6 @@ namespace game::core
 
         inline static Font font= LoadFont("PieWare/assets/Font/GnomishGame.ttf");
         inline static bool running= true;
+        inline static float volume=10;
     };
 }

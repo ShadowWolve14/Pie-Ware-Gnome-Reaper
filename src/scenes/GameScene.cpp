@@ -46,6 +46,7 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
         Song3.looping = true;
     }
     PlayMusicStream(*Active_Song);
+    SetMusicVolume(*Active_Song,game::core::Store::volume);
     enemy::Melee_Enemy::Load_All_Melee_Assets();
     game::Player_Projectile::LoadAssets();
     BombExplosionHitbox::LoadAssets();
