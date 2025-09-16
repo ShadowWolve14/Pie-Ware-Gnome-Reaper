@@ -44,3 +44,8 @@ FairyItem::FairyItem(Vector2 position, int current_level)
     this->animation = RepeatAnimation(item_size, anim_path,
         game::Config::fairy_Frame_Count, game::Config::fairy_Frame_Count, game::Config::fairy_Anim_Speed);
 }
+
+std::string FairyItem::GetName() const
+{
+    return "Fairy Item";
+}

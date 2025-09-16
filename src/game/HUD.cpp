@@ -24,7 +24,10 @@ void HUD::HUD_update() {
         if (mp->GetHeldItem()->GetType()==ItemType::KEY){
             this->it=key;
         }
-        if (mp->GetHeldItem()->GetType()==ItemType::HEALTH_POTION){
+        if (mp->GetHeldItem()->GetType()==ItemType::HEALTH_POTION ||
+            mp->GetHeldItem()->GetType()==ItemType::HEALTH_POTION_2 ||
+            mp->GetHeldItem()->GetType()==ItemType::HEALTH_POTION_3)
+        {
             this->it=potion;
         }
         if (mp->GetHeldItem()->GetType()==ItemType::TESTO_NEEDLE){
@@ -113,9 +116,6 @@ void HUD::HUD_draw() {
         DrawTexturePro(damge,{1+(float)c*512,1,512,320},{0,0,512*4,320*4},{0,0},0,WHITE);
     }*/
 
-
-
-
     DrawTextureEx(HS,v1,rot,3,WHITE);
     DrawTextureEx(SCC,v2,rot,3,WHITE);
     DrawTextureEx(SOC,v3,rot,3,WHITE);
@@ -132,6 +132,19 @@ void HUD::HUD_draw() {
             DrawTextureEx(AAU,v5,rot,3,WHITE);
         }
     }
+
+    if (mp->HasItem())
+    {
+        std::string itemName = mp->GetHeldItem()->GetName();
+        float fontSize = 20.0f;
+        float spacing = 1.0f;
+        Vector2 textSize = MeasureTextEx(game::core::Store::font, itemName.c_str(), fontSize, spacing);
+        Vector2 textPos;
+        textPos.x = v6.x + (150 / 2) - (textSize.x / 2) - 64;
+        textPos.y = v6.y - textSize.y - 26;
+        DrawTextEx(game::core::Store::font, itemName.c_str(), textPos, fontSize, spacing, WHITE);
+    }
+
     if (st==iu){
         switch (it) {
             case bomb:{

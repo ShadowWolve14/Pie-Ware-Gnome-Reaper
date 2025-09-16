@@ -70,3 +70,8 @@ void BombItem::Activate(Player_Base_Class* player)
     this->Mark_For_Destruction();
     PlaySound(us);
 }
+
+std::string BombItem::GetName() const
+{
+        return "Bomb";
+}

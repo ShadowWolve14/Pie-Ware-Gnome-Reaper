@@ -26,6 +26,8 @@
 #include "../game/DisappearingWall.h"
 #include "../game/HourglassWall.h"
 #include "../game/BombExplosionHitbox.h"
+#include "../game/HealthPotion2.h"
+#include "../game/HealthPotion3.h"
 
 using namespace std::string_literals;
 
@@ -238,12 +240,16 @@ for (const auto& pos : dead_enemy_positions)
     {
         std::vector<std::pair<ItemType, int>> full_weighted_list = {
             {ItemType::HEALTH_POTION, game::Config::item_Drop_Weight_Heal},
+            {ItemType::HEALTH_POTION_2, game::Config::item_Drop_Weight_Heal_2},
+            {ItemType::HEALTH_POTION_3, game::Config::item_Drop_Weight_Heal_3},
             {ItemType::BOMB,          game::Config::item_Drop_Weight_Bomb},
             {ItemType::TESTO_NEEDLE,  game::Config::item_Drop_Weight_TestoNeedle}
         };
         int total_weight = game::Config::item_Drop_Weight_Heal +
-                           game::Config::item_Drop_Weight_Bomb +
-                           game::Config::item_Drop_Weight_TestoNeedle;
+                        game::Config::item_Drop_Weight_Heal_2 +
+                        game::Config::item_Drop_Weight_Heal_3 +
+                        game::Config::item_Drop_Weight_Bomb +
+                        game::Config::item_Drop_Weight_TestoNeedle;
 
         if (total_weight <= 0) continue;
 
@@ -269,6 +275,16 @@ for (const auto& pos : dead_enemy_positions)
                     potions_to_spawn++;
                 }
                 break;
+            case ItemType::HEALTH_POTION_2:
+                if (CountItemsOfType(ItemType::HEALTH_POTION_2, objectManager, *player_ptr) < game::Config::health_Potion_2_Max_On_Map) {
+                    spawned_item = new HealthPotion2(pos);
+                }
+            break;
+            case ItemType::HEALTH_POTION_3:
+                if (CountItemsOfType(ItemType::HEALTH_POTION_3, objectManager, *player_ptr) < game::Config::health_Potion_3_Max_On_Map) {
+                    spawned_item = new HealthPotion3(pos);
+                }
+            break;
             case ItemType::BOMB:
                 if (CountItemsOfType(ItemType::BOMB, objectManager, *player_ptr) + bombs_to_spawn < game::Config::bomb_Max_On_Map) {
                     spawned_item = new BombItem(pos);

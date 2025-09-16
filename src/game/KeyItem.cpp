@@ -17,3 +17,8 @@ void KeyItem::Activate(Player_Base_Class* player)
     PlaySound(us);
     player->RemoveHeldItem();
 }
+
+std::string KeyItem::GetName() const
+{
+    return "Key";
+}

@@ -17,3 +17,7 @@ void TestoNeedle::Activate(Player_Base_Class* player)
     PlaySound(us);
     player->ApplyTestoBuff();
 }
+std::string TestoNeedle::GetName() const
+{
+    return "Testo";
+}

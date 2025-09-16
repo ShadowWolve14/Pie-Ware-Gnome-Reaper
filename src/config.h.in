@@ -388,6 +388,8 @@ namespace game
         // Die folgenden Werte sind "Gewichte". Ein höherer Wert bedeutet eine höhere Chance im Vergleich zu den anderen.
         // Ein Wert von 0 bedeutet, dass dieses Item niemals von Gegnern gedroppt wird. 10 und 1 bedeutet das Item mit 10 kommt 10 mal häufiger
         inline static constexpr int item_Drop_Weight_Heal = 70;
+        inline static constexpr int item_Drop_Weight_Heal_2 = 25;
+        inline static constexpr int item_Drop_Weight_Heal_3 = 5;
         inline static constexpr int item_Drop_Weight_Bomb = 25;
         inline static constexpr int item_Drop_Weight_TestoNeedle = 5;
         inline static constexpr int item_Drop_Weight_Key = 0; // Schlüssel soll nicht von Gegnern droppen
@@ -398,6 +400,18 @@ namespace game
         inline static constexpr int health_Potion_Heal_Amount = 40;        // Wie viel Leben wiederhergestellt wird
         inline static constexpr int health_Potion_Max_On_Map = 3;          // Maximale Anzahl (Map + Inventar)
         inline static constexpr const char* kHealthPotionAnim = "PieWare/assets/Items/Animations/Animation_Healthpotion.png";
+
+        // ------ Heil-Item 2 ------
+        inline static constexpr int health_Potion_2_Heal_Amount = 80;
+        inline static constexpr int health_Potion_2_Max_On_Map = 2;
+        // Wie gewünscht, erstmal die gleichen Assets:
+        inline static constexpr const char* kHealthPotion2Anim = "PieWare/assets/Items/Animations/Animation_Healthpotion.png";
+
+        // ------ Heil-Item 3 ------
+        inline static constexpr int health_Potion_3_Heal_Amount = 120;
+        inline static constexpr int health_Potion_3_Max_On_Map = 1;
+        inline static constexpr const char* kHealthPotion3Anim = "PieWare/assets/Items/Animations/Animation_Healthpotion.png";
+
         inline static constexpr Vector2 health_Potion_Anim_Size = {16.0f, 16.0f};
         inline static constexpr int health_Potion_Frame_Count = 9;
         inline static constexpr float health_Potion_Anim_Speed = 1.0f;
