@@ -52,6 +52,6 @@ namespace enemy
         void Draw() override;
         void On_Collision(Collidable* other) override;
         void Melee_Attack() override;
-        void Take_Damage_Check(int damage);
+        void Take_Damage_Check(int damage_amount) override;
     };
 }

@@ -8,6 +8,8 @@
 #include "CollisionResponse.h"
 #include "PlayerBaseClass.h"
 
+bool enemy::Enemy_Base_Class::sound_played_this_frame = false;
+
 namespace enemy
 {
 #include "EnemyBaseClass.h"
@@ -86,8 +88,14 @@ namespace enemy
     void Enemy_Base_Class::Take_Damage(int damage_amount)
     {
         if (enemy_Health <= 0) return;
+
         this->enemy_Health -= damage_amount;
-        PlaySound(hitS);
+
+        if (!sound_played_this_frame)
+        {
+            PlaySound(hitS);
+            sound_played_this_frame = true;
+        }
         this->Take_Damage_Check(damage_amount);
     }
 

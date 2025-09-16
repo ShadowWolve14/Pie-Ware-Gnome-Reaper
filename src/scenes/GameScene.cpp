@@ -112,6 +112,8 @@ game::scenes::GameScene::~GameScene()
 
 void game::scenes::GameScene::Update()
 {
+    enemy::Enemy_Base_Class::sound_played_this_frame = false;
+
     if (player_ptr->Is_Dead())
     {
         bool player_has_fairy = player_ptr->HasFairy();

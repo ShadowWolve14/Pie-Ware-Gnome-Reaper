@@ -36,7 +36,6 @@ namespace enemy
         int enemy_Damage;
         const float attack_Cooldown_Duration;
         float attack_Cooldown_Timer;
-
         int score_value;
         int souls_value;
 
@@ -56,14 +55,15 @@ namespace enemy
         virtual ~Enemy_Base_Class();
 
         void Set_Position(Vector2 position) override;
-        void Take_Damage(int damage_amount);
-
+        virtual void Take_Damage(int damage_amount);
+        static bool sound_played_this_frame;
         void Tick_AI(float delta_time, Vector2 player_center, const std::vector<Enemy_Base_Class*>& all_enemies);
         void Tick(float delta_time) override;
 
         void On_Collision(Collidable* other) override;
         virtual void Draw() = 0;
         virtual void Melee_Attack();
+
         virtual void Take_Damage_Check(int damage_amount) {}
 
         int Get_Score_Value() const { return score_value; }
