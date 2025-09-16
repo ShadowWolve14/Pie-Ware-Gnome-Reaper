@@ -108,7 +108,7 @@ namespace game::scenes {
                     game::core::Store::stage->SwitchToNewScene("MainMenu", upgradeScene);
                 }
                 if (current_level==3){
-                    auto upgradeScene = std::make_shared<MainMenuScene>();
+                    auto upgradeScene = std::make_shared<ScoreboardScene>(game::core::Store::player_state->score);
                     game::core::Store::stage->SwitchToNewScene("MainMenu", upgradeScene);
                 }
             }

@@ -212,6 +212,10 @@ namespace game::scenes {
 
     void UpgradeScene::Update()
     {
+        if (IsKeyPressed(KEY_K)){
+            auto newGameScene = std::make_shared<GameScene>(current_level+1);
+            game::core::Store::stage->SwitchToNewScene("GameScene", newGameScene);
+        }
         UpdateMusicStream(song);
         // tick fail flash timer
         // tick fail flash timer
@@ -246,7 +250,7 @@ namespace game::scenes {
     }
 
     void UpgradeScene::Draw() {
-        ClearBackground(Color{31, 14, 28, 255});
+        ClearBackground(BLACK);//Color{31, 14, 28, 255}
         //Draw Menu Backdrop
 
         DrawTexturePro(soulcounter_bg,
