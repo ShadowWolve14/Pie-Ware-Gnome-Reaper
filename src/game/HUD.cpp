@@ -8,30 +8,37 @@
 HUD::HUD(Player_Class_One* mp):mp(mp) {
     prevhp=100;
     c=0;
+
+    IP1 = LoadTexture(game::Config::kIconHealthPotion1);
+    IP1U = LoadTexture(game::Config::kIconHealthPotion1_Use);
+    IP2 = LoadTexture(game::Config::kIconHealthPotion2);
+    IP2U = LoadTexture(game::Config::kIconHealthPotion2_Use);
+    IP3 = LoadTexture(game::Config::kIconHealthPotion3);
+    IP3U = LoadTexture(game::Config::kIconHealthPotion3_Use);
 }
 
-void HUD::HUD_update() {
+void HUD::HUD_update()
+{
     sc=game::core::Store::player_state->souls;
     scc=game::core::Store::player_state->score;
     player_pos=mp->Get_Player_Center();
 
-    if (!mp->HasItem()){
-        this->it=empty;
-    } else{
-        if (mp->GetHeldItem()->GetType()==ItemType::BOMB){
-            this->it=bomb;
-        }
-        if (mp->GetHeldItem()->GetType()==ItemType::KEY){
-            this->it=key;
-        }
-        if (mp->GetHeldItem()->GetType()==ItemType::HEALTH_POTION ||
-            mp->GetHeldItem()->GetType()==ItemType::HEALTH_POTION_2 ||
-            mp->GetHeldItem()->GetType()==ItemType::HEALTH_POTION_3)
-        {
-            this->it=potion;
-        }
-        if (mp->GetHeldItem()->GetType()==ItemType::TESTO_NEEDLE){
-            this->it=testo;
+    if (!mp->HasItem()) {
+        this->it = empty;
+    } else {
+        ItemType currentItemType = mp->GetHeldItem()->GetType();
+        if (currentItemType == ItemType::BOMB) {
+            this->it = bomb;
+        } else if (currentItemType == ItemType::KEY) {
+            this->it = key;
+        } else if (currentItemType == ItemType::HEALTH_POTION) {
+            this->it = potion1;
+        } else if (currentItemType == ItemType::HEALTH_POTION_2) {
+            this->it = potion2;
+        } else if (currentItemType == ItemType::HEALTH_POTION_3) {
+            this->it = potion3;
+        } else if (currentItemType == ItemType::TESTO_NEEDLE) {
+            this->it = testo;
         }
     }
 
@@ -145,59 +152,67 @@ void HUD::HUD_draw() {
         DrawTextEx(game::core::Store::font, itemName.c_str(), textPos, fontSize, spacing, WHITE);
     }
 
-    if (st==iu){
+    if (st == iu) {
         switch (it) {
-            case bomb:{
-                if (UC>0){
-                    DrawTextureEx(IBU,v6,rot,3,WHITE);}
+            case bomb: {
+                if (UC > 0) { DrawTextureEx(IBU, v6, rot, 3, WHITE); }
                 break;
             }
-            case key:{
-                if (UC>0){
-                    DrawTextureEx(IKU,v6,rot,3,WHITE);}
-
+            case key: {
+                if (UC > 0) { DrawTextureEx(IKU, v6, rot, 3, WHITE); }
                 break;
             }
-            case testo:{
-                if (UC>0){
-                    DrawTextureEx(ITU,v6,rot,3,WHITE);}
+            case testo: {
+                if (UC > 0) { DrawTextureEx(ITU, v6, rot, 3, WHITE); }
                 break;
             }
-            case potion:{
-                if (UC>0){
-                    DrawTextureEx(IPU,v6,rot,3,WHITE);}
+            case potion1: {
+                if (UC > 0) { DrawTextureEx(IP1U, v6, rot, 3, WHITE); } // _Use Icon
                 break;
             }
-
-            default:{
-                if (UC>0){
-                    DrawTextureEx(IEU,v6,rot,3,WHITE);}
+            case potion2: {
+                if (UC > 0) { DrawTextureEx(IP2U, v6, rot, 3, WHITE); } // _Use Icon
+                break;
+            }
+            case potion3: {
+                if (UC > 0) { DrawTextureEx(IP3U, v6, rot, 3, WHITE); } // _Use Icon
+                break;
+            }
+            default: {
+                if (UC > 0) { DrawTextureEx(IEU, v6, rot, 3, WHITE); }
                 break;
             }
         }
-    } else{
+    } else {
         switch (it) {
-            case bomb:{
-                DrawTextureEx(IB,v6,rot,3,WHITE);
+            case bomb: {
+                DrawTextureEx(IB, v6, rot, 3, WHITE);
                 break;
             }
-            case key:{
-                DrawTextureEx(IK,v6,rot,3,WHITE);
+            case key: {
+                DrawTextureEx(IK, v6, rot, 3, WHITE);
                 break;
             }
-            case testo:{
-                DrawTextureEx(IT,v6,rot,3,WHITE);
+            case testo: {
+                DrawTextureEx(IT, v6, rot, 3, WHITE);
                 break;
             }
-            case potion:{
-                DrawTextureEx(IP,v6,rot,3,WHITE);
+            case potion1: {
+                DrawTextureEx(IP1, v6, rot, 3, WHITE); // Normales Icon
                 break;
             }
-            default:{
-                DrawTextureEx(IE,v6,rot,3,WHITE);
+            case potion2: {
+                DrawTextureEx(IP2, v6, rot, 3, WHITE); // Normales Icon
                 break;
             }
-
+            case potion3: {
+                DrawTextureEx(IP3, v6, rot, 3, WHITE); // Normales Icon
+                break;
+            }
+            default: {
+                DrawTextureEx(IE, v6, rot, 3, WHITE);
+                break;
+            }
         }
     }
 

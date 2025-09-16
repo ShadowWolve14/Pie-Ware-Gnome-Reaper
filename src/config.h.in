@@ -383,7 +383,7 @@ namespace game
         inline static constexpr float item_Attraction_Speed = 10.0f;        // Geschwindigkeit, mit der das Item zum Spieler gezogen wird
 
         // ------ Item Drop Rates from Enemies ------
-        inline static constexpr int enemy_Item_Drop_Chance_Percent = 15; // Globale Chance in %, dass ein Gegner überhaupt ein Item droppt
+        inline static constexpr int enemy_Item_Drop_Chance_Percent = 100; // Globale Chance in %, dass ein Gegner überhaupt ein Item droppt
 
         // Die folgenden Werte sind "Gewichte". Ein höherer Wert bedeutet eine höhere Chance im Vergleich zu den anderen.
         // Ein Wert von 0 bedeutet, dass dieses Item niemals von Gegnern gedroppt wird. 10 und 1 bedeutet das Item mit 10 kommt 10 mal häufiger
@@ -399,13 +399,13 @@ namespace game
         // ------ Heil-Item: Health Potion ------
         inline static constexpr int health_Potion_Heal_Amount = 40;        // Wie viel Leben wiederhergestellt wird
         inline static constexpr int health_Potion_Max_On_Map = 3;          // Maximale Anzahl (Map + Inventar)
-        inline static constexpr const char* kHealthPotionAnim = "PieWare/assets/Items/Animations/Animation_Healthpotion.png";
+        inline static constexpr const char* kHealthPotionAnim = "PieWare/assets/Items/Item Variants/Item_Variant_HeiltrankVariant2.png";
 
         // ------ Heil-Item 2 ------
         inline static constexpr int health_Potion_2_Heal_Amount = 80;
         inline static constexpr int health_Potion_2_Max_On_Map = 2;
         // Wie gewünscht, erstmal die gleichen Assets:
-        inline static constexpr const char* kHealthPotion2Anim = "PieWare/assets/Items/Animations/Animation_Healthpotion.png";
+        inline static constexpr const char* kHealthPotion2Anim = "PieWare/assets/Items/Item Variants/Item_Variant_HeiltrankVariant1.png";
 
         // ------ Heil-Item 3 ------
         inline static constexpr int health_Potion_3_Heal_Amount = 120;
@@ -542,30 +542,34 @@ namespace game
 
 
         //-------HUD----------
-         inline static constexpr const char* Symbol_AA ="PieWare/assets/UI/HUD/Button_ArrowAttack.png";
-                        inline static constexpr const char* Symbol_AAU ="PieWare/assets/UI/HUD/Button_ArrowAttack_Use.png";
-                        inline static constexpr const char* Symbol_AAI ="PieWare/assets/UI/HUD/Button_ArrowAttack_Input.png";
-                        inline static constexpr const char* Symbol_IB ="PieWare/assets/UI/HUD/Button_Item_Bomb.png";
-                        inline static constexpr const char* Symbol_IBU ="PieWare/assets/UI/HUD/Button_Item_Bomb_Use.png";
-                        inline static constexpr const char* Symbol_IE ="PieWare/assets/UI/HUD/Button_Item_Empty.png";
-                        inline static constexpr const char* Symbol_IEU ="PieWare/assets/UI/HUD/Button_Item_Empty_Use.png";
-                        inline static constexpr const char* Symbol_II ="PieWare/assets/UI/HUD/Button_Item_Input.png";
-                        inline static constexpr const char* Symbol_IK ="PieWare/assets/UI/HUD/Button_Item_Key.png";
-                        inline static constexpr const char* Symbol_IKU ="PieWare/assets/UI/HUD/Button_Item_Key_Use.png";
-                        inline static constexpr const char* Symbol_SA ="PieWare/assets/UI/HUD/Button_SwordAttack.png";
-                        inline static constexpr const char* Symbol_SAU ="PieWare/assets/UI/HUD/Button_SwordAttack_Use.png";
-                        inline static constexpr const char* Symbol_SAI ="PieWare/assets/UI/HUD/Button_SwordAttack_Input.png";
-                        inline static constexpr const char* Symbol_HH ="PieWare/assets/UI/HUD/Healthbar_HalfHeart.png";
-                        inline static constexpr const char* Symbol_H ="PieWare/assets/UI/HUD/Healthbar_Heart.png";
-                        inline static constexpr const char* Symbol_HS ="PieWare/assets/UI/HUD/Healthbar_Static.png";
-                        inline static constexpr const char* Symbol_HU ="PieWare/assets/UI/HUD/Healthbar_UpgradeHeart.png";
-                        inline static constexpr const char* Symbol_HUH ="PieWare/assets/UI/HUD/Healthbar_UpgradeHalfHeart.png";
-                        inline static constexpr const char* Symbol_SCC ="PieWare/assets/UI/HUD/ScoreCounter_Static.png";
-                        inline static constexpr const char* Symbol_SOC ="PieWare/assets/UI/HUD/SoulCounter_Static.png";
-                        inline static constexpr const char* Symbol_IP ="PieWare/assets/UI/HUD/Button_Item_Potionl.png";
-                        inline static constexpr const char* Symbol_IPU ="PieWare/assets/UI/HUD/Button_Item_Potionl_Use.png";
-                        inline static constexpr const char* Symbol_IT ="PieWare/assets/UI/HUD/Button_Item_Testonadel.png";
-                        inline static constexpr const char* Symbol_ITU ="PieWare/assets/UI/HUD/Button_Item_Testonadel_Use.png";
+        inline static constexpr const char* Symbol_AA ="PieWare/assets/UI/HUD/Button_ArrowAttack.png";
+        inline static constexpr const char* Symbol_AAU ="PieWare/assets/UI/HUD/Button_ArrowAttack_Use.png";
+        inline static constexpr const char* Symbol_AAI ="PieWare/assets/UI/HUD/Button_ArrowAttack_Input.png";
+        inline static constexpr const char* Symbol_IB ="PieWare/assets/UI/HUD/Button_Item_Bomb.png";
+        inline static constexpr const char* Symbol_IBU ="PieWare/assets/UI/HUD/Button_Item_Bomb_Use.png";
+        inline static constexpr const char* Symbol_IE ="PieWare/assets/UI/HUD/Button_Item_Empty.png";
+        inline static constexpr const char* Symbol_IEU ="PieWare/assets/UI/HUD/Button_Item_Empty_Use.png";
+        inline static constexpr const char* Symbol_II ="PieWare/assets/UI/HUD/Button_Item_Input.png";
+        inline static constexpr const char* Symbol_IK ="PieWare/assets/UI/HUD/Button_Item_Key.png";
+        inline static constexpr const char* Symbol_IKU ="PieWare/assets/UI/HUD/Button_Item_Key_Use.png";
+        inline static constexpr const char* Symbol_SA ="PieWare/assets/UI/HUD/Button_SwordAttack.png";
+        inline static constexpr const char* Symbol_SAU ="PieWare/assets/UI/HUD/Button_SwordAttack_Use.png";
+        inline static constexpr const char* Symbol_SAI ="PieWare/assets/UI/HUD/Button_SwordAttack_Input.png";
+        inline static constexpr const char* Symbol_HH ="PieWare/assets/UI/HUD/Healthbar_HalfHeart.png";
+        inline static constexpr const char* Symbol_H ="PieWare/assets/UI/HUD/Healthbar_Heart.png";
+        inline static constexpr const char* Symbol_HS ="PieWare/assets/UI/HUD/Healthbar_Static.png";
+        inline static constexpr const char* Symbol_HU ="PieWare/assets/UI/HUD/Healthbar_UpgradeHeart.png";
+        inline static constexpr const char* Symbol_HUH ="PieWare/assets/UI/HUD/Healthbar_UpgradeHalfHeart.png";
+        inline static constexpr const char* Symbol_SCC ="PieWare/assets/UI/HUD/ScoreCounter_Static.png";
+        inline static constexpr const char* Symbol_SOC ="PieWare/assets/UI/HUD/SoulCounter_Static.png";
+        inline static constexpr const char* Symbol_IT ="PieWare/assets/UI/HUD/Button_Item_Testonadel.png";
+        inline static constexpr const char* Symbol_ITU ="PieWare/assets/UI/HUD/Button_Item_Testonadel_Use.png";
+        inline static constexpr const char* kIconHealthPotion1 = "PieWare/assets/UI/HUD/Button_Item_HelthpotionV3.png";
+        inline static constexpr const char* kIconHealthPotion1_Use = "PieWare/assets/UI/HUD/Button_Item_HelthpotionV3_Use.png";
+        inline static constexpr const char* kIconHealthPotion2 = "PieWare/assets/UI/HUD/Button_Item_HelthpotionV2.png";
+        inline static constexpr const char* kIconHealthPotion2_Use = "PieWare/assets/UI/HUD/Button_Item_HelthpotionV2_Use.png";
+        inline static constexpr const char* kIconHealthPotion3 = "PieWare/assets/UI/HUD/Button_Item_Potionl.png";
+        inline static constexpr const char* kIconHealthPotion3_Use = "PieWare/assets/UI/HUD/Button_Item_Potionl_Use.png";
 
 
        //____________________Rätsel: Steinverschieben____________________________
