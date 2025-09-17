@@ -213,6 +213,10 @@ namespace game::scenes {
 
     void UpgradeScene::Update()
     {
+        SetSoundVolume(sound1,game::core::Store::volume);
+        SetSoundVolume(sound2,game::core::Store::volume);
+        SetSoundVolume(sound3,game::core::Store::volume);
+
         if (IsKeyPressed(KEY_K)){
             auto newGameScene = std::make_shared<GameScene>(current_level+1);
             game::core::Store::stage->SwitchToNewScene("GameScene", newGameScene);
@@ -577,13 +581,16 @@ namespace game::scenes {
     void UpgradeScene::Input_Check_Mov() {
         if (IsKeyPressed(game::Config::key_Up)){
             this->counter= this->counter-1;
+            PlaySound(sound3);
         }
         if (IsKeyPressed(game::Config::key_Down)){
             this->counter= this->counter+1;
+            PlaySound(sound3);
         }
     }
     bool UpgradeScene::Input_Check_Sel() {
         if (IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_ENTER)) {
+            PlaySound(sound1);
             return true;
         } else {
             return false;
