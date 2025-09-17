@@ -4,18 +4,19 @@
 
 #include "FairyItem.h"
 #include "PlayerBaseClass.h"
+#include "Store.h"
 #include "../Config.h.in"
 
 FairyItem::FairyItem(Vector2 position, int current_level)
     : ItemBase(position, ItemType::FAIRY, "", false, {0,0}, 0, 0),
-      // Initialisiere die Aura-Animation direkt im Konstruktor
       aura_vfx(
           game::Config::fairy_Aura_VFX_Anim_Size,
           game::Config::kFairyAuraVFXAnim,
           game::Config::fairy_Aura_VFX_Frame_Count,
           game::Config::fairy_Aura_VFX_Frame_Count,
           game::Config::fairy_Aura_VFX_Anim_Speed
-      )
+      ),
+      collected_in_level(current_level)
 {
     const char* anim_path;
     Vector2 item_size;
@@ -81,7 +82,7 @@ void FairyItem::Activate(Player_Base_Class* player)
     PlaySound(LoadSound("assets/audio/sfx/Item_Obtained.wav"));
 
     player->SetHasFairy(true);
-
+    game::core::Store::player_state->fairy_collected_in_level = this->collected_in_level;
     this->Mark_For_Destruction();
 }
 std::string FairyItem::GetName() const
