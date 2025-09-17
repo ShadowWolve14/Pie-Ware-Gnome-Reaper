@@ -383,7 +383,7 @@ namespace game
         inline static constexpr float item_Attraction_Speed = 10.0f;        // Geschwindigkeit, mit der das Item zum Spieler gezogen wird
 
         // ------ Item Drop Rates from Enemies ------
-        inline static constexpr int enemy_Item_Drop_Chance_Percent = 15; // Globale Chance in %, dass ein Gegner überhaupt ein Item droppt
+        inline static constexpr int enemy_Item_Drop_Chance_Percent = 100; // Globale Chance in %, dass ein Gegner überhaupt ein Item droppt
 
         // Die folgenden Werte sind "Gewichte". Ein höherer Wert bedeutet eine höhere Chance im Vergleich zu den anderen.
         // Ein Wert von 0 bedeutet, dass dieses Item niemals von Gegnern gedroppt wird. 10 und 1 bedeutet das Item mit 10 kommt 10 mal häufiger
@@ -481,17 +481,17 @@ namespace game
         inline static constexpr int adrenalin_Pierce_Multiplier_Boost_Percent = 25; // ist mit 25 auf 100 also kein Schadenverlust mehr
         inline static constexpr int adrenalin_Attack_Speed_Boost_Percent = 20;
         // Adrenalin VFX Settings (visueller Effekt auf dem Spieler)
-        inline static const char* kAdrenalineVFXAnim = "PieWare/assets/Spritesheets/VFX/Healing Effect.png";
+        inline static const char* kAdrenalineVFXAnim = "PieWare/assets/Spritesheets/VFX/AdrenalineVFX.png";
         inline static const Vector2 adrenaline_VFX_Anim_Size = { 32.0f, 32.0f };
         inline static constexpr int adrenaline_VFX_Frame_Count = 5;
         inline static constexpr float adrenaline_VFX_Anim_Speed = 3.0f;
         inline static constexpr int adrenaline_VFX_Transparency = 150; // Transparenz (0-255)
 
         // Adrenalin Projectile Settings (animiertes Projektil)
-        inline static const char* kAdrenalineProjectileAnim = "PieWare/assets/Items/Projectile_Right_White.png";
-        inline static const Vector2 adrenaline_Projectile_Anim_Size = { 16.0f, 16.0f };
-        inline static constexpr int adrenaline_Projectile_Frame_Count = 1;
-        inline static constexpr float adrenaline_Projectile_Anim_Speed = 1.0f;
+        inline static const char* kAdrenalineProjectileAnim = "PieWare/assets/Items/Animations/AdrenalineArrow.png";
+        inline static const Vector2 adrenaline_Projectile_Anim_Size = { 32.0f, 16.0f };
+        inline static constexpr int adrenaline_Projectile_Frame_Count = 5;
+        inline static constexpr float adrenaline_Projectile_Anim_Speed = 8.0f;
 
         // ------ Testonadel Buff-Animationen ------
         // Hier definieren wir alle 16 neuen Animationspfade, wie du es wolltest.

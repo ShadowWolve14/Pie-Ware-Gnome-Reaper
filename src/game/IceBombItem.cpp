@@ -32,7 +32,7 @@ void IceBombItem::Activate(Player_Base_Class* player)
         for (auto* obj : player->object_manager_ptr->managed_objects) {
             if (auto* hourglass = dynamic_cast<HourglassWall*>(obj)) {
                 hourglass->ApplyFreeze(game::Config::kIceBombFreezeDuration);
-                break; // Es gibt nur eine Sanduhr
+                break;
             }
         }
     }

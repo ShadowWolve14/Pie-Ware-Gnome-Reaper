@@ -26,6 +26,8 @@ class RepeatAnimation {
     void First_Frame();
     void Draw_Current_Frame(Vector2 pos, Color tint = WHITE);
     void Draw_Current_Frame_Pro(Vector2 pos, Color tint = WHITE);
+    Texture2D GetSpritesheet() const { return spritesheet; }
+    Rectangle GetCurrentFrameRec() const { return target; }
 
 };
 

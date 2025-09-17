@@ -5,28 +5,26 @@
 
 namespace game
 {
-
+    Texture2D Player_Projectile::normal_projectile_sprite;
+    Texture2D Player_Projectile::buffed_projectile_spritesheet;
     Player_Projectile::Player_Projectile(Vector2 start_position, Vector2 direction, float projectile_speed,
     int final_damage, int pierce_count, float final_pierce_multiplier, bool is_buffed_and_animated)
-    : is_active(true), damage(final_damage), is_animated(is_buffed_and_animated),
-      animation({0,0}, nullptr, 0, 0, 0.0f)
-{
+    : is_active(true),
+      damage(final_damage),
+      is_animated(is_buffed_and_animated),
+      animation(
+          is_buffed_and_animated ? game::Config::adrenaline_Projectile_Anim_Size : Vector2{0, 0},
+          is_buffed_and_animated ? buffed_projectile_spritesheet : Texture2D{0},
+          is_buffed_and_animated ? game::Config::adrenaline_Projectile_Frame_Count : 0,
+          is_buffed_and_animated ? game::Config::adrenaline_Projectile_Frame_Count : 1,
+          is_buffed_and_animated ? game::Config::adrenaline_Projectile_Anim_Speed : 0.0f
+      )
+    {
         this->pierce_count_remaining = pierce_count;
         this->damage_falloff_multiplier = final_pierce_multiplier;
-
         this->velocity = Vector2Scale(direction, projectile_speed);
-
         this->rotation = atan2(direction.y, direction.x) * RAD2DEG;
-        if (is_animated)
-        {
-            animation = Animations(game::Config::adrenaline_Projectile_Anim_Size, game::Config::kAdrenalineProjectileAnim,
-                                    game::Config::adrenaline_Projectile_Frame_Count, game::Config::adrenaline_Projectile_Frame_Count,
-                                    game::Config::adrenaline_Projectile_Anim_Speed);
-        }
-        else
-        {
-            this->sprite = LoadTexture(game::Config::kProjectileSprite);
-        }
+
         this->hitbox = {
             start_position.x - game::Config::projectile_Hitbox_Size.x / 2.0f,
             start_position.y - game::Config::projectile_Hitbox_Size.y / 2.0f,
@@ -35,11 +33,7 @@ namespace game
         };
     }
 
-    Player_Projectile::~Player_Projectile() {
-        if (!is_animated) {
-            UnloadTexture(this->sprite);
-        }
-    }
+    Player_Projectile::~Player_Projectile() { }
 
     void Player_Projectile::Tick(float delta_time) {
         if (!is_active) return;
@@ -64,10 +58,11 @@ namespace game
         }
         else
         {
-            Rectangle sourceRec = { 0.0f, 0.0f, (float)this->sprite.width, (float)this->sprite.height };
-            Rectangle destRec = { hitbox.x + hitbox.width/2, hitbox.y + hitbox.height/2, (float)this->sprite.width, (float)this->sprite.height };
-            Vector2 origin = { (float)this->sprite.width / 2, (float)this->sprite.height / 2 };
-            DrawTexturePro(this->sprite, sourceRec, destRec, origin, this->rotation, WHITE);
+            Rectangle sourceRec = { 0.0f, 0.0f, (float)normal_projectile_sprite.width, (float)normal_projectile_sprite.height };
+            Rectangle destRec = { hitbox.x + hitbox.width/2, hitbox.y + hitbox.height/2, (float)normal_projectile_sprite.width,
+                (float)normal_projectile_sprite.height }; Vector2 origin = { (float)normal_projectile_sprite.width
+                    / 2, (float)normal_projectile_sprite.height / 2 };
+            DrawTexturePro(normal_projectile_sprite, sourceRec, destRec, origin, this->rotation, WHITE);
         }
 
         if (game::Config::visualize_Attack_Hitboxes)
@@ -99,5 +94,15 @@ namespace game
             }
         }
     }
+    void Player_Projectile::LoadAssets()
+    {
+        normal_projectile_sprite = LoadTexture(game::Config::kProjectileSprite);
+        buffed_projectile_spritesheet = LoadTexture(game::Config::kAdrenalineProjectileAnim);
+    }
 
+    void Player_Projectile::UnloadAssets()
+    {
+        UnloadTexture(normal_projectile_sprite);
+        UnloadTexture(buffed_projectile_spritesheet);
+    }
 }

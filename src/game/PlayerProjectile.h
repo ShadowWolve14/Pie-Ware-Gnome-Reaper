@@ -16,16 +16,15 @@ namespace game {
         Vector2 velocity;
         bool is_active;
         int damage;
-        Animations animation;
-        Texture2D sprite;
+        RepeatAnimation animation;
         bool is_animated;
-
+        static Texture2D normal_projectile_sprite;
+        static Texture2D buffed_projectile_spritesheet;
         float rotation;
 
         Player_Projectile(Vector2 start_position, Vector2 direction, float projectile_speed, int final_damage,
             int pierce_count, float final_pierce_multiplier, bool is_buffed_and_animated);
         ~Player_Projectile() override;
-
         int pierce_count_remaining;
         float damage_falloff_multiplier;
         std::vector<Collidable*> hit_enemies;
@@ -33,5 +32,7 @@ namespace game {
         void Draw() override;
         Collision_Type Get_Collision_Type() const override;
         void On_Collision(Collidable* other) override;
+        static void LoadAssets();
+        static void UnloadAssets();
     };
 }
