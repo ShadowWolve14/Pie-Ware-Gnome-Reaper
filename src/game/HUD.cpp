@@ -127,9 +127,9 @@ void HUD::HUD_draw() {
     v14.x=v14.x+ofs;v14.y=v14.y+ofs;
 
 
-   /* if (c>0){
-        DrawTexturePro(damge,{1+(float)c*512,1,512,320},{0,0,512*4,320*4},{0,0},0,WHITE);
-    }*/
+    if (c>0){
+        DrawTexturePro(damge,{1+(float)c*512,1,512,288},{0,0,512*3.8,288*3.8},{0,0},0,WHITE);
+    }
 
     DrawTextureEx(HS,v1,rot,3,WHITE);
     DrawTextureEx(SCC,v2,rot,3,WHITE);
