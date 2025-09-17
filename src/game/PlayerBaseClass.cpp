@@ -41,14 +41,38 @@ Player_Base_Class::~Player_Base_Class()
 
 void Player_Base_Class::Player_Input()
 {
+
     if (IsKeyPressed(game::Config::key_Melee_Attack) && melee_Cooldown <= 0)
     {
-        Melee_Attack();
+        if (is_adrenalin_buffed)
+        {
+            if (range_Attack_Cooldown <= 0)
+            {
+                Ranged_Attack();
+            }
+        }
+        else
+        {
+            Melee_Attack();
+        }
     }
 
-    if (IsKeyPressed(game::Config::key_Ranged_Attack) && range_Attack_Cooldown <= 0)
+    if (IsKeyPressed(game::Config::key_Ranged_Attack))
     {
-        Ranged_Attack();
+        if (is_buffed)
+        {
+            if (melee_Cooldown <= 0)
+            {
+                Melee_Attack();
+            }
+        }
+        else
+        {
+            if (range_Attack_Cooldown <= 0)
+            {
+                Ranged_Attack();
+            }
+        }
     }
     Use_Item();
 }
@@ -74,7 +98,23 @@ void Player_Base_Class::Tick(float delta_time)
             RemoveHeldItem();
         }
     }
+    if (is_adrenalin_buffed)
+    {
+        adrenalin_buff_timer -= delta_time;
+        if (adrenalin_buff_timer <= 0.0f)
+        {
+            is_adrenalin_buffed = false;
 
+            player_Movement_Speed -= game::Config::adrenalin_Movement_Speed_Boost;
+            ranged_Base_Damage -= game::Config::adrenalin_Ranged_Damage_Boost;
+            is_invincible = false;
+
+            float speed_multiplier = 1.0f - (game::Config::adrenalin_Attack_Speed_Boost_Percent / 100.0f);
+            ranged_Base_Cooldown /= speed_multiplier;
+
+            RemoveHeldItem();
+        }
+    }
     Update_Previous_Position();
     if (game::Config::enable_Health_Drain) {
         player_Health -= game::Config::player_Health_Drain_Rate * delta_time;
@@ -217,13 +257,27 @@ void Player_Base_Class::Ranged_Attack()
         pierce_count += game::core::upgrades.rangedDMG_level;
     }
 
+    if (is_adrenalin_buffed)
+    {
+        pierce_count += game::Config::adrenalin_Pierce_Count_Boost;
+    }
+
+    float pierce_multiplier = game::Config::projectile_pierce_damage_multiplier_percent / 100.0f;
+    if (is_adrenalin_buffed)
+    {
+        pierce_multiplier += game::Config::adrenalin_Pierce_Multiplier_Boost_Percent / 100.0f;
+        pierce_multiplier = std::min(pierce_multiplier, 1.0f);
+    }
+
     auto* projectile = new game::Player_Projectile(
-        spawn_position,
-        fire_direction,
-        projectile_Speed,
-        final_damage,
-        pierce_count
-    );
+    spawn_position,
+    fire_direction,
+    projectile_Speed,
+    final_damage,
+    pierce_count,
+    pierce_multiplier,
+    is_adrenalin_buffed
+);
 
     if (object_manager_ptr) {
         object_manager_ptr->AddObject(projectile);
@@ -276,9 +330,13 @@ Vector2 Player_Base_Class::Get_Player_Pos()
 
 void Player_Base_Class::Take_Damage(int damage_amount)
 {
+    if (is_invincible && damage_amount > 0) return;
     if (is_buffed && damage_amount > 0) return;
 
-    PlaySound(hits);
+    if (damage_amount > 0)
+    {
+        PlaySound(hits);
+    }
     player_Health -= damage_amount;
     player_Health = std::min(player_Health, (float)player_Max_Health);
 }
@@ -356,7 +414,7 @@ void Player_Base_Class::PickUpItem(ItemBase* item_to_pick_up)
 
 void Player_Base_Class::Use_Item()
 {
-    if (IsKeyPressed(game::Config::key_Use_Item) && HasItem() && held_item->GetType() != ItemType::KEY && !is_buffed && item_removal_timer <= 0.0f)
+    if (IsKeyPressed(game::Config::key_Use_Item) && HasItem() && held_item->GetType() != ItemType::KEY && !is_buffed && !is_adrenalin_buffed && item_removal_timer <= 0.0f)
     {
         if (held_item->GetType()==ItemType::HEALTH_POTION){
             itemvfx=&potionvfx;
@@ -509,4 +567,33 @@ bool Player_Base_Class::CheckCollisionLineRec(Vector2 startPos, Vector2 endPos, 
     if (LineIntersectsLine(startPos, endPos, topRight, bottomRight)) return true;
 
     return false;
+}
+
+void Player_Base_Class::ApplyAdrenalineBuff()
+{
+    if (is_adrenalin_buffed) return;
+
+    is_adrenalin_buffed = true;
+    player_Movement_Speed += game::Config::adrenalin_Movement_Speed_Boost;
+    ranged_Base_Damage += game::Config::adrenalin_Ranged_Damage_Boost;
+    is_invincible = game::Config::adrenaline_Grants_Invincibility;
+
+    float speed_multiplier = 1.0f - (game::Config::adrenalin_Attack_Speed_Boost_Percent / 100.0f);
+    ranged_Base_Cooldown *= speed_multiplier;
+
+    adrenalin_buff_timer = game::Config::adrenaline_Needle_Buff_Duration;
+
+    if (held_item->GetType() == ItemType::ADRENALINE_NEEDLE) {
+        itemvfx = &testovfx;
+        vfxtype = 2;
+    }
+}
+bool Player_Base_Class::IsAdrenalinBuffed() const
+{
+    return is_adrenalin_buffed;
+}
+
+float Player_Base_Class::GetAdrenalinBuffTimer() const
+{
+    return adrenalin_buff_timer;
 }

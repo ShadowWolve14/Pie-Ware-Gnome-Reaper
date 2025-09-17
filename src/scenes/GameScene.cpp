@@ -26,6 +26,11 @@
 #include "../game/DisappearingWall.h"
 #include "../game/HourglassWall.h"
 #include "../game/BombExplosionHitbox.h"
+#include "../game/HealthPotion2.h"
+#include "../game/HealthPotion3.h"
+#include "../game/IceBombItem.h"
+#include "../game/IceBombExplosionHitbox.h"
+#include "../game/AdrenalineNeedle.h"
 
 using namespace std::string_literals;
 
@@ -44,8 +49,8 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
         Song3.looping = true;
     }
     PlayMusicStream(*Active_Song);
+    SetMusicVolume(*Active_Song,game::core::Store::volume);
     enemy::Melee_Enemy::Load_All_Melee_Assets();
-    game::Player_Projectile::LoadAssets();
     BombExplosionHitbox::LoadAssets();
     MovableWall::LoadAssets();
     this->current_level = level_to_load;
@@ -74,6 +79,7 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
     screen.Load_Game_Objects(objectManager);
 
     this->player_ptr->object_manager_ptr = &objectManager;
+    this->player_ptr->scene_ptr = this;
     p_cm = std::make_unique<Collision_Manager>(wb, objectManager.managed_objects);
 
     enemySpawner = std::make_unique<EnemySpawner>(objectManager, cam);
@@ -105,7 +111,6 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
 game::scenes::GameScene::~GameScene()
 {
     enemy::Melee_Enemy::Unload_All_Melee_Assets();
-    game::Player_Projectile::UnloadAssets();
     BombExplosionHitbox::UnloadAssets();
     MovableWall::UnloadAssets();
 }
@@ -130,7 +135,19 @@ void game::scenes::GameScene::Update()
         score_timer -= game::Config::kScore_Time_Interval;
     }
 
-    wave_timer -= dtm.Get_Dt();
+    if (wave_timer_is_frozen)
+    {
+        wave_freeze_timer -= dtm.Get_Dt();
+        if (wave_freeze_timer <= 0.0f)
+        {
+            wave_timer_is_frozen = false;
+        }
+    }
+    else
+    {
+        wave_timer -= dtm.Get_Dt();
+    }
+
     if (wave_timer <= 0.0f)
     {
         current_wave++;
@@ -229,8 +246,12 @@ objectManager.Cleanup_Objects([this, &dead_enemy_positions](Collidable* cleaned_
 });
 
     int potions_to_spawn = 0;
+    int potions2_to_spawn = 0;
+    int potions3_to_spawn = 0;
     int bombs_to_spawn = 0;
     int needles_to_spawn = 0;
+    int ice_bombs_to_spawn = 0;
+    int adrenaline_needles_to_spawn = 0;
 
 for (const auto& pos : dead_enemy_positions)
 {
@@ -238,12 +259,20 @@ for (const auto& pos : dead_enemy_positions)
     {
         std::vector<std::pair<ItemType, int>> full_weighted_list = {
             {ItemType::HEALTH_POTION, game::Config::item_Drop_Weight_Heal},
+            {ItemType::HEALTH_POTION_2, game::Config::item_Drop_Weight_Heal_2},
+            {ItemType::HEALTH_POTION_3, game::Config::item_Drop_Weight_Heal_3},
             {ItemType::BOMB,          game::Config::item_Drop_Weight_Bomb},
-            {ItemType::TESTO_NEEDLE,  game::Config::item_Drop_Weight_TestoNeedle}
+            {ItemType::ICE_BOMB,      game::Config::item_Drop_Weight_IceBomb},
+            {ItemType::TESTO_NEEDLE,  game::Config::item_Drop_Weight_TestoNeedle},
+            {ItemType::ADRENALINE_NEEDLE, game::Config::item_Drop_Weight_Adrenaline}
         };
         int total_weight = game::Config::item_Drop_Weight_Heal +
-                           game::Config::item_Drop_Weight_Bomb +
-                           game::Config::item_Drop_Weight_TestoNeedle;
+                        game::Config::item_Drop_Weight_Heal_2 +
+                        game::Config::item_Drop_Weight_Heal_3 +
+                        game::Config::item_Drop_Weight_Bomb +
+                        game::Config::item_Drop_Weight_IceBomb +
+                        game::Config::item_Drop_Weight_TestoNeedle +
+                            game::Config::item_Drop_Weight_Adrenaline;
 
         if (total_weight <= 0) continue;
 
@@ -268,20 +297,52 @@ for (const auto& pos : dead_enemy_positions)
                     spawned_item = new HealthPotion(pos);
                     potions_to_spawn++;
                 }
-                break;
+            break;
+
+            case ItemType::HEALTH_POTION_2:
+                if (CountItemsOfType(ItemType::HEALTH_POTION_2, objectManager, *player_ptr) + potions2_to_spawn < game::Config::health_Potion_2_Max_On_Map) {
+                    spawned_item = new HealthPotion2(pos);
+                    potions2_to_spawn++;
+                }
+            break;
+
+            case ItemType::HEALTH_POTION_3:
+                if (CountItemsOfType(ItemType::HEALTH_POTION_3, objectManager, *player_ptr) + potions3_to_spawn < game::Config::health_Potion_3_Max_On_Map) {
+                    spawned_item = new HealthPotion3(pos);
+                    potions3_to_spawn++;
+                }
+            break;
+
             case ItemType::BOMB:
                 if (CountItemsOfType(ItemType::BOMB, objectManager, *player_ptr) + bombs_to_spawn < game::Config::bomb_Max_On_Map) {
                     spawned_item = new BombItem(pos);
                     bombs_to_spawn++;
                 }
-                break;
+            break;
+
+            case ItemType::ICE_BOMB:
+                if (CountItemsOfType(ItemType::ICE_BOMB, objectManager, *player_ptr) + ice_bombs_to_spawn < game::Config::kIceBombMaxOnMap) {
+                    spawned_item = new IceBombItem(pos);
+                    ice_bombs_to_spawn++;
+                }
+            break;
+
             case ItemType::TESTO_NEEDLE:
                 if (CountItemsOfType(ItemType::TESTO_NEEDLE, objectManager, *player_ptr) + needles_to_spawn < game::Config::testo_Needle_Max_On_Map) {
                     spawned_item = new TestoNeedle(pos);
                     needles_to_spawn++;
                 }
-                break;
+            break;
+
+            case ItemType::ADRENALINE_NEEDLE:
+                if (CountItemsOfType(ItemType::ADRENALINE_NEEDLE, objectManager, *player_ptr) + adrenaline_needles_to_spawn < game::Config::adrenaline_Needle_Max_On_Map) {
+                    spawned_item = new AdrenalineNeedle(pos);
+                    adrenaline_needles_to_spawn++;
+                }
+            break;
         }
+
+
         if (spawned_item)
         {
             objectManager.AddObjectDeferred(spawned_item);
@@ -329,4 +390,10 @@ int game::scenes::GameScene::CountItemsOfType(ItemType type, const Object_Manage
         count++;
     }
     return count;
+}
+
+void game::scenes::GameScene::FreezeWaveTimer(float duration)
+{
+    this->wave_timer_is_frozen = true;
+    this->wave_freeze_timer = std::max(this->wave_freeze_timer, duration);
 }

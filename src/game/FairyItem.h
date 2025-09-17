@@ -11,6 +11,7 @@ class FairyItem : public ItemBase
 public:
     FairyItem(Vector2 position, int current_level);
     void Activate(Player_Base_Class* player) override {}
+    std::string GetName() const override;
 };
 
 

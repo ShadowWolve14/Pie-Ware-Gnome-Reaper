@@ -24,8 +24,9 @@ class RepeatAnimation {
     RepeatAnimation(Vector2, Texture2D, int, int, float speed);
     void Update_Frame(float delta_time);
     void First_Frame();
-    void Draw_Current_Frame(Vector2);
-    void Draw_Current_Frame_Pro(Vector2);
+    void Draw_Current_Frame(Vector2 pos, Color tint = WHITE);
+    void Draw_Current_Frame_Pro(Vector2 pos, Color tint = WHITE);
+
 };
 
 

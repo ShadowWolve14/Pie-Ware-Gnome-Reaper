@@ -1,5 +1,5 @@
 #pragma once
-#include <Scene.h>
+#include "Scene.h"
 #include "Screen.h"
 #include "CollisionManager.h"
 #include "../game/PlayerClassOne.h"
@@ -31,7 +31,8 @@ namespace game::scenes
         int current_wave = 0;
         int current_level = 1;
         float wave_timer = 0.0f;
-
+        bool wave_timer_is_frozen = false;
+        float wave_freeze_timer = 0.0f;
         HourglassWall* hourglass_wall_ptr = nullptr;
 
         std::unique_ptr<PuzzleOne> puzzle_one;
@@ -59,5 +60,6 @@ namespace game::scenes
         std::shared_ptr<Cam> cam;
         bool is_finished = false;
         std::string next_scene_name;
+        void FreezeWaveTimer(float duration);
     };
 }

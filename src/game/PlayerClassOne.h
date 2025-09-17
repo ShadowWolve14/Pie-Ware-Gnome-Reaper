@@ -24,7 +24,7 @@ private:
     std::map<Facing_Direction, RepeatAnimation> buff_idle_Animations;
     std::map<Facing_Direction, Animations> buff_melee_Attack_Animations;
     Facing_Direction attack_Direction = DOWN;
-
+    RepeatAnimation adrenalin_vfx_animation;
     Texture2D walkvfx= LoadTexture("PieWare/assets/Spritesheets/VFX/Walk_VFX.png");
 
 

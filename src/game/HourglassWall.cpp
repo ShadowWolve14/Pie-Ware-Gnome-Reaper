@@ -69,11 +69,23 @@ Collision_Type HourglassWall::Get_Collision_Type() const
     return Collision_Type::WALL;
 }
 
-void HourglassWall::Tick(float delta_time) { }
+void HourglassWall::Tick(float delta_time)
+{
+    if (is_frozen)
+    {
+        freeze_timer -= delta_time;
+        if (freeze_timer <= 0.0f)
+        {
+            is_frozen = false;
+        }
+    }
+}
+
 
 void HourglassWall::Draw()
 {
-    DrawTextureRec(this->spritesheet, this->current_frame_rect, this->draw_position, WHITE);
+    Color tint = is_frozen ? game::Config::kIceBombFreezeTint : WHITE;
+    DrawTextureRec(this->spritesheet, this->current_frame_rect, this->draw_position, tint);
 }
 
 void HourglassWall::On_Collision(Collidable* other) { }
@@ -81,4 +93,9 @@ void HourglassWall::On_Collision(Collidable* other) { }
 float HourglassWall::GetYSortPosition() const
 {
     return this->hitbox.y + this->hitbox.height;
+}
+void HourglassWall::ApplyFreeze(float duration)
+{
+    this->is_frozen = true;
+    this->freeze_timer = duration;
 }

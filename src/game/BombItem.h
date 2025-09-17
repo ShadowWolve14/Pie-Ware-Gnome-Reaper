@@ -15,6 +15,7 @@ private:
 public:
     BombItem(Vector2 position);
     void Activate(Player_Base_Class* player) override;
+    std::string GetName() const override;
 };
 
 

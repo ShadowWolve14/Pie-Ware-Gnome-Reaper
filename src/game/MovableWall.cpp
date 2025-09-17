@@ -7,6 +7,7 @@
 #include "raymath.h"
 #include "CollisionResponse.h"
 #include "Object_Manager.h"
+#include "Store.h"
 
 Texture2D MovableWall::smoke_spritesheet;
 
@@ -27,6 +28,7 @@ MovableWall::MovableWall(Vector2 position, Vector2 size, Vector2 target, const c
     spritesheet = LoadTexture(spritesheet_path);
     inactive_frame = { 0.0f, 0.0f, game::Config::movable_wall_sprite_size.x, game::Config::movable_wall_sprite_size.y };
     active_frame = { game::Config::movable_wall_sprite_size.x, 0.0f, game::Config::movable_wall_sprite_size.x, game::Config::movable_wall_sprite_size.y };
+    SetSoundVolume(pushs,game::core::Store::volume);
 }
 
 MovableWall::~MovableWall()
