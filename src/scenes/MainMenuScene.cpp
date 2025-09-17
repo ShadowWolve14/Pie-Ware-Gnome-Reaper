@@ -418,7 +418,7 @@ void MainMenuScene::credits_Draw() {
             }
       }
         d++;
-        if (d==60*8){
+        if (d==60*10){
             s++;
             d=0;
         }
