@@ -19,7 +19,8 @@ enum class ItemType
     TESTO_NEEDLE,
     KEY,
     FAIRY,
-    ADRENALINE_NEEDLE
+    ADRENALINE_NEEDLE,
+    LUCK_NEEDLE
 };
 
 class ItemBase : public Collidable

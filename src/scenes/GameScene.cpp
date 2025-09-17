@@ -31,6 +31,7 @@
 #include "../game/IceBombItem.h"
 #include "../game/IceBombExplosionHitbox.h"
 #include "../game/AdrenalineNeedle.h"
+#include "../game/Luck_Needle.h"
 
 using namespace std::string_literals;
 
@@ -117,6 +118,13 @@ game::scenes::GameScene::~GameScene()
 
 void game::scenes::GameScene::Update()
 {
+    if (game::core::Store::drop_chance_change_duration>=0){
+        game::core::Store::drop_chance_change_duration-=dtm.Get_Dt();
+    }
+    if (game::core::Store::drop_chance_change_duration<0){
+        game::core::Store::drop_chance=15;
+    }
+
     enemy::Enemy_Base_Class::sound_played_this_frame = false;
 
     if (player_ptr->Is_Dead())
@@ -252,10 +260,11 @@ objectManager.Cleanup_Objects([this, &dead_enemy_positions](Collidable* cleaned_
     int needles_to_spawn = 0;
     int ice_bombs_to_spawn = 0;
     int adrenaline_needles_to_spawn = 0;
+    int luck_needles_to_spawn = 0;
 
 for (const auto& pos : dead_enemy_positions)
 {
-    if (GetRandomValue(1, 100) <= game::Config::enemy_Item_Drop_Chance_Percent)
+    if (GetRandomValue(1, 100) <= game::core::Store::drop_chance)
     {
         std::vector<std::pair<ItemType, int>> full_weighted_list = {
             {ItemType::HEALTH_POTION, game::Config::item_Drop_Weight_Heal},
@@ -264,7 +273,8 @@ for (const auto& pos : dead_enemy_positions)
             {ItemType::BOMB,          game::Config::item_Drop_Weight_Bomb},
             {ItemType::ICE_BOMB,      game::Config::item_Drop_Weight_IceBomb},
             {ItemType::TESTO_NEEDLE,  game::Config::item_Drop_Weight_TestoNeedle},
-            {ItemType::ADRENALINE_NEEDLE, game::Config::item_Drop_Weight_Adrenaline}
+            {ItemType::ADRENALINE_NEEDLE, game::Config::item_Drop_Weight_Adrenaline},
+            {ItemType::LUCK_NEEDLE, game::Config::item_Drop_Weight_Luck}
         };
         int total_weight = game::Config::item_Drop_Weight_Heal +
                         game::Config::item_Drop_Weight_Heal_2 +
@@ -272,7 +282,8 @@ for (const auto& pos : dead_enemy_positions)
                         game::Config::item_Drop_Weight_Bomb +
                         game::Config::item_Drop_Weight_IceBomb +
                         game::Config::item_Drop_Weight_TestoNeedle +
-                            game::Config::item_Drop_Weight_Adrenaline;
+                        game::Config::item_Drop_Weight_Adrenaline +
+                        game::Config::item_Drop_Weight_Luck;
 
         if (total_weight <= 0) continue;
 
@@ -340,6 +351,11 @@ for (const auto& pos : dead_enemy_positions)
                     adrenaline_needles_to_spawn++;
                 }
             break;
+            case ItemType::LUCK_NEEDLE:
+                if (CountItemsOfType(ItemType::LUCK_NEEDLE, objectManager, *player_ptr) + luck_needles_to_spawn < game::Config::Luck_Needle_Max_On_Map) {
+                    spawned_item = new Luck_Needle(pos);
+                    luck_needles_to_spawn++;
+                }
         }
 
 

@@ -26,7 +26,7 @@ namespace game
         inline static constexpr int kTargetFps = 60;
 
         // Start game in window or fullscreen mode
-        inline static constexpr const bool kFullScreen = true;
+        inline static constexpr const bool kFullScreen = false;
 
         // Define if the game uses a mouse/mouse pointer
         // The mouse position is then accessible in game::core::Store in the mouse_position attribute
@@ -394,6 +394,7 @@ namespace game
         inline static constexpr int item_Drop_Weight_IceBomb = 25;
         inline static constexpr int item_Drop_Weight_TestoNeedle = 5;
         inline static constexpr int item_Drop_Weight_Adrenaline = 5;
+        inline static constexpr int item_Drop_Weight_Luck = 5;
         inline static constexpr int item_Drop_Weight_Key = 0; // Schlüssel soll nicht von Gegnern droppen
         inline static constexpr int item_Drop_Weight_Fairy = 0; // Fee soll nicht von Gegnern droppen
 
@@ -418,6 +419,17 @@ namespace game
         inline static constexpr int health_Potion_Frame_Count = 9;
         inline static constexpr float health_Potion_Anim_Speed = 1.0f;
         inline static constexpr float kHealVFXAnimSpeed = 1.5f;
+
+        // ------Luck_Spritze--------
+        inline static constexpr int Luck_Needle_duration = 120;
+        inline static constexpr int Luck_Needle_Max_On_Map = 2;
+        inline static constexpr const char* kLuck_Needle_Anim = "PieWare/assets/Items/Item Variants/Item_Variant_SpritzedesGluecks.png";
+
+        inline static constexpr Vector2 Luck_Needle_Anim_Size = {16.0f, 16.0f};
+        inline static constexpr int Luck_Needle_Frame_Count = 9;
+        inline static constexpr float Luck_Needle_Anim_Speed = 1.0f;
+        inline static constexpr float kLuckVFXAnimSpeed = 1.5f;
+
         // ------ Bomben-Item ------
         inline static constexpr int bomb_Damage = 240;                      // Schaden an Gegnern
         inline static constexpr float bomb_Radius_Tiles = 6.0f;             // Radius in "Tiles" (1 Tile = 16 Pixel)
@@ -614,6 +626,8 @@ namespace game
         inline static constexpr const char* kIconHealthPotion3_Use = "PieWare/assets/UI/HUD/Button_Item_Potionl_Use.png";
         inline static const char* kIconAdrenalinNeedle = "PieWare/assets/UI/HUD/Button_Item_Adrenaline.png";
         inline static const char* kIconAdrenalinNeedle_Use = "PieWare/assets/UI/HUD/Button_Item_Adrenaline_Use.png";
+        inline static const char* kIconLuckNeedle = "PieWare/assets/UI/HUD/Button_Item_Luckspritze.png";
+        inline static const char* kIconLuckNeedle_Use = "PieWare/assets/UI/HUD/Button_Item_Luckspritze_Use.png";
 
        //____________________Rätsel: Steinverschieben____________________________
         // ------ Allgemeine Rätsel-Mechaniken ------

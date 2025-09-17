@@ -47,5 +47,7 @@ namespace game::core
         inline static Font font= LoadFont("PieWare/assets/Font/GnomishGame.ttf");
         inline static bool running= true;
         inline static float volume=5;
+        inline static float drop_chance=game::Config::enemy_Item_Drop_Chance_Percent;
+        inline static float drop_chance_change_duration=0;
     };
 }

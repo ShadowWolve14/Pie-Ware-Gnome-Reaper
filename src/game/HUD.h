@@ -11,7 +11,7 @@
 #include "ItemBase.h"
 
 class HUD {
-    enum item{bomb, icebomb, empty,key,potion1, potion2, potion3, testo, adrenalin};
+    enum item{bomb, icebomb, empty,key,potion1, potion2, potion3, testo, adrenalin, luck};
     enum state{ma,ra,id,iu};
     Player_Class_One* mp= nullptr;
     int UC=0;
@@ -56,6 +56,8 @@ class HUD {
     Texture2D IBombU;
     Texture2D IAU;
     Texture2D IA;
+    Texture2D ILN;
+    Texture2D ILNU;
     Texture2D IT= LoadTexture(game::Config::Symbol_IT);
     Texture2D ITU= LoadTexture(game::Config::Symbol_ITU);
     Texture2D damge=LoadTexture("PieWare/assets/Spritesheets/VFX/Damage_Taken_Overlay.png");
