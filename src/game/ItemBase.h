@@ -15,6 +15,7 @@ enum class ItemType
     HEALTH_POTION_2,
     HEALTH_POTION_3,
     BOMB,
+    ICE_BOMB,
     TESTO_NEEDLE,
     KEY,
     FAIRY

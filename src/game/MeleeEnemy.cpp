@@ -90,6 +90,10 @@ namespace enemy
 
     void Melee_Enemy::Tick_Melee(float delta_time, Vector2 player_center)
 {
+    if (this->is_frozen)
+    {
+        return;
+    }
     this->last_known_player_center = player_center;
     if (currentState == E_DYING)
     {
@@ -179,24 +183,25 @@ namespace enemy
                 walk_anim = &walk_animations.at(facing_Direction);
             break;
         }
+        Color current_tint = is_frozen ? game::Config::kIceBombFreezeTint : WHITE;
 
         if (attack_anim != nullptr)
         {
             draw_pos.x = this->hitbox.x - (attack_anim->size.x - this->hitbox.width) / 2.0f;
             draw_pos.y = this->hitbox.y - (attack_anim->size.y - this->hitbox.height) / 2.0f;
-            attack_anim->Draw_Current_Frame(draw_pos);
+            attack_anim->Draw_Current_Frame(draw_pos, current_tint);
         }
         else if (hit_anim != nullptr)
         {
             draw_pos.x = this->hitbox.x - (hit_anim->size.x - this->hitbox.width) / 2.0f;
             draw_pos.y = this->hitbox.y - (hit_anim->size.y - this->hitbox.height) / 2.0f;
-            hit_anim->Draw_Current_Frame(draw_pos);
+            hit_anim->Draw_Current_Frame(draw_pos, current_tint);
         }
         else if (walk_anim != nullptr)
         {
             draw_pos.x = this->hitbox.x - (walk_anim->size.x - this->hitbox.width) / 2.0f;
             draw_pos.y = this->hitbox.y - (walk_anim->size.y - this->hitbox.height) / 2.0f;
-            walk_anim->Draw_Current_Frame(draw_pos);
+            walk_anim->Draw_Current_Frame(draw_pos, current_tint);
         }
 
         //DrawRectangleLinesEx(this->hitbox, 2.0f, RED);
@@ -207,7 +212,7 @@ namespace enemy
 
         if (other->Get_Collision_Type() == Collision_Type::PLAYER)
         {
-            if (currentState == E_ATTACKING && !damage_applied_this_attack)
+            if (currentState == E_ATTACKING && !damage_applied_this_attack && !is_frozen)
             {
                 CollisionResponse::Apply_Damage(other, this->enemy_Damage);
                 damage_applied_this_attack = true;
@@ -218,7 +223,16 @@ namespace enemy
     }
     void Melee_Enemy::Take_Damage_Check(int damage_amount)
     {
-        if (currentState == E_DYING) return;
+        if (this->is_frozen)
+        {
+            this->is_frozen = false;
+            this->freeze_timer = 0.0f;
+        }
+        if (currentState == E_DYING)
+        {
+            return;
+        }
+
         if (this->enemy_Health <= 0)
         {
             currentState = E_DYING;
@@ -230,7 +244,7 @@ namespace enemy
             knockback_timer = game::Config::kAIBase_Knockback_Duration;
             hit_stun_timer = this->hit_animation_duration;
 
-            Vector2 self_center = { this->hitbox.x + hitbox.width / 2.0f, this->hitbox.y + hitbox.height / 2.0f };
+            Vector2 self_center = { hitbox.x + hitbox.width / 2.0f, hitbox.y + hitbox.height / 2.0f };
             Vector2 direction_away_from_player = Vector2Normalize(Vector2Subtract(self_center, this->last_known_player_center));
 
             knockback_velocity = Vector2Scale(direction_away_from_player, game::Config::kAIBase_Knockback_Speed);

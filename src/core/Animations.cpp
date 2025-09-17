@@ -68,10 +68,10 @@ void Animations::Update_Frame(float delta_time)
     }
 }
 
-void Animations::Draw_Current_Frame(Vector2 pos)
+void Animations::Draw_Current_Frame(Vector2 pos, Color tint)
 {
     if (spritesheet.id <= 0) return;
-    DrawTextureRec(spritesheet, target, pos, WHITE);
+    DrawTextureRec(spritesheet, target, pos, tint);
 }
 
 bool Animations::IsFinished() const

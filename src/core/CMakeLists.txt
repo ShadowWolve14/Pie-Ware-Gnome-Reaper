@@ -78,7 +78,11 @@ add_library(core STATIC game.h game.cpp store.h ../scenes/Scene.h stage.h stage.
         ../game/HealthPotion2.cpp
         ../game/HealthPotion2.h
         ../game/HealthPotion3.cpp
-        ../game/HealthPotion3.h)
+        ../game/HealthPotion3.h
+        ../game/IceBombItem.cpp
+        ../game/IceBombItem.h
+        ../game/IceBombExplosionHitbox.cpp
+        ../game/IceBombExplosionHitbox.h)
 
 target_include_directories(core PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 

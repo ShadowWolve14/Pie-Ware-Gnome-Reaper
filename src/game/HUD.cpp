@@ -15,6 +15,8 @@ HUD::HUD(Player_Class_One* mp):mp(mp) {
     IP2U = LoadTexture(game::Config::kIconHealthPotion2_Use);
     IP3 = LoadTexture(game::Config::kIconHealthPotion3);
     IP3U = LoadTexture(game::Config::kIconHealthPotion3_Use);
+    IBomb = LoadTexture(game::Config::kIconIceBomb);
+    IBombU = LoadTexture(game::Config::kIconIceBomb_Use);
 }
 
 void HUD::HUD_update()
@@ -29,6 +31,8 @@ void HUD::HUD_update()
         ItemType currentItemType = mp->GetHeldItem()->GetType();
         if (currentItemType == ItemType::BOMB) {
             this->it = bomb;
+        } else if (currentItemType == ItemType::ICE_BOMB) {
+            this->it = icebomb;
         } else if (currentItemType == ItemType::KEY) {
             this->it = key;
         } else if (currentItemType == ItemType::HEALTH_POTION) {
@@ -37,6 +41,8 @@ void HUD::HUD_update()
             this->it = potion2;
         } else if (currentItemType == ItemType::HEALTH_POTION_3) {
             this->it = potion3;
+        } else if (currentItemType == ItemType::ICE_BOMB) {
+            this->it = icebomb;
         } else if (currentItemType == ItemType::TESTO_NEEDLE) {
             this->it = testo;
         }
@@ -173,6 +179,10 @@ void HUD::HUD_draw() {
                 if (UC > 0) { DrawTextureEx(IBU, v6, rot, 3, WHITE); }
                 break;
             }
+            case icebomb: {
+               if (UC > 0) { DrawTextureEx(IBombU, v6, rot, 3, WHITE);}
+                break;
+            }
             case key: {
                 if (UC > 0) { DrawTextureEx(IKU, v6, rot, 3, WHITE); }
                 break;
@@ -202,6 +212,10 @@ void HUD::HUD_draw() {
         switch (it) {
             case bomb: {
                 DrawTextureEx(IB, v6, rot, 3, WHITE);
+                break;
+            }
+            case icebomb: {
+                DrawTextureEx(IBomb, v6, rot, 3, WHITE);
                 break;
             }
             case key: {

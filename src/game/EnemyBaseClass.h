@@ -12,11 +12,13 @@
 
 namespace enemy
 {
+    enum EnemyState { E_IDLE, E_WALKING, E_ATTACKING, E_DAMAGED, E_DYING, E_KNOCKBACK };
     class Collision_Manager;
     class Enemy_Base_Class : public Collidable
     {
     protected:
         // KI-Parameter
+        EnemyState currentState = E_WALKING;
         float seek_weight;
         float separation_weight;
         float player_separation_weight;
@@ -27,6 +29,8 @@ namespace enemy
         Vector2 knockback_velocity = {0.0f, 0.0f};
         float knockback_timer = 0.0f;
         float ai_update_timer = 0.0f;
+        bool is_frozen = false;
+        float freeze_timer = 0.0f;
 
         // Zustand
         Vector2 velocity = {0.0f, 0.0f};
@@ -53,7 +57,7 @@ namespace enemy
                          float seek_w, float sep_w, float player_sep_w, float desired_sep, float drag_factor);
 
         virtual ~Enemy_Base_Class();
-
+        void ApplyFreeze(float duration);
         void Set_Position(Vector2 position) override;
         virtual void Take_Damage(int damage_amount);
         static bool sound_played_this_frame;

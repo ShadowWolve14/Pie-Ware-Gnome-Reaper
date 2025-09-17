@@ -383,14 +383,15 @@ namespace game
         inline static constexpr float item_Attraction_Speed = 10.0f;        // Geschwindigkeit, mit der das Item zum Spieler gezogen wird
 
         // ------ Item Drop Rates from Enemies ------
-        inline static constexpr int enemy_Item_Drop_Chance_Percent = 15; // Globale Chance in %, dass ein Gegner überhaupt ein Item droppt
+        inline static constexpr int enemy_Item_Drop_Chance_Percent = 100; // Globale Chance in %, dass ein Gegner überhaupt ein Item droppt
 
         // Die folgenden Werte sind "Gewichte". Ein höherer Wert bedeutet eine höhere Chance im Vergleich zu den anderen.
         // Ein Wert von 0 bedeutet, dass dieses Item niemals von Gegnern gedroppt wird. 10 und 1 bedeutet das Item mit 10 kommt 10 mal häufiger
         inline static constexpr int item_Drop_Weight_Heal = 70;
         inline static constexpr int item_Drop_Weight_Heal_2 = 25;
         inline static constexpr int item_Drop_Weight_Heal_3 = 5;
-        inline static constexpr int item_Drop_Weight_Bomb = 25;
+        inline static constexpr int item_Drop_Weight_Bomb = 250;
+        inline static constexpr int item_Drop_Weight_IceBomb = 500;
         inline static constexpr int item_Drop_Weight_TestoNeedle = 5;
         inline static constexpr int item_Drop_Weight_Key = 0; // Schlüssel soll nicht von Gegnern droppen
         inline static constexpr int item_Drop_Weight_Fairy = 0; // Fee soll nicht von Gegnern droppen
@@ -398,18 +399,18 @@ namespace game
 
         // ------ Heil-Item: Health Potion ------
         inline static constexpr int health_Potion_Heal_Amount = 40;        // Wie viel Leben wiederhergestellt wird
-        inline static constexpr int health_Potion_Max_On_Map = 3;          // Maximale Anzahl (Map + Inventar)
+        inline static constexpr int health_Potion_Max_On_Map = 4;          // Maximale Anzahl (Map + Inventar)
         inline static constexpr const char* kHealthPotionAnim = "PieWare/assets/Items/Item Variants/Item_Variant_HeiltrankVariant2.png";
 
         // ------ Heil-Item 2 ------
         inline static constexpr int health_Potion_2_Heal_Amount = 80;
-        inline static constexpr int health_Potion_2_Max_On_Map = 2;
+        inline static constexpr int health_Potion_2_Max_On_Map = 3;
         // Wie gewünscht, erstmal die gleichen Assets:
         inline static constexpr const char* kHealthPotion2Anim = "PieWare/assets/Items/Item Variants/Item_Variant_HeiltrankVariant1.png";
 
         // ------ Heil-Item 3 ------
         inline static constexpr int health_Potion_3_Heal_Amount = 120;
-        inline static constexpr int health_Potion_3_Max_On_Map = 1;
+        inline static constexpr int health_Potion_3_Max_On_Map = 2;
         inline static constexpr const char* kHealthPotion3Anim = "PieWare/assets/Items/Animations/Animation_Healthpotion.png";
 
         inline static constexpr Vector2 health_Potion_Anim_Size = {16.0f, 16.0f};
@@ -431,6 +432,13 @@ namespace game
         inline static constexpr int bomb_Explosion_Frame_Count = 12; // Wie viele Frames hat die Explosion
         inline static constexpr float bomb_Explosion_Anim_Speed = 3.0f; // Wie schnell läuft die Animation durch
 
+        // ------ Eisbomben-Item ------
+        inline static constexpr const char* kIceBombItemAnim = "PieWare/assets/Items/Item Variants/Item_Variant_Eisbombe.png";
+        inline static constexpr const char* kIceBombExplosionAnim = "PieWare/assets/Items/Animations/Fire_Test.png";
+        inline static constexpr float kIceBombFreezeDuration = 50.0f; // Dauer des Einfrierens in 1/10 Sekunden (5s)
+        inline static constexpr Color kIceBombFreezeTint = {53, 133, 158, 255}; // Farbe aus unserer Farbpalette (mir persönlich scheiß egal wenn sie davon abweicht)
+        inline static constexpr bool kIceBombFreezesTimerGlobally = false; // Friert die Sanduhr immer ein, egal wo sie explodiert?
+        inline static constexpr int kIceBombMaxOnMap = 2;
         // ------ Testonadel-Item ------
         inline static constexpr float testo_Needle_Buff_Duration = 150.0f;  // Dauer des Buffs in Sekunden 100 = 10 Sek
         inline static constexpr float testo_Needle_Speed_Boost = 0.75f;     // Multiplikator für die Geschwindigkeit
@@ -548,6 +556,8 @@ namespace game
         inline static constexpr const char* Symbol_AAI ="PieWare/assets/UI/HUD/Button_ArrowAttack_Input.png";
         inline static constexpr const char* Symbol_IB ="PieWare/assets/UI/HUD/Button_Item_Bomb.png";
         inline static constexpr const char* Symbol_IBU ="PieWare/assets/UI/HUD/Button_Item_Bomb_Use.png";
+        inline static constexpr const char* kIconIceBomb = "PieWare/assets/UI/HUD/Button_Item_Icebomb.png";
+        inline static constexpr const char* kIconIceBomb_Use = "PieWare/assets/UI/HUD/Button_Item_Icebomb_Use.png";
         inline static constexpr const char* Symbol_IE ="PieWare/assets/UI/HUD/Button_Item_Empty.png";
         inline static constexpr const char* Symbol_IEU ="PieWare/assets/UI/HUD/Button_Item_Empty_Use.png";
         inline static constexpr const char* Symbol_II ="PieWare/assets/UI/HUD/Button_Item_Input.png";

@@ -8,6 +8,7 @@
 #include "Collidable.h"
 #include "CollisionManager.h"
 namespace game { class Player_Projectile; }
+namespace game::scenes { class GameScene; }
 
 class Object_Manager;
 class Collision_Manager;
@@ -64,7 +65,7 @@ protected:
 
 
 public:
-
+	game::scenes::GameScene* scene_ptr = nullptr;
 	Player_Base_Class(int max_Health, float movement_Speed, float damage_multiplier, Vector2 start_Position);
 	bool Is_Dead() const;
 

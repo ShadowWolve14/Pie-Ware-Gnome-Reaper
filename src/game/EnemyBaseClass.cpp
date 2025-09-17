@@ -6,6 +6,7 @@
 #include "EnemyBaseClass.h"
 #include "CollisionManager.h"
 #include "CollisionResponse.h"
+#include "MeleeEnemy.h"
 #include "PlayerBaseClass.h"
 
 bool enemy::Enemy_Base_Class::sound_played_this_frame = false;
@@ -37,6 +38,19 @@ namespace enemy
     void Enemy_Base_Class::Tick_AI(float delta_time, Vector2 player_center, const std::vector<Enemy_Base_Class*>& all_enemies)
 {
     ai_update_timer -= delta_time;
+
+    if (is_frozen)
+    {
+        freeze_timer -= delta_time;
+        if (freeze_timer <= 0.0f) {
+            is_frozen = false;
+        }
+        return;
+   }
+    if (is_frozen || currentState == E_KNOCKBACK || currentState == E_DYING)
+    {
+        return;
+    }
     if (ai_update_timer <= 0.0f)
     {
         ai_update_timer = 0.2;
@@ -159,5 +173,10 @@ namespace enemy
             return diff;
         }
         return {0.0f, 0.0f};
+    }
+    void enemy::Enemy_Base_Class::ApplyFreeze(float duration)
+    {
+        this->is_frozen = true;
+        this->freeze_timer = duration;
     }
 }
