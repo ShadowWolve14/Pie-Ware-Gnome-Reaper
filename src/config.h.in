@@ -91,6 +91,7 @@ namespace game
         inline static constexpr const char* kPlayerRangeAttackDownLeftAnim = "PieWare/assets/Spritesheets/gnoooomeRangedLeftDown.png";
         inline static constexpr const char* kPlayerRangeAttackDownRightAnim = "PieWare/assets/Spritesheets/gnoooomeRangedRightDown.png";
 
+//use ...SwordAttack_UPWalk, etc. or cut down framecount to 7
         inline static constexpr float player_Melee_Attack_Anim_Speed = 1.85f;
         inline static constexpr int player_Melee_Attack_Frame_Count = 13;
         inline static constexpr Vector2 player_Melee_Attack_Anim_Size{48, 48};
