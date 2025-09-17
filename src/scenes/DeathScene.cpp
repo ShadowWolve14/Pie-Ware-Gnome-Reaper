@@ -28,7 +28,7 @@ namespace game::scenes {
             );
             fairyAnim.First_Frame();
         }
-        SetSoundVolume(deaths,game::core::Store::volume*game::Config::Player_Death_Sound_Volume);
+
 
 
         if (has_fairy) {
@@ -87,6 +87,8 @@ namespace game::scenes {
     DeathScene::~DeathScene() {}
 
     void DeathScene::Update() {
+        SetSoundVolume(deaths,game::core::Store::volume*game::Config::Player_Death_Sound_Volume);
+        SetSoundVolume(sound1,game::core::Store::volume*game::Config::Player_Death_Sound_Volume);
         fairyAnim.Update_Frame(GetFrameTime());
         if (frame>=13&&sa>=300){
             if (f<=fc){
@@ -100,6 +102,7 @@ namespace game::scenes {
 
 
             if (IsKeyPressed(game::Config::key_Melee_Attack)){
+                PlaySound(sound1);
                 if (!has_fairy&&current_level!=3){
                     auto upgradeScene = std::make_shared<MainMenuScene>();
                     game::core::Store::stage->SwitchToNewScene("MainMenu", upgradeScene);

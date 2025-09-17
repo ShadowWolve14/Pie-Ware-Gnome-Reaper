@@ -71,10 +71,14 @@ namespace game::scenes
 
     void ScoreboardScene::Update() {
 
+        SetSoundVolume(sound1,game::core::Store::volume);
+        SetSoundVolume(sound2,game::core::Store::volume);
+        SetSoundVolume(sound3,game::core::Store::volume);
         if (textmode && !enterdname) {
             int key = GetCharPressed();
             while (key > 0) {
                 if ((key >= 32) && (key <= 125) && (inputText.length() < maxLength)) {
+                    PlaySound(sound1);
                     inputText.push_back((char) key);
                 }
                 key = GetCharPressed();
@@ -82,8 +86,10 @@ namespace game::scenes
 
             if (IsKeyPressed(KEY_BACKSPACE) && !inputText.empty()) {
                 inputText.pop_back();
+                PlaySound(sound2);
             }
             if (IsKeyPressed(KEY_ENTER)) {
+                PlaySound(sound1);
                 enterdname = true;
                 textmode = false;
 

@@ -119,6 +119,10 @@ void MainMenuScene::Update()
 {
     SetMusicVolume(song,game::core::Store::volume);
     UpdateMusicStream(song);
+    SetSoundVolume(sound1,game::core::Store::volume);
+    SetSoundVolume(sound2,game::core::Store::volume);
+    SetSoundVolume(sound3,game::core::Store::volume);
+
 
 
     switch (state) {
@@ -179,14 +183,18 @@ void MainMenuScene::Draw()
 void MainMenuScene::Input_Check_Mov() {
     if (IsKeyPressed(game::Config::key_Up)){
         this->counter= this->counter-1;
+        PlaySound(sound3);
     }
     if (IsKeyPressed(game::Config::key_Down)){
         this->counter= this->counter+1;
+        PlaySound(sound3);
     }
 }
 bool MainMenuScene::Input_Check_Sel() {
     if (IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_ENTER)) {
+        PlaySound(sound1);
         return true;
+
     } else {
         return false;
     }
@@ -194,6 +202,7 @@ bool MainMenuScene::Input_Check_Sel() {
 void MainMenuScene::Input_Check_Back() {
     if (IsKeyPressed(game::Config::key_Ranged_Attack)){
         state=main;
+        PlaySound(sound2);
     }
 }
 void MainMenuScene::main_Update() {
