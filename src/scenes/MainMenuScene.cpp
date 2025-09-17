@@ -201,21 +201,24 @@ void MainMenuScene::main_Draw() {
 void MainMenuScene::options_Update() {
 
     if (slider){
-        if (IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_ENTER)) {
+        if (IsGamepadButtonPressed(0,7)) {
             slider = !slider;
         }
-        if (IsKeyPressed(game::Config::key_Left)){
+        if (GetGamepadAxisMovement(0, 0) < -0.5&&input_delay<1){
             game::core::Store::volume=game::core::Store::volume-0.5;
             if (game::core::Store::volume<0){
                 game::core::Store::volume=0;
             }
+            input_delay = 10;
         }
-        if (IsKeyPressed(game::Config::key_Right)){
+        if (GetGamepadAxisMovement(0, 0) > 0.5&&input_delay<1){
             game::core::Store::volume=game::core::Store::volume+0.5;
             if (game::core::Store::volume>5){
                 game::core::Store::volume=5;
             }
+            input_delay = 10;
         }
+        input_delay--;
 
     } else{
         Input_Check_Mov();
