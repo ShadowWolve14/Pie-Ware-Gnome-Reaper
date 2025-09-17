@@ -540,6 +540,11 @@ namespace game
         inline static constexpr Vector2 fairy_Anim_Size_Lvl3 = {16.0f, 32.0f};
         inline static constexpr int fairy_Frame_Count = 9;
         inline static constexpr float fairy_Anim_Speed = 1.0f;
+        inline static const char* kFairyAuraVFXAnim = "PieWare/assets/Spritesheets/VFX/FeenitemVFX.png";
+        inline static const Vector2 fairy_Aura_VFX_Anim_Size = { 48.0f, 48.0f };
+        inline static constexpr int fairy_Aura_VFX_Frame_Count = 6;
+        inline static constexpr float fairy_Aura_VFX_Anim_Speed = 2.5f;
+        inline static constexpr int fairy_Aura_VFX_Transparency = 255; // Transparenz (0-255)
 
         // ------ Hard-coded Item Positions ------
         inline static constexpr Vector2 initial_Testo_Needle_Position = {104.0f, 464.0f}; // Position Testonadel im Tempel
@@ -670,7 +675,7 @@ namespace game
         inline static constexpr Vector2 movable_wall_5_target_pos = {696, 863};
         inline static constexpr const char* movable_wall_5_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Earth.png";
 
-        // ------ Rätsel-Bewegungsgrenzen ------
+// ------ Rätsel-Bewegungsgrenzen ------
         // Definiert den Bereich, in dem sich die Steine aufhalten dürfen.
         // Verlassen sie ihn, werden sie auf ihre Startposition zurückgesetzt.
         inline static constexpr Rectangle kMovableWallBounds = { 550.0f, 620.0f, 435.0f, 290.0f };
@@ -710,6 +715,10 @@ namespace game
         inline static constexpr const char* hourglass_lvl2_spritesheet = "PieWare/assets/Spritesheets/Hourglass_Lvl2.png";
         inline static constexpr const char* hourglass_lvl3_spritesheet = "PieWare/assets/Spritesheets/Hourglass_Lvl3.png";
 
+
+        inline static constexpr const char* kSfxPuzzleStoneSolve = "assets/audio/sfx/Healpotion_Used.wav"; // Sound wenn ein Stein rein geht
+        inline static constexpr const char* kSfxPuzzleCompleteAndFairySpawn = "assets/audio/sfx/Bomb_detonation.wav"; // Sound wenn der letzte Stein rein geht und Item spawned
+        inline static constexpr const char* kSfxIceBombUse = "assets/audio/sfx/Bomb_detonation.wav"; // Eis bombe sound
         // ------ DEBUGGING ------
         inline static constexpr bool visualize_Player_Hitbox = false;
         inline static constexpr bool visualize_Attack_Hitboxes = false;

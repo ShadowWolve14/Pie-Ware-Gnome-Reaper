@@ -211,6 +211,7 @@ void Player_Base_Class::On_Collision(Collidable* other)
         {
             if (item->GetType() == ItemType::FAIRY)
             {
+                item->Activate(this);
                 SetHasFairy(true);
                 item->Mark_For_Destruction();
             }

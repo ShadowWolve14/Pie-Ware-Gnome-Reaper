@@ -7,7 +7,15 @@
 #include "../Config.h.in"
 
 FairyItem::FairyItem(Vector2 position, int current_level)
-    : ItemBase(position, ItemType::FAIRY, "", false, {0,0}, 0, 0)
+    : ItemBase(position, ItemType::FAIRY, "", false, {0,0}, 0, 0),
+      // Initialisiere die Aura-Animation direkt im Konstruktor
+      aura_vfx(
+          game::Config::fairy_Aura_VFX_Anim_Size,
+          game::Config::kFairyAuraVFXAnim,
+          game::Config::fairy_Aura_VFX_Frame_Count,
+          game::Config::fairy_Aura_VFX_Frame_Count,
+          game::Config::fairy_Aura_VFX_Anim_Speed
+      )
 {
     const char* anim_path;
     Vector2 item_size;
@@ -45,6 +53,37 @@ FairyItem::FairyItem(Vector2 position, int current_level)
         game::Config::fairy_Frame_Count, game::Config::fairy_Frame_Count, game::Config::fairy_Anim_Speed);
 }
 
+void FairyItem::Tick(float delta_time)
+{
+    ItemBase::Tick(delta_time);
+    aura_vfx.Update_Frame(delta_time);
+}
+
+void FairyItem::Draw()
+{
+    Vector2 item_center = {
+        this->hitbox.x + this->hitbox.width / 2.0f,
+        this->hitbox.y + this->hitbox.height / 2.0f
+    };
+    Vector2 vfx_pos = {
+        item_center.x - game::Config::fairy_Aura_VFX_Anim_Size.x / 2.0f,
+        item_center.y - game::Config::fairy_Aura_VFX_Anim_Size.y / 2.0f
+    };
+    Color vfx_tint = { 255, 255, 255, (unsigned char)game::Config::fairy_Aura_VFX_Transparency };
+    aura_vfx.Draw_Current_Frame(vfx_pos, vfx_tint);
+
+    ItemBase::Draw();
+}
+void FairyItem::Activate(Player_Base_Class* player)
+{
+    if (!player) return;
+
+    PlaySound(LoadSound("assets/audio/sfx/Item_Obtained.wav"));
+
+    player->SetHasFairy(true);
+
+    this->Mark_For_Destruction();
+}
 std::string FairyItem::GetName() const
 {
     return "Fairy Item";
