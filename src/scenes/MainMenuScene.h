@@ -41,6 +41,9 @@ float vol=5;
 
     std::vector<HighscoreEntry> lines;
     bool loaded= false;
+    std::vector<std::string> Text;
+    int d=0;
+    int s=0;
 
 void Input_Check_Mov();
 bool Input_Check_Sel();
