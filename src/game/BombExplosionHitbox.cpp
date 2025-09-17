@@ -6,13 +6,16 @@
 #include "../game/CollisionResponse.h"
 #include "../Config.h.in"
 #include <raylib.h>
+#include <algorithm>
+
+Texture2D BombExplosionHitbox::explosion_texture;
 
 BombExplosionHitbox::BombExplosionHitbox(Rectangle rect, int dmg)
     : damage(dmg),
       lifetime(game::Config::bomb_Explosion_Visual_Lifetime),
       damage_active_timer(game::Config::bomb_Explosion_Damage_Lifetime),
-      animation(game::Config::bomb_Explosion_Tile_Size, game::Config::kBombExplosionAnim,
-                game::Config::bomb_Explosion_Frame_Count, game::Config::bomb_Explosion_Frame_Count, game::Config::bomb_Explosion_Anim_Speed)
+      animation(game::Config::bomb_Explosion_Tile_Size, explosion_texture, game::Config::bomb_Explosion_Frame_Count,
+      game::Config::bomb_Explosion_Frame_Count, game::Config::bomb_Explosion_Anim_Speed)
 {
     this->hitbox = rect;
 }
@@ -36,7 +39,11 @@ void BombExplosionHitbox::On_Collision(Collidable* other)
 {
     if (damage_active_timer > 0 && other->Get_Collision_Type() == Collision_Type::ENEMY)
     {
-        CollisionResponse::Apply_Damage(other, damage);
+        if (std::find(already_hit_enemies.begin(), already_hit_enemies.end(), other) == already_hit_enemies.end())
+        {
+            CollisionResponse::Apply_Damage(other, damage);
+            already_hit_enemies.push_back(other);
+        }
     }
 }
 
@@ -59,4 +66,14 @@ void BombExplosionHitbox::Draw()
     {
         DrawRectangleLinesEx(this->hitbox, 1.0f, (damage_active_timer > 0) ? RED : ORANGE);
     }
+}
+
+void BombExplosionHitbox::LoadAssets()
+{
+    explosion_texture = LoadTexture(game::Config::kBombExplosionAnim);
+}
+
+void BombExplosionHitbox::UnloadAssets()
+{
+    UnloadTexture(explosion_texture);
 }

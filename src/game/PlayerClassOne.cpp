@@ -11,7 +11,14 @@ Player_Class_One::Player_Class_One(Vector2 start_Position)
     : Player_Base_Class(/* maxHealth */ BuildEffectiveStats(game::core::upgrades).max_health,
                     /* moveSpeed */ BuildEffectiveStats(game::core::upgrades).movement_speed,
                     /* dmgMult   */ BuildEffectiveStats(game::core::upgrades).DMGxMult,
-                    start_Position)
+                    start_Position),
+      adrenalin_vfx_animation(
+          game::Config::adrenaline_VFX_Anim_Size,
+          game::Config::kAdrenalineVFXAnim,
+          game::Config::adrenaline_VFX_Frame_Count,
+          game::Config::adrenaline_VFX_Frame_Count,
+          game::Config::adrenaline_VFX_Anim_Speed
+      )
 {
     int player_Walk_Anim_Speed = game::Config::player_Walk_Anim_Speed;
     Vector2 player_Walk_Anim_Size = game::Config::player_Walk_Anim_Size;
@@ -87,6 +94,7 @@ Player_Class_One::Player_Class_One(Vector2 start_Position)
     buff_melee_Attack_Animations.try_emplace(UP_RIGHT, player_Buff_Melee_Attack_Anim_Size, game::Config::kPlayerBuffMeleeUpRightAnim, player_Buff_Melee_Attack_Frame_Count, sprites_Per_Line_Buff_Melee_Attack, player_Buff_Melee_Attack_Anim_Speed);
     buff_melee_Attack_Animations.try_emplace(DOWN_LEFT, player_Buff_Melee_Attack_Anim_Size, game::Config::kPlayerBuffMeleeDownLeftAnim, player_Buff_Melee_Attack_Frame_Count, sprites_Per_Line_Buff_Melee_Attack, player_Buff_Melee_Attack_Anim_Speed);
     buff_melee_Attack_Animations.try_emplace(DOWN_RIGHT, player_Buff_Melee_Attack_Anim_Size, game::Config::kPlayerBuffMeleeDownRightAnim, player_Buff_Melee_Attack_Frame_Count, sprites_Per_Line_Buff_Melee_Attack, player_Buff_Melee_Attack_Anim_Speed);
+
 }
 
 
@@ -96,6 +104,15 @@ Player_Class_One::~Player_Class_One() {}
 void Player_Class_One::Tick(float delta_time)
 {
     Player_Base_Class::Tick(delta_time);
+    if (IsAdrenalinBuffed())
+    {
+        adrenalin_vfx_animation.Update_Frame(delta_time);
+    }
+
+    if (itemvfx != nullptr)
+    {
+        vfx_timer += delta_time;
+    }
 
     if (currentState == ATTACKING_MELEE)
     {
@@ -201,7 +218,6 @@ void Player_Class_One::Draw()
         }
     }
 
-
     if (current_attack_anim != nullptr) {
         draw_pos.x = this->hitbox.x - (current_attack_anim->size.x - this->hitbox.width) / 2.0f;
         draw_pos.y = this->hitbox.y - (current_attack_anim->size.y - this->hitbox.height) / 2.0f;
@@ -214,6 +230,49 @@ void Player_Class_One::Draw()
     if (game::Config::visualize_Player_Hitbox)
     {
         DrawRectangleLinesEx(this->hitbox, 1.0f, BLUE);
+    }
+
+    if (itemvfx != nullptr)
+    {
+        int frame_limit = 0;
+        int sprite_width = 0;
+        float anim_speed = 1.0f;
+
+        if (vfxtype == 1)
+        {
+            frame_limit = 4;
+            sprite_width = 32;
+            anim_speed = game::Config::kHealVFXAnimSpeed;
+        }
+        else if (vfxtype == 2)
+        {
+            frame_limit = 14;
+            sprite_width = 16;
+            anim_speed = game::Config::kSmokeVFXAnimSpeed;
+        }
+
+        int current_frame = static_cast<int>(vfx_timer * anim_speed);
+
+        if (current_frame < frame_limit)
+        {
+            Rectangle source_rec = { 1.0f + sprite_width * current_frame, 1.0f, (float)sprite_width, 32.0f };
+            Vector2 draw_pos = { hitbox.x - (sprite_width - hitbox.width)/2.0f, hitbox.y - 6 };
+            DrawTextureRec(*itemvfx, source_rec, draw_pos, WHITE);
+        }
+        else
+        {
+            itemvfx = nullptr;
+            vfx_timer = 0.0f;
+        }
+    }
+    if (IsAdrenalinBuffed())
+    {
+        Vector2 vfx_draw_pos = {
+            this->hitbox.x - (adrenalin_vfx_animation.size.x - this->hitbox.width) / 2.0f,
+            this->hitbox.y - (adrenalin_vfx_animation.size.y - this->hitbox.height) / 2.0f
+        };
+        Color vfx_tint = { 255, 255, 255, (unsigned char)game::Config::adrenaline_VFX_Transparency };
+        adrenalin_vfx_animation.Draw_Current_Frame(vfx_draw_pos, vfx_tint);
     }
 }
 

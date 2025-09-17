@@ -12,70 +12,31 @@ Cam::Cam(Player_Base_Class& mp) : pao(mp)
 
 void Cam::Cam_Movement(double dtm, Vector2 mapDimensions)
 {
-    Vector2 mpp = pao.Get_Player_Center();
-    cam.target=mpp;
-    /* int disx=mpp.x-cam.target.x;
-     int disy=mpp.y-cam.target.y;
-     int speed=game::Config::player_Class_One_Movement_Speed;
-     if (disx<0){
-         i=-1;
-     } else{
-         i=1;
-     }
-     if (disy<0){
-         f=-1;
-     } else{
-         f=1;
-     }
-     disx= sqrt(disx*disx);
-     disy= sqrt(disy*disy);
-     if (c<1){
-         c=10;
-         //*speede=0;
-         //*speedy=0;
+   Vector2 mpp = pao.Get_Player_Center();
 
-         if (disx<game::Config::player_Class_One_Movement_Speed){
-             speede= floor(speed*0);
-         }
-         if (disx>=game::Config::player_Class_One_Movement_Speed){
-             speede= round(speed*0.5);
-         }
-         if (disx>game::Config::player_Class_One_Movement_Speed*3){
-             speede= round(speed*1);
-         }
-         if (disx>game::Config::player_Class_One_Movement_Speed*5){
-             speede= round(speed*1.5);
-         }
-         if (disx>game::Config::player_Class_One_Movement_Speed*7){
-             speede= round(speed*2);
-         }
-         if (disx>game::Config::player_Class_One_Movement_Speed*9){
-             speede= round(speed*2.5);
-         }
-         if (disy<game::Config::player_Class_One_Movement_Speed){
-             speedy= floor(speed*0);
-         }
-         if (disy>=game::Config::player_Class_One_Movement_Speed){
-             speedy= round(speed*0.5);
-         }
-         if (disy>game::Config::player_Class_One_Movement_Speed*3){
-             speedy= round(speed*1);
-         }
-         if (disy>game::Config::player_Class_One_Movement_Speed*5){
-             speedy= round(speed*1.5);
-         }
-         if (disy>game::Config::player_Class_One_Movement_Speed*7){
-             speedy= round(speed*2);
-         }
-         if (disy>game::Config::player_Class_One_Movement_Speed*9){
-             speedy= round(speed*2.5);
-         }
-     }
-     c--;
 
-     this->cam.target.x=this->cam.target.x+speede*i;
-     this->cam.target.y=this->cam.target.y+speedy*f;
- */
+    Vector2 diff = Vector2Subtract(mpp, cam.target);
+
+
+    float smoothness = 0.75f;
+    cam.target = Vector2Add(cam.target, Vector2Scale(diff, smoothness * dtm));
+    /*Vector2 mpp = pao.Get_Player_Center();
+
+    Vector2 diff = Vector2Subtract(mpp, cam.target);
+    float dist = Vector2Length(diff);
+
+
+    float followStrength = 0.75f;
+
+
+    float speed = dist * followStrength * dtm;
+
+    if (speed > dist) speed = dist; // prevent overshoot
+
+
+    Vector2 move = Vector2Scale(Vector2Normalize(diff), speed);
+    cam.target = Vector2Add(cam.target, move);*/
+
 
 
     this->cam.offset = { (float)GetScreenWidth() / 2.0f, (float)GetScreenHeight() / 2.0f };

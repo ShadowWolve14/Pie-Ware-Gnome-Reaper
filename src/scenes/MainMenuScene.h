@@ -20,6 +20,10 @@ private:
     Texture2D quit_button= LoadTexture(game::Config::quit_button_asset);
     Texture2D sign_button= LoadTexture(game::Config::Back_Sign_asset);
     Texture2D scroll_button= LoadTexture(game::Config::Background_asset);
+    Texture2D FullscreenButton= LoadTexture("PieWare/assets/UI/Allgemein/FensterlosButton.png");
+    Texture2D VolumeSlider= LoadTexture("PieWare/assets/UI/Allgemein/Volume.png");
+    Texture2D TB= LoadTexture("PieWare/assets/UI/Allgemein/Title_Banner.png");
+
     Rectangle src{1,1,140,32};
 
     enum menustate {main,options, credits ,end,list};
@@ -27,8 +31,11 @@ private:
 int counter;
 int input_delay = 0;
 
+Music song = LoadMusicStream("assets/audio/tracks/MainMenuMusic.wav");
+
 bool slider;
 bool prot;
+float vol=100;
 
 void Input_Check_Mov();
 bool Input_Check_Sel();

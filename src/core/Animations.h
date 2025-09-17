@@ -23,10 +23,10 @@ private:
 public:
     Animations(Vector2 sprite_size, const char* filename, int FC, int spl, float speed);
     Animations(Vector2 sprite_size, Texture2D spritesheet, int FC, int spl, float speed);
+    void Draw_Current_Frame(Vector2 pos, Color tint = WHITE);
     Vector2 size;
     void Update_Frame(float delta_time);
     void First_Frame();
-    void Draw_Current_Frame(Vector2);
     bool IsFinished() const;
     int GetCurrentFrame() const { return current_Frame; }
     Texture2D GetSpritesheet() const { return spritesheet; }

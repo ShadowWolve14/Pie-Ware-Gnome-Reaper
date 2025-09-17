@@ -6,7 +6,10 @@
 #include "EnemyBaseClass.h"
 #include "CollisionManager.h"
 #include "CollisionResponse.h"
+#include "MeleeEnemy.h"
 #include "PlayerBaseClass.h"
+
+bool enemy::Enemy_Base_Class::sound_played_this_frame = false;
 
 namespace enemy
 {
@@ -33,11 +36,33 @@ namespace enemy
     void Enemy_Base_Class::Tick(float delta_time) { }
 
     void Enemy_Base_Class::Tick_AI(float delta_time, Vector2 player_center, const std::vector<Enemy_Base_Class*>& all_enemies)
+{
+    ai_update_timer -= delta_time;
+        if (freeze_immunity_timer > 0.0f)
+        {
+            freeze_immunity_timer -= delta_time;
+        }
+        if (is_frozen)
+        {
+            freeze_timer -= delta_time;
+            if (freeze_timer <= 0.0f) {
+                is_frozen = false;
+            }
+        }
+        if (is_frozen || currentState == E_KNOCKBACK || currentState == E_DYING)
+        {
+            this->velocity = Vector2Scale(this->velocity, this->drag);
+            return;
+        }
+    if (ai_update_timer <= 0.0f)
     {
-        this->tookd= false;
+        ai_update_timer = 0.2;
 
-        if (attack_Cooldown_Timer > 0) {
-            attack_Cooldown_Timer -= delta_time;
+        this->tookd = false;
+
+        if (attack_Cooldown_Timer > 0)
+        {
+            attack_Cooldown_Timer -= 0.2;
         }
 
         Vector2 self_center = { this->hitbox.x + this->hitbox.width / 2.0f, this->hitbox.y + this->hitbox.height / 2.0f };
@@ -54,18 +79,18 @@ namespace enemy
         total_force = Vector2Add(total_force, Vector2Scale(seek_force, this->seek_weight));
         total_force = Vector2Add(total_force, Vector2Scale(separation_force, this->separation_weight));
         total_force = Vector2Add(total_force, Vector2Scale(player_separation_force, this->player_separation_weight));
-
         Vector2 acceleration = total_force;
-        this->velocity = Vector2Add(this->velocity, Vector2Scale(acceleration, this->enemy_Movement_Speed * delta_time));
+        this->velocity = Vector2Add(this->velocity, Vector2Scale(acceleration, this->enemy_Movement_Speed * 0.2));
         float max_speed = this->enemy_Movement_Speed;
         if (Vector2Length(this->velocity) > max_speed)
         {
             this->velocity = Vector2Scale(Vector2Normalize(this->velocity), max_speed);
         }
-        this->hitbox.x += this->velocity.x * delta_time;
-        this->hitbox.y += this->velocity.y * delta_time;
-        this->velocity = Vector2Scale(this->velocity, this->drag);
     }
+    this->hitbox.x += this->velocity.x * delta_time;
+    this->hitbox.y += this->velocity.y * delta_time;
+    this->velocity = Vector2Scale(this->velocity, this->drag);
+}
 
     void Enemy_Base_Class::On_Collision(Collidable* other)
     {
@@ -79,19 +104,19 @@ namespace enemy
 
     void Enemy_Base_Class::Take_Damage(int damage_amount)
     {
-        this->tookd= true;
+        if (enemy_Health <= 0) return;
+
         this->enemy_Health -= damage_amount;
-        PlaySound(hitS);
-        if (this->enemy_Health <= 0)
+
+        if (!sound_played_this_frame)
         {
-            this->Mark_For_Destruction();
+            PlaySound(hitS);
+            sound_played_this_frame = true;
         }
+        this->Take_Damage_Check(damage_amount);
     }
 
-    void enemy::Enemy_Base_Class::Melee_Attack()
-    {
-
-    }
+    void enemy::Enemy_Base_Class::Melee_Attack() { }
 
     void enemy::Enemy_Base_Class::Set_Position(Vector2 position)
     {
@@ -151,5 +176,14 @@ namespace enemy
             return diff;
         }
         return {0.0f, 0.0f};
+    }
+    void enemy::Enemy_Base_Class::ApplyFreeze(float duration)
+    {
+        if (this->freeze_immunity_timer > 0.0f)
+        {
+            return;
+        }
+        this->is_frozen = true;
+        this->freeze_timer = std::max(this->freeze_timer, duration);
     }
 }

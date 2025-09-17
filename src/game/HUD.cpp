@@ -8,27 +8,45 @@
 HUD::HUD(Player_Class_One* mp):mp(mp) {
     prevhp=100;
     c=0;
+
+    IP1 = LoadTexture(game::Config::kIconHealthPotion1);
+    IP1U = LoadTexture(game::Config::kIconHealthPotion1_Use);
+    IP2 = LoadTexture(game::Config::kIconHealthPotion2);
+    IP2U = LoadTexture(game::Config::kIconHealthPotion2_Use);
+    IP3 = LoadTexture(game::Config::kIconHealthPotion3);
+    IP3U = LoadTexture(game::Config::kIconHealthPotion3_Use);
+    IBomb = LoadTexture(game::Config::kIconIceBomb);
+    IBombU = LoadTexture(game::Config::kIconIceBomb_Use);
+    IAU = LoadTexture(game::Config::kIconAdrenalinNeedle_Use);
+    IA = LoadTexture(game::Config::kIconAdrenalinNeedle);
 }
 
-void HUD::HUD_update() {
+void HUD::HUD_update()
+{
     sc=game::core::Store::player_state->souls;
     scc=game::core::Store::player_state->score;
     player_pos=mp->Get_Player_Center();
 
-    if (!mp->HasItem()){
-        this->it=empty;
-    } else{
-        if (mp->GetHeldItem()->GetType()==ItemType::BOMB){
-            this->it=bomb;
-        }
-        if (mp->GetHeldItem()->GetType()==ItemType::KEY){
-            this->it=key;
-        }
-        if (mp->GetHeldItem()->GetType()==ItemType::HEALTH_POTION){
-            this->it=potion;
-        }
-        if (mp->GetHeldItem()->GetType()==ItemType::TESTO_NEEDLE){
-            this->it=testo;
+    if (!mp->HasItem()) {
+        this->it = empty;
+    } else {
+        ItemType currentItemType = mp->GetHeldItem()->GetType();
+        if (currentItemType == ItemType::BOMB) {
+            this->it = bomb;
+        } else if (currentItemType == ItemType::ICE_BOMB) {
+            this->it = icebomb;
+        } else if (currentItemType == ItemType::KEY) {
+            this->it = key;
+        } else if (currentItemType == ItemType::HEALTH_POTION) {
+            this->it = potion1;
+        } else if (currentItemType == ItemType::HEALTH_POTION_2) {
+            this->it = potion2;
+        } else if (currentItemType == ItemType::HEALTH_POTION_3) {
+            this->it = potion3;
+        } else if (currentItemType == ItemType::TESTO_NEEDLE) {
+            this->it = testo;
+        } else if (currentItemType == ItemType::ADRENALINE_NEEDLE) {
+        this->it = adrenalin;
         }
     }
 
@@ -85,6 +103,13 @@ void HUD::HUD_draw() {
     Vector2 v12{208,25};
     Vector2 v13{253,25};
     Vector2 v14{298,25};
+    Vector2 v15{343,25};
+    Vector2 v16{118,65};
+    Vector2 v17{163,65};
+    Vector2 v18{208,65};
+    Vector2 v19{253,65};
+    Vector2 v20{298,65};
+    Vector2 v21{343,65};
 
     v1.x=v1.x+ofs;v1.y=v1.y+ofs;
     v2.x=v2.x+ofs;v2.y=v2.y+ofs;
@@ -102,80 +127,179 @@ void HUD::HUD_draw() {
     v14.x=v14.x+ofs;v14.y=v14.y+ofs;
 
 
-
-
-
-
+   /* if (c>0){
+        DrawTexturePro(damge,{1+(float)c*512,1,512,320},{0,0,512*4,320*4},{0,0},0,WHITE);
+    }*/
 
     DrawTextureEx(HS,v1,rot,3,WHITE);
     DrawTextureEx(SCC,v2,rot,3,WHITE);
     DrawTextureEx(SOC,v3,rot,3,WHITE);
-    DrawTextureEx(SA,v4,rot,3,WHITE);
-    DrawTextureEx(AA,v5,rot,3,WHITE);
+
+    if (mp->IsBuffed())
+    {
+        DrawTextureEx(SA, v5, rot, 3, WHITE);
+    }
+    else
+    {
+        DrawTextureEx(AA, v5, rot, 3, WHITE);
+    }
+
+    if (mp->IsAdrenalinBuffed())
+    {
+        DrawTextureEx(AA, v4, rot, 3, WHITE);
+    }
+    else
+    {
+        DrawTextureEx(SA, v4, rot, 3, WHITE);
+    }
 
     if (st==ma){
-        if (UC>0){
-            DrawTextureEx(SAU,v4,rot,3,WHITE);
+        if (UC>0)
+        {
+            if (mp->IsAdrenalinBuffed())
+            {
+                DrawTextureEx(AAU, v4, rot, 3, WHITE);
+            }
+            else
+            {
+                DrawTextureEx(SAU, v4, rot, 3, WHITE);
+            }
         }
     }
     if (st==ra){
         if (UC>0){
-            DrawTextureEx(AAU,v5,rot,3,WHITE);
+            if (mp->IsBuffed())
+            {
+                DrawTextureEx(SAU, v5, rot, 3, WHITE);
+            }
+            else
+            {
+                DrawTextureEx(AAU, v5, rot, 3, WHITE);
+            }
         }
     }
-    if (st==iu){
+
+    if (mp->HasItem())
+    {
+        std::string itemName = mp->GetHeldItem()->GetName();
+        float fontSize = 20.0f;
+        float spacing = 1.0f;
+        Vector2 textSize = MeasureTextEx(game::core::Store::font, itemName.c_str(), fontSize, spacing);
+        Vector2 textPos;
+        textPos.x = v6.x + (150 / 2) - (textSize.x / 2) - 64;
+        textPos.y = v6.y - textSize.y - 26;
+        DrawTextEx(game::core::Store::font, itemName.c_str(), textPos, fontSize, spacing, WHITE);
+    }
+
+    if (st == iu) {
         switch (it) {
-            case bomb:{
-                if (UC>0){
-                    DrawTextureEx(IBU,v6,rot,3,WHITE);}
+            case bomb: {
+                if (UC > 0) { DrawTextureEx(IBU, v6, rot, 3, WHITE); }
                 break;
             }
-            case key:{
-                if (UC>0){
-                    DrawTextureEx(IKU,v6,rot,3,WHITE);}
-
+            case icebomb: {
+               if (UC > 0) { DrawTextureEx(IBombU, v6, rot, 3, WHITE);}
                 break;
             }
-            case testo:{
-                if (UC>0){
-                    DrawTextureEx(ITU,v6,rot,3,WHITE);}
+            case key: {
+                if (UC > 0) { DrawTextureEx(IKU, v6, rot, 3, WHITE); }
                 break;
             }
-            case potion:{
-                if (UC>0){
-                    DrawTextureEx(IPU,v6,rot,3,WHITE);}
+            case testo: {
+                if (UC > 0) { DrawTextureEx(ITU, v6, rot, 3, WHITE); }
                 break;
             }
-
-            default:{
-                if (UC>0){
-                    DrawTextureEx(IEU,v6,rot,3,WHITE);}
+            case adrenalin: {
+                if (UC > 0) { DrawTextureEx(IAU, v6, rot, 3, WHITE); }
+                break;
+            }
+            case potion1: {
+                if (UC > 0) { DrawTextureEx(IP1U, v6, rot, 3, WHITE); }
+                break;
+            }
+            case potion2: {
+                if (UC > 0) { DrawTextureEx(IP2U, v6, rot, 3, WHITE); }
+                break;
+            }
+            case potion3: {
+                if (UC > 0) { DrawTextureEx(IP3U, v6, rot, 3, WHITE); }
+                break;
+            }
+            default: {
+                if (UC > 0) { DrawTextureEx(IEU, v6, rot, 3, WHITE); }
                 break;
             }
         }
-    } else{
+    } else {
         switch (it) {
-            case bomb:{
-                DrawTextureEx(IB,v6,rot,3,WHITE);
+            case bomb: {
+                DrawTextureEx(IB, v6, rot, 3, WHITE);
                 break;
             }
-            case key:{
-                DrawTextureEx(IK,v6,rot,3,WHITE);
+            case icebomb: {
+                DrawTextureEx(IBomb, v6, rot, 3, WHITE);
                 break;
             }
-            case testo:{
-                DrawTextureEx(IT,v6,rot,3,WHITE);
+            case key: {
+                DrawTextureEx(IK, v6, rot, 3, WHITE);
                 break;
             }
-            case potion:{
-                DrawTextureEx(IP,v6,rot,3,WHITE);
-                break;
-            }
-            default:{
-                DrawTextureEx(IE,v6,rot,3,WHITE);
-                break;
-            }
+            case testo: {
+                bool should_draw = true;
+                if (mp->IsBuffed() && mp->GetBuffTimer() <= game::Config::testo_Needle_Blinking_Start_Time)
+                {
+                    if ((int)(GetTime() * 10) % 2 == 0)
+                    {
+                        should_draw = false;
+                    }
+                }
 
+                if (should_draw)
+                {
+                    DrawTextureEx(IT, v6, rot, 3, WHITE);
+                }
+                else
+                {
+                    DrawTextureEx(IE, v6, rot, 3, WHITE);
+                }
+                break;
+            }
+            case adrenalin: {
+                bool should_draw = true;
+                if (mp->IsAdrenalinBuffed() && mp->GetAdrenalinBuffTimer() <= game::Config::adrenaline_Needle_Blinking_Start_Time)
+                {
+                    if ((int)(GetTime() * 10) % 2 == 0)
+                    {
+                        should_draw = false;
+                    }
+                }
+
+                if (should_draw)
+                {
+                    DrawTextureEx(IA, v6, rot, 3, WHITE);
+                }
+                else
+                {
+                    DrawTextureEx(IE, v6, rot, 3, WHITE);
+                }
+                break;
+            }
+            case potion1: {
+                DrawTextureEx(IP1, v6, rot, 3, WHITE);
+                break;
+            }
+            case potion2: {
+                DrawTextureEx(IP2, v6, rot, 3, WHITE);
+                break;
+            }
+            case potion3: {
+                DrawTextureEx(IP3, v6, rot, 3, WHITE);
+                break;
+            }
+            default: {
+                DrawTextureEx(IE, v6, rot, 3, WHITE);
+                break;
+            }
         }
     }
 
@@ -183,6 +307,9 @@ void HUD::HUD_draw() {
     DrawTextureEx(AAI,v8,rot,3,WHITE);
     DrawTextureEx(II,v9,rot,3,WHITE);
 
+    if (mp->Get_Health()>109){
+        DrawTextureEx(HH,v15,rot,3,WHITE);
+    }
     if (mp->Get_Health()>89){
         DrawTextureEx(HH,v14,rot,3,WHITE);
     }
@@ -198,6 +325,10 @@ void HUD::HUD_draw() {
     if (mp->Get_Health()>9){
         DrawTextureEx(HH,v10,rot,3,WHITE);
     }
+
+    if (mp->Get_Health()>119){
+        DrawTextureEx(H,v15,rot,3,WHITE);
+    }
     if (mp->Get_Health()>99){
         DrawTextureEx(H,v14,rot,3,WHITE);
     }
@@ -212,6 +343,45 @@ void HUD::HUD_draw() {
     }
     if (mp->Get_Health()>19){
         DrawTextureEx(H,v10,rot,3,WHITE);
+
+    }
+
+    if (mp->Get_Health()>229){
+        DrawTextureEx(HH,v21,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>209){
+        DrawTextureEx(HH,v20,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>189){
+        DrawTextureEx(HH,v19,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>169){
+        DrawTextureEx(HH,v18,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>149){
+        DrawTextureEx(HH,v17,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>129){
+        DrawTextureEx(HH,v16,rot,3,WHITE);
+    }
+
+    if (mp->Get_Health()>239){
+        DrawTextureEx(H,v21,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>219){
+        DrawTextureEx(H,v20,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>199){
+        DrawTextureEx(H,v19,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>179){
+        DrawTextureEx(H,v18,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>159){
+        DrawTextureEx(H,v17,rot,3,WHITE);
+    }
+    if (mp->Get_Health()>139){
+        DrawTextureEx(H,v16,rot,3,WHITE);
 
     }
     std::string temp=std::to_string(game::core::Store::player_state->score);

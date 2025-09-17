@@ -42,7 +42,6 @@ game::core::Game::~Game()
 
     UnloadRenderTexture(this->render_Target_);
 
-    CloseWindow();
 }
 
 void game::core::Game::Run(const std::string &scene_Name, std::unique_ptr<game::core::Scene> scene) const
@@ -62,6 +61,9 @@ void game::core::Game::Run(const std::string &scene_Name, std::unique_ptr<game::
         EndTextureMode();
         this->DrawRenderTexture();
         EndDrawing();
+        if (!game::core::Store::running){
+            CloseWindow();
+        }
     }
 }
 

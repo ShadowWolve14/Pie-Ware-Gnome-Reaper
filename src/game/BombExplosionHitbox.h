@@ -5,6 +5,7 @@
 #ifndef BOMBEXPLOSIONHITBOX_H
 #define BOMBEXPLOSIONHITBOX_H
 
+#include <vector>
 #include "../game/Collidable.h"
 #include "../core/Animations.h"
 
@@ -15,11 +16,14 @@ private:
     float lifetime;
     float damage_active_timer;
     Animations animation;
+    static Texture2D explosion_texture;
+    std::vector<Collidable*> already_hit_enemies;
 
 public:
     BombExplosionHitbox(Rectangle rect, int dmg);
     ~BombExplosionHitbox() override = default;
-
+    static void LoadAssets();
+    static void UnloadAssets();
     void Tick(float delta_time) override;
     void On_Collision(Collidable* other) override;
     void Draw() override;

@@ -7,6 +7,7 @@
 #include "PlayerProjectile.h"
 #include "CollisionResponse.h"
 #include "Object_Manager.h"
+#include "PlayerEffectiveStats.h"
 #include "PlayerMeleeHitbox.h"
 #include "raymath.h"
 #include "../Config.h.in"
@@ -42,25 +43,47 @@ void Player_Base_Class::Player_Input()
 {
     if (IsGamepadButtonPressed(0,7) && melee_Cooldown <= 0)
     {
-        Melee_Attack();
+        if (is_adrenalin_buffed)
+        {
+            if (range_Attack_Cooldown <= 0)
+            {
+                Ranged_Attack();
+            }
+        }
+        else
+        {
+            Melee_Attack();
+        }
     }
 
-    if (IsGamepadButtonPressed(0,6) && range_Attack_Cooldown <= 0)
+    if (IsGamepadButtonPressed(0,6))
     {
-        Ranged_Attack();
+        if (is_buffed)
+        {
+            if (melee_Cooldown <= 0)
+            {
+                Melee_Attack();
+            }
+        }
+        else
+        {
+            if (range_Attack_Cooldown <= 0)
+            {
+                Ranged_Attack();
+            }
+        }
     }
     Use_Item();
 }
 
 void Player_Base_Class::Tick(float delta_time)
 {
-    if (item_remove_ticker > 0)
+    if (item_removal_timer > 0.0f)
     {
-        item_remove_ticker++;
-        if (item_remove_ticker > 5)
+        item_removal_timer -= delta_time;
+        if (item_removal_timer <= 0.0f)
         {
             RemoveHeldItem();
-            item_remove_ticker = 0;
         }
     }
     if (is_buffed)
@@ -74,7 +97,23 @@ void Player_Base_Class::Tick(float delta_time)
             RemoveHeldItem();
         }
     }
+    if (is_adrenalin_buffed)
+    {
+        adrenalin_buff_timer -= delta_time;
+        if (adrenalin_buff_timer <= 0.0f)
+        {
+            is_adrenalin_buffed = false;
 
+            player_Movement_Speed -= game::Config::adrenalin_Movement_Speed_Boost;
+            ranged_Base_Damage -= game::Config::adrenalin_Ranged_Damage_Boost;
+            is_invincible = false;
+
+            float speed_multiplier = 1.0f - (game::Config::adrenalin_Attack_Speed_Boost_Percent / 100.0f);
+            ranged_Base_Cooldown /= speed_multiplier;
+
+            RemoveHeldItem();
+        }
+    }
     Update_Previous_Position();
     if (game::Config::enable_Health_Drain) {
         player_Health -= game::Config::player_Health_Drain_Rate * delta_time;
@@ -107,10 +146,55 @@ void Player_Base_Class::Tick(float delta_time)
         float deadzone = 0.5f;
         is_Moving = move_Direction.x > deadzone || move_Direction.x < -deadzone || move_Direction.y > deadzone || move_Direction.y < -deadzone;
 
-        if(is_Moving) {
+        is_Moving = (move_Direction.x != 0.0f || move_Direction.y != 0.0f);
+        is_Moving = (move_Direction.x != 0.0f || move_Direction.y != 0.0f);
+
+        if(is_Moving)
+        {
             move_Direction = Vector2Normalize(move_Direction);
-            hitbox.x += move_Direction.x * player_Movement_Speed * delta_time;
-            hitbox.y += move_Direction.y * player_Movement_Speed * delta_time;
+            Vector2 potential_movement = Vector2Scale(move_Direction, player_Movement_Speed * delta_time);
+            const float tunneling_threshold = 1.0f;
+
+            if (Vector2Length(potential_movement) > tunneling_threshold)
+            {
+                std::vector<Collidable*> walls;
+                if (object_manager_ptr) {
+                    for (auto* obj : object_manager_ptr->managed_objects) {
+                        if (obj->Get_Collision_Type() == Collision_Type::WALL) {
+                            walls.push_back(obj);
+                        }
+                    }
+                }
+
+                Vector2 start_pos = Get_Player_Center();
+                Vector2 end_pos = Vector2Add(start_pos, potential_movement);
+
+                bool will_tunnel_wall = false;
+                for (const auto& wall : walls) {
+                    if (CheckCollisionLineRec(start_pos, end_pos, wall->Get_Hitbox()))
+                    {
+                        will_tunnel_wall = true;
+                        break;
+                    }
+                }
+
+                if (will_tunnel_wall)
+                {
+                    hitbox.x = previous_Position.x;
+                    hitbox.y = previous_Position.y;
+                }
+                else
+                {
+
+                    hitbox.x += potential_movement.x;
+                    hitbox.y += potential_movement.y;
+                }
+            }
+            else
+            {
+                hitbox.x += potential_movement.x;
+                hitbox.y += potential_movement.y;
+            }
         }
     }
     player_Pos = {hitbox.x, hitbox.y};
@@ -123,7 +207,7 @@ void Player_Base_Class::On_Collision(Collidable* other)
 	Collision_Type otherType = other->Get_Collision_Type();
 
     if (otherType == Collision_Type::WALL ||
-        otherType == Collision_Type::ENEMY_SPAWNER)
+    otherType == Collision_Type::ENEMY_SPAWNER)
     {
         CollisionResponse::Resolve_Overlap(this, other);
 	}
@@ -154,7 +238,6 @@ void Player_Base_Class::Ranged_Attack()
 {
     if (is_buffed) return;
     this->range_Attack_Cooldown = ranged_Base_Cooldown;
-
     this->currentState = ATTACKING_RANGED;
 
     Vector2 fire_direction = {0.0f, 0.0f};
@@ -172,15 +255,35 @@ void Player_Base_Class::Ranged_Attack()
 
     float offset_distance = (hitbox.width / 2.0f) + 1;
     Vector2 spawn_position = Vector2Add(Get_Player_Center(), Vector2Scale(fire_direction, offset_distance));
-
     int final_damage = static_cast<int>(ranged_Base_Damage * this->player_Damage_Multiplier);
 
+    int pierce_count = game::Config::base_projectile_pierce_count;
+    if (game::Config::enable_piercing_upgrades)
+    {
+        pierce_count += game::core::upgrades.rangedDMG_level;
+    }
+
+    if (is_adrenalin_buffed)
+    {
+        pierce_count += game::Config::adrenalin_Pierce_Count_Boost;
+    }
+
+    float pierce_multiplier = game::Config::projectile_pierce_damage_multiplier_percent / 100.0f;
+    if (is_adrenalin_buffed)
+    {
+        pierce_multiplier += game::Config::adrenalin_Pierce_Multiplier_Boost_Percent / 100.0f;
+        pierce_multiplier = std::min(pierce_multiplier, 1.0f);
+    }
+
     auto* projectile = new game::Player_Projectile(
-        spawn_position,
-        fire_direction,
-        projectile_Speed,
-        final_damage
-    );
+    spawn_position,
+    fire_direction,
+    projectile_Speed,
+    final_damage,
+    pierce_count,
+    pierce_multiplier,
+    is_adrenalin_buffed
+);
 
     if (object_manager_ptr) {
         object_manager_ptr->AddObject(projectile);
@@ -233,9 +336,13 @@ Vector2 Player_Base_Class::Get_Player_Pos()
 
 void Player_Base_Class::Take_Damage(int damage_amount)
 {
+    if (is_invincible && damage_amount > 0) return;
     if (is_buffed && damage_amount > 0) return;
 
-    PlaySound(hits);
+    if (damage_amount > 0)
+    {
+        PlaySound(hits);
+    }
     player_Health -= damage_amount;
     player_Health = std::min(player_Health, (float)player_Max_Health);
 }
@@ -254,7 +361,7 @@ void Player_Base_Class::Set_Position(Vector2 position)
 
 void Player_Base_Class::Heal_To_Full()
 {
-    this->player_Health = this->player_Max_Health;
+    this->player_Health = BuildEffectiveStats(game::core::upgrades).max_health;
 }
 
 float Player_Base_Class::Get_Health() const
@@ -313,8 +420,16 @@ void Player_Base_Class::PickUpItem(ItemBase* item_to_pick_up)
 
 void Player_Base_Class::Use_Item()
 {
-    if (IsGamepadButtonPressed(0,8) && HasItem() && held_item->GetType() != ItemType::KEY && !is_buffed)
+    if (IsGamepadButtonPressed(0,8) && HasItem() && held_item->GetType() != ItemType::KEY && !is_buffed && !is_adrenalin_buffed && item_removal_timer <= 0.0f)
     {
+        if (held_item->GetType()==ItemType::HEALTH_POTION){
+            itemvfx=&potionvfx;
+            vfxtype=1;
+        }
+        if (held_item->GetType()==ItemType::TESTO_NEEDLE){
+            itemvfx=&testovfx;
+            vfxtype=2;
+        }
         held_item->Activate(this);
     }
 }
@@ -333,6 +448,9 @@ void Player_Base_Class::ApplyTestoBuff()
     if (!is_buffed)
     {
         is_buffed = true;
+        original_movement_speed = player_Movement_Speed;
+        original_damage_multiplier = player_Damage_Multiplier;
+
         player_Movement_Speed *= game::Config::testo_Needle_Speed_Boost;
         player_Damage_Multiplier *= game::Config::testo_Needle_Damage_Boost;
     }
@@ -424,4 +542,64 @@ void Player_Base_Class::Reset_For_New_Level()
 void Player_Base_Class::KillYourself() {
     this->SetHasFairy(true);
     this->player_Health=0;
+}
+
+bool Player_Base_Class::LineIntersectsLine(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
+{
+    float den = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
+    if (std::abs(den) < 0.0001f) {
+        return false;
+    }
+    float t_num = (p1.x - p3.x) * (p3.y - p4.y) - (p1.y - p3.y) * (p3.x - p4.x);
+    float u_num = -((p1.x - p2.x) * (p1.y - p3.y) - (p1.y - p2.y) * (p1.x - p3.x));
+    float t = t_num / den;
+    float u = u_num / den;
+    return (t >= 0.0f && t <= 1.0f && u >= 0.0f && u <= 1.0f);
+}
+
+bool Player_Base_Class::CheckCollisionLineRec(Vector2 startPos, Vector2 endPos, Rectangle rec)
+{
+    if (CheckCollisionPointRec(startPos, rec)) {
+        return true;
+    }
+    Vector2 topLeft = { rec.x, rec.y };
+    Vector2 topRight = { rec.x + rec.width, rec.y };
+    Vector2 bottomLeft = { rec.x, rec.y + rec.height };
+    Vector2 bottomRight = { rec.x + rec.width, rec.y + rec.height };
+
+    if (LineIntersectsLine(startPos, endPos, topLeft, topRight)) return true;
+    if (LineIntersectsLine(startPos, endPos, bottomLeft, bottomRight)) return true;
+    if (LineIntersectsLine(startPos, endPos, topLeft, bottomLeft)) return true;
+    if (LineIntersectsLine(startPos, endPos, topRight, bottomRight)) return true;
+
+    return false;
+}
+
+void Player_Base_Class::ApplyAdrenalineBuff()
+{
+    if (is_adrenalin_buffed) return;
+
+    is_adrenalin_buffed = true;
+    player_Movement_Speed += game::Config::adrenalin_Movement_Speed_Boost;
+    ranged_Base_Damage += game::Config::adrenalin_Ranged_Damage_Boost;
+    is_invincible = game::Config::adrenaline_Grants_Invincibility;
+
+    float speed_multiplier = 1.0f - (game::Config::adrenalin_Attack_Speed_Boost_Percent / 100.0f);
+    ranged_Base_Cooldown *= speed_multiplier;
+
+    adrenalin_buff_timer = game::Config::adrenaline_Needle_Buff_Duration;
+
+    if (held_item->GetType() == ItemType::ADRENALINE_NEEDLE) {
+        itemvfx = &testovfx;
+        vfxtype = 2;
+    }
+}
+bool Player_Base_Class::IsAdrenalinBuffed() const
+{
+    return is_adrenalin_buffed;
+}
+
+float Player_Base_Class::GetAdrenalinBuffTimer() const
+{
+    return adrenalin_buff_timer;
 }

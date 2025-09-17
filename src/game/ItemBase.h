@@ -12,10 +12,14 @@ class Player_Base_Class;
 enum class ItemType
 {
     HEALTH_POTION,
+    HEALTH_POTION_2,
+    HEALTH_POTION_3,
     BOMB,
+    ICE_BOMB,
     TESTO_NEEDLE,
     KEY,
-    FAIRY
+    FAIRY,
+    ADRENALINE_NEEDLE
 };
 
 class ItemBase : public Collidable
@@ -39,6 +43,7 @@ public:
     void On_Collision(Collidable* other) override;
     void Draw() override;
     virtual void Activate(Player_Base_Class* player) = 0;
+    virtual std::string GetName() const = 0;
 
     ItemType GetType() const { return type; }
     Rectangle GetAttractionHitbox() const { return attraction_hitbox; }

@@ -27,6 +27,7 @@ namespace game::scenes
         int current_level;
         int counter;
         int input_delay = 0;
+        Music song= LoadMusicStream("assets/audio/tracks/CutsceneMusic.wav");
 
         Font GnomeFont = LoadFont("../../PieWare/assets/Font/GnomishGame.ttf");
 
