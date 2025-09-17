@@ -119,7 +119,7 @@ game::scenes::GameScene::~GameScene()
 void game::scenes::GameScene::Update()
 {
     if (game::core::Store::drop_chance_change_duration>=0){
-        game::core::Store::drop_chance_change_duration--;
+        game::core::Store::drop_chance_change_duration-=dtm.Get_Dt();
     }
     if (game::core::Store::drop_chance_change_duration<0){
         game::core::Store::drop_chance=15;
