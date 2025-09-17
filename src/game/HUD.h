@@ -63,6 +63,9 @@ class HUD {
     Texture2D ITU= LoadTexture(game::Config::Symbol_ITU);
     Texture2D damge=LoadTexture("PieWare/assets/Spritesheets/VFX/Damage_Taken_Overlay.png");
     Texture2D freeze=LoadTexture("PieWare/assets/Spritesheets/VFX/Frost_Overlay.png");
+    Texture2D fairy_icon_lvl1;
+    Texture2D fairy_icon_lvl2;
+    Texture2D fairy_icon_lvl3;
 
 
 

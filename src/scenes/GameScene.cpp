@@ -70,6 +70,7 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
         game::core::Store::player_state->player.Heal_To_Full();
         game::core::Store::player_state->player.ReapplyUpgrades();
         game::core::Store::player_state->player.Reset_For_New_Level();
+        game::core::Store::player_state->fairy_collected_in_level = 0;
     }
 
     this->player_ptr = &game::core::Store::player_state->player;
