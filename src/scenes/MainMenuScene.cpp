@@ -145,6 +145,7 @@ void MainMenuScene::Update()
         }
         case end:{
             game::core::Store::running= false;
+            PlaySound(sound4);
 
             break;
         }
@@ -245,6 +246,10 @@ void MainMenuScene::main_Update() {
 }
 void MainMenuScene::main_Draw() {
 
+    DrawTextPro(game::core::Store::font,"Drücke Range Attack um ins Hauptmenü zurück zu kehren", {game::Config::kStageWidth/2-950,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
+    DrawTextPro(game::core::Store::font,"Drücke Meele Attack um den Aktuellen Button auszuwählen", {game::Config::kStageWidth/2+150,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
+
+
     DrawTextureEx(sign_button,{game::Config::kStageWidth/2-3*228,20},0,3,WHITE);
     Rectangle dest{game::Config::kStageWidth/2-140,150,280,64};
     if (counter==0){
@@ -343,7 +348,7 @@ void MainMenuScene::options_Update() {
             if (counter==0){
                 ToggleFullscreen();
             } else{
-                slider=true;
+                slider=!slider;
             }
         }
 
@@ -354,6 +359,9 @@ void MainMenuScene::options_Update() {
 void MainMenuScene::options_Draw() {
     DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-420,20+90*3-100},0,4,WHITE);
     DrawTexturePro(TB,{40+230*3,1,230,48},{game::Config::kStageWidth/2-460,20,230*4,48*4},{0,0},0,WHITE);
+    DrawTextPro(game::core::Store::font,"Drücke Range Attack um ins Hauptmenü zurück zu kehren", {game::Config::kStageWidth/2-950,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
+    DrawTextPro(game::core::Store::font,"Drücke Meele Attack um den Aktuellen Button auszuwählen", {game::Config::kStageWidth/2+150,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
+
     if (counter==0){
         if (IsWindowFullscreen()){
             DrawTexturePro(FullscreenButton,{150-6,1,144,64},{game::Config::kStageWidth/2-72*2,350,144*2,64*2},{0,0},0,WHITE);
@@ -391,6 +399,9 @@ void MainMenuScene::list_Draw() {
     DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-420-20,20+90*3-100},0,4,WHITE);
     DrawTexturePro(TB,{30+230*2,1,230,48},{game::Config::kStageWidth/2-460,20,230*4,48*4},{0,0},0,WHITE);
     DrawTextPro(game::core::Store::font,"Highscores:", {game::Config::kStageWidth/2-150,game::Config::kStageHeight/2-200}, {0,0}, 0, 50, 3, BLACK);
+    DrawTextPro(game::core::Store::font,"Drücke Range Attack um ins Hauptmenü zurück zu kehren", {game::Config::kStageWidth/2-950,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
+    DrawTextPro(game::core::Store::font,"Drücke Meele Attack um den Aktuellen Button auszuwählen", {game::Config::kStageWidth/2+150,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
+
 
 
     for (int s = 0; s < lines.size(); s++) {
@@ -408,6 +419,9 @@ void MainMenuScene::credits_Update() {
 void MainMenuScene::credits_Draw() {
     DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-795,1500},-90,7,WHITE);
     DrawTexturePro(TB,{20+230*1,1,230,48},{game::Config::kStageWidth/2-460,20,230*4,48*4},{0,0},0,WHITE);
+    DrawTextPro(game::core::Store::font,"Drücke Range Attack um ins Hauptmenü zurück zu kehren", {game::Config::kStageWidth/2-950,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
+    DrawTextPro(game::core::Store::font,"Drücke Meele Attack um den Aktuellen Button auszuwählen", {game::Config::kStageWidth/2+150,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
+
 
     for (int l = 0; l < 4; ++l) {
         for (int i = 0; i < 8; ++i) {

@@ -37,6 +37,7 @@ Music song = LoadMusicStream("assets/audio/tracks/MainMenuMusic.wav");
 Sound sound1 = LoadSound("assets/audio/sfx/Item_Obtained.wav");
     Sound sound2 = LoadSound("assets/audio/sfx/Enemy_Hit.wav");
     Sound sound3 = LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
+    Sound sound4 = LoadSound("assets/audio/sfx/Willhelm Scream.wav");
 
 
 bool slider;
