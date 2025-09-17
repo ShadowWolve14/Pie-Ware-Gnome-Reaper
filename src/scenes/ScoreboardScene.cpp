@@ -106,31 +106,32 @@ namespace game::scenes
 
     void ScoreboardScene::Draw()
     {
-        DrawTextPro(game::core::Store::font,"Score: "+final_score, {game::Config::kStageWidth/2-200,game::Config::kStageHeight/2-400}, {0,0}, 0, 50, 1, WHITE);
+        std::string scoret="Score: "+std::to_string(final_score);
+        DrawTextPro(game::core::Store::font,scoret.c_str(), {game::Config::kStageWidth/2-200,game::Config::kStageHeight/2-400}, {0,0}, 0, 50, 3, WHITE);
 
         float y=0;
         ClearBackground(BLACK);
         if (textmode){
             std::string namefield="Name: "+inputText;
-            DrawTextPro(game::core::Store::font,namefield.c_str(), {game::Config::kStageWidth/2-200,game::Config::kStageHeight/2-300}, {0,0}, 0, 50, 1, WHITE);
-            DrawTextPro(game::core::Store::font,"Drück Enter um deinen Namen mit deinem Score zu Speichern", {game::Config::kStageWidth/2-400,game::Config::kStageHeight/2-200}, {0,0}, 0, 35, 1, GREEN);
+            DrawTextPro(game::core::Store::font,namefield.c_str(), {game::Config::kStageWidth/2-200,game::Config::kStageHeight/2-300}, {0,0}, 0, 50, 3, WHITE);
+            DrawTextPro(game::core::Store::font,"Drück Enter um deinen Namen mit deinem Score zu Speichern", {game::Config::kStageWidth/2-400,game::Config::kStageHeight/2-200}, {0,0}, 0, 35, 3, GREEN);
             y=400;
         }
-        DrawTextPro(game::core::Store::font,"Highscores:", {game::Config::kStageWidth/2-200,game::Config::kStageHeight/2-300+y}, {0,0}, 0, 50, 1, YELLOW);
+        DrawTextPro(game::core::Store::font,"Highscores:", {game::Config::kStageWidth/2-200,game::Config::kStageHeight/2-300+y}, {0,0}, 0, 50, 3, YELLOW);
 
 
         for (int s = 0; s < lines.size(); s++) {
             std::string output;
             output=std::to_string(s+1) +". "+lines[s].name+":";
 
-            DrawTextPro(game::core::Store::font,std::to_string(lines[s].score).c_str(), {game::Config::kStageWidth/2+200,game::Config::kStageHeight/2-200+y+s*50}, {0,0}, 0, 50, 1, YELLOW);
+            DrawTextPro(game::core::Store::font,std::to_string(lines[s].score).c_str(), {game::Config::kStageWidth/2+200,game::Config::kStageHeight/2-200+y+s*50}, {0,0}, 0, 50, 3, YELLOW);
 
-            DrawTextPro(game::core::Store::font,output.c_str(), {game::Config::kStageWidth/2-400,game::Config::kStageHeight/2-200+y+s*50}, {0,0}, 0, 50, 1, YELLOW);
+            DrawTextPro(game::core::Store::font,output.c_str(), {game::Config::kStageWidth/2-400,game::Config::kStageHeight/2-200+y+s*50}, {0,0}, 0, 50, 3, YELLOW);
         }
 
-        DrawTextPro(game::core::Store::font,"Drücke Range Attack um ins Hauptmenü zurück zu kehren", {game::Config::kStageWidth/2-950,game::Config::kStageHeight/2+500}, {0,0}, 0, 30, 1, RED);
+        DrawTextPro(game::core::Store::font,"Drücke Range Attack um ins Hauptmenü zurück zu kehren", {game::Config::kStageWidth/2-950,game::Config::kStageHeight/2+500}, {0,0}, 0, 30, 3, RED);
         if (!textmode){
-            DrawTextPro(game::core::Store::font,"Drücke Meele Attack um deinen Namen einzugeben", {game::Config::kStageWidth/2+250,game::Config::kStageHeight/2+500}, {0,0}, 0, 30, 1, GREEN);
+            DrawTextPro(game::core::Store::font,"Drücke Meele Attack um deinen Namen einzugeben", {game::Config::kStageWidth/2+250,game::Config::kStageHeight/2+500}, {0,0}, 0, 30, 3, GREEN);
         }
 
 
