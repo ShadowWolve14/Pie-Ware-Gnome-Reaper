@@ -720,6 +720,24 @@ namespace game
         inline static constexpr const char* kSfxPuzzleStoneSolve = "assets/audio/sfx/Stone_Solved.wav"; // Sound wenn ein Stein rein geht
         inline static constexpr const char* kSfxPuzzleCompleteAndFairySpawn = "assets/audio/sfx/Puzzle_Solved.wav"; // Sound wenn der letzte Stein rein geht und Item spawned
         inline static constexpr const char* kSfxIceBombUse = "assets/audio/sfx/Icebomb.wav"; // Eis bombe sound
+
+        // ------AudioStuff-------
+        inline static constexpr const float Adrenalin_Sound_Volume=1.0f;
+        inline static constexpr const float Bomb_Sound_Volume=1.0f;
+        inline static constexpr const float Potion_Sound_Volume=1.0f;
+        inline static constexpr const float IceBomb_Sound_Volume=1.0f;
+        inline static constexpr const float Key_Sound_Volume=1.0f;
+        inline static constexpr const float Luck_Sound_Volume=1.0f;
+        inline static constexpr const float Testo_Sound_Volume=1.0f;
+
+        inline static constexpr const float Enemy_Attack_Sound_Volume=1.0f;
+
+        inline static constexpr const float Player_Death_Sound_Volume=1.0f;
+        inline static constexpr const float Player_Item_Obtained_Sound_Volume=1.0f;
+        inline static constexpr const float Player_Took_Damage_Sound_Volume=1.0f;
+        inline static constexpr const float Player_Attack_Sound_Volume=1.0f;
+        inline static constexpr const float Player_Ranged_Attack_Sound_Volume=1.0f;
+
         // ------ DEBUGGING ------
         inline static constexpr bool visualize_Player_Hitbox = false;
         inline static constexpr bool visualize_Attack_Hitboxes = false;

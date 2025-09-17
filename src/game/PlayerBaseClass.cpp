@@ -79,6 +79,13 @@ void Player_Base_Class::Player_Input()
 
 void Player_Base_Class::Tick(float delta_time)
 {
+    SetSoundVolume(this->itoS,game::core::Store::volume*game::Config::Player_Item_Obtained_Sound_Volume);
+    SetSoundVolume(this->hits,game::core::Store::volume*game::Config::Player_Took_Damage_Sound_Volume);
+    SetSoundVolume(this->deaths,game::core::Store::volume*game::Config::Player_Death_Sound_Volume);
+    SetSoundVolume(this->ats,game::core::Store::volume*game::Config::Player_Attack_Sound_Volume);
+    SetSoundVolume(this->rats,game::core::Store::volume*game::Config::Player_Ranged_Attack_Sound_Volume);
+
+
     if (item_removal_timer > 0.0f)
     {
         item_removal_timer -= delta_time;

@@ -56,7 +56,7 @@ namespace enemy
                                game::Config::kAIBase_SeekWeight, game::Config::kAIBase_SeparationWeight, game::Config::kAIBase_PlayerSeparationWeight,
                                game::Config::kAIBase_DesiredSeparation, game::Config::kAIBase_Drag)
     {
-        SetSoundVolume(atS,game::core::Store::volume);
+        SetSoundVolume(atS,game::core::Store::volume*game::Config::Enemy_Attack_Sound_Volume);
 
         this->walk_texture_left = &s_melee_textures.at(name + "_Walk_Left");
         this->walk_texture_right = &s_melee_textures.at(name + "_Walk_Right");

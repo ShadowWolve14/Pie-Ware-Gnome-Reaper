@@ -21,7 +21,7 @@ Luck_Needle::Luck_Needle(Vector2 position)
 void Luck_Needle::Activate(Player_Base_Class* player)
 {
     PlaySound(us);
-    SetSoundVolume(us, game::core::Store::volume);
+    SetSoundVolume(us, game::core::Store::volume*game::Config::Luck_Sound_Volume);
     game::core::Store::drop_chance=100;
     game::core::Store::drop_chance_change_duration=duration;
     player->RemoveHeldItem();

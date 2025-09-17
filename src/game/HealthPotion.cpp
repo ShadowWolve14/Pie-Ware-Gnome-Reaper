@@ -18,7 +18,7 @@ HealthPotion::HealthPotion(Vector2 position)
 void HealthPotion::Activate(Player_Base_Class* player)
 {
     PlaySound(us);
-    SetSoundVolume(us, game::core::Store::volume);
+    SetSoundVolume(us, game::core::Store::volume*game::Config::Potion_Sound_Volume);
     player->Take_Damage(-this->heal_amount);
     player->RemoveHeldItem();
 }

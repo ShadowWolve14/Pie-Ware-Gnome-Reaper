@@ -11,7 +11,7 @@ KeyItem::KeyItem(Vector2 position)
         : ItemBase(position, ItemType::KEY, game::Config::kKeyAnim, false, // false -> hat keinen Despawn-Timer
                    game::Config::key_Anim_Size, game::Config::key_Frame_Count, game::Config::key_Anim_Speed)
 {
-    SetSoundVolume(us,game::core::Store::volume);
+    SetSoundVolume(us,game::core::Store::volume*game::Config::Key_Sound_Volume);
 }
 
 void KeyItem::Activate(Player_Base_Class* player)
