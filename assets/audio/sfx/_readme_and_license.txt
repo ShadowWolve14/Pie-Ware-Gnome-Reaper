@@ -4,7 +4,7 @@ Bookmark Category downloaded from Freesound
 "Gnome Reaper 8 bit"
 
 This Bookmark Category of sounds contains sounds by the following users:
- - OwlStorm ( https://freesound.org/people/OwlStorm/ ) - Mrthenoronha ( https://freesound.org/people/Mrthenoronha/ ) - timgormly ( https://freesound.org/people/timgormly/ ) - lulyc ( https://freesound.org/people/lulyc/ ) - Jofae ( https://freesound.org/people/Jofae/ ) - stumpbutt ( https://freesound.org/people/stumpbutt/ ) - Fupicat ( https://freesound.org/people/Fupicat/ ) - silver887 ( https://freesound.org/people/silver887/ ) - BaggoNotes ( https://freesound.org/people/BaggoNotes/ ) - Cat-Fox_Alex ( https://freesound.org/people/Cat-Fox_Alex/ )
+ - OwlStorm ( https://freesound.org/people/OwlStorm/ ) - Mrthenoronha ( https://freesound.org/people/Mrthenoronha/ ) - timgormly ( https://freesound.org/people/timgormly/ ) - Kenneth_Cooney ( https://freesound.org/people/Kenneth_Cooney/ ) - lulyc ( https://freesound.org/people/lulyc/ ) - Jofae ( https://freesound.org/people/Jofae/ ) - stumpbutt ( https://freesound.org/people/stumpbutt/ ) - Fupicat ( https://freesound.org/people/Fupicat/ ) - silver887 ( https://freesound.org/people/silver887/ ) - Artninja ( https://freesound.org/people/Artninja/ ) - BaggoNotes ( https://freesound.org/people/BaggoNotes/ ) - Cat-Fox_Alex ( https://freesound.org/people/Cat-Fox_Alex/ )
 
 
 
@@ -23,15 +23,24 @@ Sounds in this Bookmark Category
   * 818007__cat-fox_alex__8-bit-noise-open-hat1.wav.wav
     * url: https://freesound.org/s/818007/
     * license: Creative Commons 0
+  * 777293__artninja__custom_tiger_claw_ice_laser_sound_12182024.wav.wav
+    * url: https://freesound.org/s/777293/
+    * license: Attribution 4.0
   * 720118__baggonotes__player_shoot1.wav.wav
     * url: https://freesound.org/s/720118/
     * license: Creative Commons 0
   * 629664__stumpbutt__retro-taking-damage-sfx2.wav.wav
     * url: https://freesound.org/s/629664/
     * license: Creative Commons 0
+  * 609336__kenneth_cooney__completed.wav.wav
+    * url: https://freesound.org/s/609336/
+    * license: Creative Commons 0
   * 573117__silver887__8-bit-flame-or-lava.wav.wav
     * url: https://freesound.org/s/573117/
     * license: Attribution 4.0
+  * 518306__mrthenoronha__extra-life-8-bit.wav.wav
+    * url: https://freesound.org/s/518306/
+    * license: Attribution NonCommercial 4.0
   * 517169__mrthenoronha__rocket-launcher-1-8-bit.wav.wav
     * url: https://freesound.org/s/517169/
     * license: Attribution NonCommercial 4.0

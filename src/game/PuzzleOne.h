@@ -17,8 +17,14 @@ private:
     bool is_solved = false;
     bool loaded = false;
 
+    int previously_solved_count = 0;
+    Sound stone_solve_sound;
+    Sound puzzle_complete_sound;
+    float initial_sound_delay_timer = 5.0f;
+
 public:
     PuzzleOne(Object_Manager& obj_manager);
+    ~PuzzleOne();
     void Load(int level_number);
     void Update();
     bool IsSolved() const { return is_solved; }

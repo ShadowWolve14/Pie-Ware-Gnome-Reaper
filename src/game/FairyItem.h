@@ -8,9 +8,15 @@
 
 class FairyItem : public ItemBase
 {
+    RepeatAnimation aura_vfx;
+    int collected_in_level;
 public:
     FairyItem(Vector2 position, int current_level);
-    void Activate(Player_Base_Class* player) override {}
+
+    void Tick(float delta_time) override;
+    void Draw() override;
+
+    void Activate(Player_Base_Class* player) override;
     std::string GetName() const override;
 };
 

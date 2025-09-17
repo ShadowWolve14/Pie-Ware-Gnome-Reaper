@@ -5,12 +5,14 @@
 #include "Stage.h"
 #include "Actor.h"
 #include "../game/PlayerClassOne.h"
+
 namespace game::core
 {
     struct PlayerState {
         Player_Class_One player;
         int score = 0;
         int souls = 0;
+        int fairy_collected_in_level = 0;
 
         explicit PlayerState(Vector2 start_pos) : player(start_pos) {}
     };
@@ -37,7 +39,6 @@ namespace game::core
 
         /// Global game counter. Can be used e.g. for the calculation of animation times.
         inline static long long int ticks = 1;
-
         /// The actors map can contain shared pointers to actor objects that are to be used across
         /// multiple scenes (e.g. the player actor).
         inline static std::map<std::string, std::shared_ptr<game::core::Actor>> actors = { };
@@ -47,5 +48,7 @@ namespace game::core
         inline static Font font= LoadFont("PieWare/assets/Font/GnomishGame.ttf");
         inline static bool running= true;
         inline static float volume=5;
+        inline static float drop_chance=game::Config::enemy_Item_Drop_Chance_Percent;
+        inline static float drop_chance_change_duration=0;
     };
 }

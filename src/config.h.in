@@ -26,7 +26,7 @@ namespace game
         inline static constexpr int kTargetFps = 60;
 
         // Start game in window or fullscreen mode
-        inline static constexpr const bool kFullScreen = true;
+        inline static constexpr const bool kFullScreen = false;
 
         // Define if the game uses a mouse/mouse pointer
         // The mouse position is then accessible in game::core::Store in the mouse_position attribute
@@ -384,7 +384,7 @@ namespace game
         inline static constexpr float item_Attraction_Speed = 10.0f;        // Geschwindigkeit, mit der das Item zum Spieler gezogen wird
 
         // ------ Item Drop Rates from Enemies ------
-        inline static constexpr int enemy_Item_Drop_Chance_Percent = 15; // Globale Chance in %, dass ein Gegner überhaupt ein Item droppt
+        inline static constexpr int enemy_Item_Drop_Chance_Percent = 100; // Globale Chance in %, dass ein Gegner überhaupt ein Item droppt
 
         // Die folgenden Werte sind "Gewichte". Ein höherer Wert bedeutet eine höhere Chance im Vergleich zu den anderen.
         // Ein Wert von 0 bedeutet, dass dieses Item niemals von Gegnern gedroppt wird. 10 und 1 bedeutet das Item mit 10 kommt 10 mal häufiger
@@ -395,6 +395,7 @@ namespace game
         inline static constexpr int item_Drop_Weight_IceBomb = 25;
         inline static constexpr int item_Drop_Weight_TestoNeedle = 5;
         inline static constexpr int item_Drop_Weight_Adrenaline = 5;
+        inline static constexpr int item_Drop_Weight_Luck = 5;
         inline static constexpr int item_Drop_Weight_Key = 0; // Schlüssel soll nicht von Gegnern droppen
         inline static constexpr int item_Drop_Weight_Fairy = 0; // Fee soll nicht von Gegnern droppen
 
@@ -419,6 +420,17 @@ namespace game
         inline static constexpr int health_Potion_Frame_Count = 9;
         inline static constexpr float health_Potion_Anim_Speed = 1.0f;
         inline static constexpr float kHealVFXAnimSpeed = 1.5f;
+
+        // ------Luck_Spritze--------
+        inline static constexpr int Luck_Needle_duration = 120;
+        inline static constexpr int Luck_Needle_Max_On_Map = 2;
+        inline static constexpr const char* kLuck_Needle_Anim = "PieWare/assets/Items/Item Variants/Item_Variant_SpritzedesGluecks.png";
+
+        inline static constexpr Vector2 Luck_Needle_Anim_Size = {16.0f, 16.0f};
+        inline static constexpr int Luck_Needle_Frame_Count = 9;
+        inline static constexpr float Luck_Needle_Anim_Speed = 1.0f;
+        inline static constexpr float kLuckVFXAnimSpeed = 1.5f;
+
         // ------ Bomben-Item ------
         inline static constexpr int bomb_Damage = 240;                      // Schaden an Gegnern
         inline static constexpr float bomb_Radius_Tiles = 6.0f;             // Radius in "Tiles" (1 Tile = 16 Pixel)
@@ -436,7 +448,7 @@ namespace game
 
         // ------ Eisbomben-Item ------
         inline static constexpr const char* kIceBombItemAnim = "PieWare/assets/Items/Item Variants/Item_Variant_Eisbombe.png";
-        inline static constexpr const char* kIceBombExplosionAnim = "PieWare/assets/Items/Animations/Fire_Test.png";
+        inline static constexpr const char* kIceBombExplosionAnim = "PieWare/assets/Spritesheets/VFX/EisbombeVFX.png";
         inline static constexpr float kIceBombFreezeDuration = 50.0f; // Dauer des Einfrierens in 1/10 Sekunden (5s)
         inline static constexpr Color kIceBombFreezeTint = {53, 133, 158, 255}; // Farbe aus unserer Farbpalette (mir persönlich scheiß egal wenn sie davon abweicht)
         inline static constexpr bool kIceBombFreezesTimerGlobally = false; // Friert die Sanduhr immer ein, egal wo sie explodiert?
@@ -470,17 +482,17 @@ namespace game
         inline static constexpr int adrenalin_Pierce_Multiplier_Boost_Percent = 25; // ist mit 25 auf 100 also kein Schadenverlust mehr
         inline static constexpr int adrenalin_Attack_Speed_Boost_Percent = 20;
         // Adrenalin VFX Settings (visueller Effekt auf dem Spieler)
-        inline static const char* kAdrenalineVFXAnim = "PieWare/assets/Spritesheets/VFX/Healing Effect.png";
+        inline static const char* kAdrenalineVFXAnim = "PieWare/assets/Spritesheets/VFX/AdrenalineVFX.png";
         inline static const Vector2 adrenaline_VFX_Anim_Size = { 32.0f, 32.0f };
         inline static constexpr int adrenaline_VFX_Frame_Count = 5;
         inline static constexpr float adrenaline_VFX_Anim_Speed = 3.0f;
         inline static constexpr int adrenaline_VFX_Transparency = 150; // Transparenz (0-255)
 
         // Adrenalin Projectile Settings (animiertes Projektil)
-        inline static const char* kAdrenalineProjectileAnim = "PieWare/assets/Items/Projectile_Right_White.png";
-        inline static const Vector2 adrenaline_Projectile_Anim_Size = { 16.0f, 16.0f };
-        inline static constexpr int adrenaline_Projectile_Frame_Count = 1;
-        inline static constexpr float adrenaline_Projectile_Anim_Speed = 1.0f;
+        inline static const char* kAdrenalineProjectileAnim = "PieWare/assets/Items/Animations/AdrenalineArrow.png";
+        inline static const Vector2 adrenaline_Projectile_Anim_Size = { 32.0f, 16.0f };
+        inline static constexpr int adrenaline_Projectile_Frame_Count = 5;
+        inline static constexpr float adrenaline_Projectile_Anim_Speed = 8.0f;
 
         // ------ Testonadel Buff-Animationen ------
         // Hier definieren wir alle 16 neuen Animationspfade, wie du es wolltest.
@@ -529,6 +541,11 @@ namespace game
         inline static constexpr Vector2 fairy_Anim_Size_Lvl3 = {16.0f, 32.0f};
         inline static constexpr int fairy_Frame_Count = 9;
         inline static constexpr float fairy_Anim_Speed = 1.0f;
+        inline static const char* kFairyAuraVFXAnim = "PieWare/assets/Spritesheets/VFX/FeenitemVFX.png";
+        inline static const Vector2 fairy_Aura_VFX_Anim_Size = { 48.0f, 48.0f };
+        inline static constexpr int fairy_Aura_VFX_Frame_Count = 6;
+        inline static constexpr float fairy_Aura_VFX_Anim_Speed = 2.5f;
+        inline static constexpr int fairy_Aura_VFX_Transparency = 255; // Transparenz (0-255)
 
         // ------ Hard-coded Item Positions ------
         inline static constexpr Vector2 initial_Testo_Needle_Position = {104.0f, 464.0f}; // Position Testonadel im Tempel
@@ -615,6 +632,8 @@ namespace game
         inline static constexpr const char* kIconHealthPotion3_Use = "PieWare/assets/UI/HUD/Button_Item_Potionl_Use.png";
         inline static const char* kIconAdrenalinNeedle = "PieWare/assets/UI/HUD/Button_Item_Adrenaline.png";
         inline static const char* kIconAdrenalinNeedle_Use = "PieWare/assets/UI/HUD/Button_Item_Adrenaline_Use.png";
+        inline static const char* kIconLuckNeedle = "PieWare/assets/UI/HUD/Button_Item_Luckspritze.png";
+        inline static const char* kIconLuckNeedle_Use = "PieWare/assets/UI/HUD/Button_Item_Luckspritze_Use.png";
 
        //____________________Rätsel: Steinverschieben____________________________
         // ------ Allgemeine Rätsel-Mechaniken ------
@@ -657,7 +676,7 @@ namespace game
         inline static constexpr Vector2 movable_wall_5_target_pos = {696, 863};
         inline static constexpr const char* movable_wall_5_spritesheet = "PieWare/assets/Spritesheets/Stones/Movable_Stone_Earth.png";
 
-        // ------ Rätsel-Bewegungsgrenzen ------
+// ------ Rätsel-Bewegungsgrenzen ------
         // Definiert den Bereich, in dem sich die Steine aufhalten dürfen.
         // Verlassen sie ihn, werden sie auf ihre Startposition zurückgesetzt.
         inline static constexpr Rectangle kMovableWallBounds = { 550.0f, 620.0f, 435.0f, 290.0f };
@@ -697,6 +716,10 @@ namespace game
         inline static constexpr const char* hourglass_lvl2_spritesheet = "PieWare/assets/Spritesheets/Hourglass_Lvl2.png";
         inline static constexpr const char* hourglass_lvl3_spritesheet = "PieWare/assets/Spritesheets/Hourglass_Lvl3.png";
 
+
+        inline static constexpr const char* kSfxPuzzleStoneSolve = "assets/audio/sfx/Stone_Solved.wav"; // Sound wenn ein Stein rein geht
+        inline static constexpr const char* kSfxPuzzleCompleteAndFairySpawn = "assets/audio/sfx/Puzzle_Solved.wav"; // Sound wenn der letzte Stein rein geht und Item spawned
+        inline static constexpr const char* kSfxIceBombUse = "assets/audio/sfx/Icebomb.wav"; // Eis bombe sound
         // ------ DEBUGGING ------
         inline static constexpr bool visualize_Player_Hitbox = false;
         inline static constexpr bool visualize_Attack_Hitboxes = false;
