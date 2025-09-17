@@ -9,6 +9,7 @@
 class FairyItem : public ItemBase
 {
     RepeatAnimation aura_vfx;
+    int collected_in_level;
 public:
     FairyItem(Vector2 position, int current_level);
 

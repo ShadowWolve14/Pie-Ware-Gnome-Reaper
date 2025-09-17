@@ -716,9 +716,9 @@ namespace game
         inline static constexpr const char* hourglass_lvl3_spritesheet = "PieWare/assets/Spritesheets/Hourglass_Lvl3.png";
 
 
-        inline static constexpr const char* kSfxPuzzleStoneSolve = "assets/audio/sfx/Healpotion_Used.wav"; // Sound wenn ein Stein rein geht
-        inline static constexpr const char* kSfxPuzzleCompleteAndFairySpawn = "assets/audio/sfx/Bomb_detonation.wav"; // Sound wenn der letzte Stein rein geht und Item spawned
-        inline static constexpr const char* kSfxIceBombUse = "assets/audio/sfx/Bomb_detonation.wav"; // Eis bombe sound
+        inline static constexpr const char* kSfxPuzzleStoneSolve = "assets/audio/sfx/Stone_Solved.wav"; // Sound wenn ein Stein rein geht
+        inline static constexpr const char* kSfxPuzzleCompleteAndFairySpawn = "assets/audio/sfx/Puzzle_Solved.wav"; // Sound wenn der letzte Stein rein geht und Item spawned
+        inline static constexpr const char* kSfxIceBombUse = "assets/audio/sfx/Icebomb.wav"; // Eis bombe sound
         // ------ DEBUGGING ------
         inline static constexpr bool visualize_Player_Hitbox = false;
         inline static constexpr bool visualize_Attack_Hitboxes = false;

@@ -21,6 +21,10 @@ HUD::HUD(Player_Class_One* mp):mp(mp) {
     IA = LoadTexture(game::Config::kIconAdrenalinNeedle);
     ILN = LoadTexture(game::Config::kIconLuckNeedle);
     ILNU = LoadTexture(game::Config::kIconLuckNeedle_Use);
+
+    fairy_icon_lvl1 = LoadTexture("PieWare/assets/Items/FeenFluegel.png");
+    fairy_icon_lvl2 = LoadTexture("PieWare/assets/Items/FeenHoerner.png");
+    fairy_icon_lvl3 = LoadTexture("PieWare/assets/Items/Zepter.png");
 }
 
 void HUD::HUD_update()
@@ -399,6 +403,60 @@ void HUD::HUD_draw() {
     if (mp->Get_Health()>139){
         DrawTextureEx(H,v16,rot,3,WHITE);
 
+    }
+    if (game::core::Store::player_state->fairy_collected_in_level > 0)
+    {
+        Texture2D current_icon;
+        Rectangle destRec;
+
+        switch (game::core::Store::player_state->fairy_collected_in_level)
+        {
+            case 1:
+            {
+                current_icon = fairy_icon_lvl1;
+                const float scale = 4.0f;
+                destRec = {
+                    400.0f,
+                    35.0f,
+                    (float)current_icon.width * scale,
+                    (float)current_icon.height * scale
+                };
+                break;
+            }
+            case 2:
+            {
+                current_icon = fairy_icon_lvl2;
+                const float scale = 6.0f;
+                destRec = {
+                    405.0f,
+                    18.0f,
+                    (float)current_icon.width * scale,
+                    (float)current_icon.height * scale
+                };
+                break;
+            }
+            case 3:
+            {
+                current_icon = fairy_icon_lvl3;
+                const float scale = 3.0f;
+                destRec = {
+                    425.0f,
+                    15.0f,
+                    (float)current_icon.width * scale,
+                    (float)current_icon.height * scale
+                };
+                break;
+            }
+            default:
+                current_icon = fairy_icon_lvl1;
+            destRec = { 400.0f, 30.0f, (float)current_icon.width * 3.0f, (float)current_icon.height * 3.0f };
+            break;
+        }
+
+        Rectangle sourceRec = { 0.0f, 0.0f, (float)current_icon.width, (float)current_icon.height };
+        Vector2 origin = { 0.0f, 0.0f };
+
+        DrawTexturePro(current_icon, sourceRec, destRec, origin, 0.0f, WHITE);
     }
     std::string temp=std::to_string(game::core::Store::player_state->score);
     DrawTextEx(game::core::Store::font,temp.c_str(),{v2.x+85,v2.y+36},30,1,WHITE);
