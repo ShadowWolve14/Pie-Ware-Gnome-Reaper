@@ -435,7 +435,7 @@ namespace game
 
         // ------ Eisbomben-Item ------
         inline static constexpr const char* kIceBombItemAnim = "PieWare/assets/Items/Item Variants/Item_Variant_Eisbombe.png";
-        inline static constexpr const char* kIceBombExplosionAnim = "PieWare/assets/Spritesheets/VFXEisbombeVFX.png";
+        inline static constexpr const char* kIceBombExplosionAnim = "PieWare/assets/Spritesheets/VFX/EisbombeVFX.png";
         inline static constexpr float kIceBombFreezeDuration = 50.0f; // Dauer des Einfrierens in 1/10 Sekunden (5s)
         inline static constexpr Color kIceBombFreezeTint = {53, 133, 158, 255}; // Farbe aus unserer Farbpalette (mir persönlich scheiß egal wenn sie davon abweicht)
         inline static constexpr bool kIceBombFreezesTimerGlobally = false; // Friert die Sanduhr immer ein, egal wo sie explodiert?
