@@ -25,6 +25,7 @@ class HUD {
     float rot;
     int ofs;
     int ct;
+    int cb;
 
     Texture2D AA= LoadTexture(game::Config::Symbol_AA);
     Texture2D AAU= LoadTexture(game::Config::Symbol_AAU);
@@ -61,6 +62,7 @@ class HUD {
     Texture2D IT= LoadTexture(game::Config::Symbol_IT);
     Texture2D ITU= LoadTexture(game::Config::Symbol_ITU);
     Texture2D damge=LoadTexture("PieWare/assets/Spritesheets/VFX/Damage_Taken_Overlay.png");
+    Texture2D freeze=LoadTexture("PieWare/assets/Spritesheets/VFX/Frost_Overlay.png");
 
 
 
