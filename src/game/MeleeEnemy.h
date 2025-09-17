@@ -5,14 +5,11 @@
 #include <map>
 #include "PlayerBaseClass.h"
 
-enum EnemyState { E_IDLE, E_WALKING, E_ATTACKING, E_DAMAGED, E_DYING, E_KNOCKBACK };
-
 namespace enemy
 {
     class Melee_Enemy : public Enemy_Base_Class
     {
     protected:
-        EnemyState currentState = E_WALKING;
         Facing_Direction facing_Direction = LEFT;
         Facing_Direction attack_Direction = LEFT;
         std::map<Facing_Direction, RepeatAnimation> walk_animations;
@@ -44,7 +41,6 @@ namespace enemy
     public:
 
         ~Melee_Enemy() override = default;
-
         static void Load_All_Melee_Assets();
         static void Unload_All_Melee_Assets();
 

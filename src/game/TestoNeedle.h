@@ -15,6 +15,7 @@ private:
 public:
     TestoNeedle(Vector2 position, bool has_despawn_timer = true);
     void Activate(Player_Base_Class* player) override;
+    std::string GetName() const override;
 };
 
 #endif //TESTONEEDLE_H

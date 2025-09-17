@@ -65,16 +65,15 @@ void RepeatAnimation::Update_Frame(float delta_time)
     }
 }
 
-void RepeatAnimation::Draw_Current_Frame(Vector2 pos) {
+void RepeatAnimation::Draw_Current_Frame(Vector2 pos, Color tint) {
     if (spritesheet.id <= 0) return;
-    DrawTextureRec(spritesheet, target, pos, WHITE);
+    DrawTextureRec(spritesheet, target, pos, tint);
 }
 
-void RepeatAnimation::Draw_Current_Frame_Pro(Vector2 pos) {
+void RepeatAnimation::Draw_Current_Frame_Pro(Vector2 pos, Color tint) {
     if (spritesheet.id <= 0) return;
 
-    // draw current frame (target) at pos, scaled x2, no rotation
     const Rectangle dest{ pos.x, pos.y, target.width * 4.0f, target.height * 4.0f };
     const Vector2   origin{ 0.0f, 0.0f };
-    DrawTexturePro(spritesheet, target, dest, origin, 0.0f, WHITE);
+    DrawTexturePro(spritesheet, target, dest, origin, 0.0f, tint);
 }

@@ -7,11 +7,13 @@
 #include "Object_Manager.h"
 #include "BombExplosionHitbox.h"
 #include "../Config.h.in"
+#include "Store.h"
 
 BombItem::BombItem(Vector2 position)
         : ItemBase(position, ItemType::BOMB, game::Config::kBombItemAnim, true,
                    game::Config::bomb_Item_Anim_Size, game::Config::bomb_Item_Frame_Count, game::Config::bomb_Item_Anim_Speed)
 {
+    SetSoundVolume(us,game::core::Store::volume);
 }
 
 void BombItem::Activate(Player_Base_Class* player)
@@ -69,4 +71,9 @@ void BombItem::Activate(Player_Base_Class* player)
         player->item_removal_timer = game::Config::bomb_Explosion_Damage_Lifetime + 0.1f;
     this->Mark_For_Destruction();
     PlaySound(us);
+}
+
+std::string BombItem::GetName() const
+{
+        return "Bomb";
 }

@@ -8,6 +8,7 @@
 #include "AttackDirection.h"
 #include "PlayerBaseClass.h"
 #include "../core/RepeatAnimation.h"
+#include "../core/Animations.h"
 
 namespace game {
     class Player_Projectile : public Collidable {
@@ -15,16 +16,19 @@ namespace game {
         Vector2 velocity;
         bool is_active;
         int damage;
-        static Texture2D projectile_sprite;
-
+        Animations animation;
         Texture2D sprite;
+        bool is_animated;
+
         float rotation;
 
-        Player_Projectile(Vector2 start_position, Vector2 direction, float projectile_speed, int final_damage);
+        Player_Projectile(Vector2 start_position, Vector2 direction, float projectile_speed, int final_damage,
+            int pierce_count, float final_pierce_multiplier, bool is_buffed_and_animated);
         ~Player_Projectile() override;
 
-        static void LoadAssets();
-        static void UnloadAssets();
+        int pierce_count_remaining;
+        float damage_falloff_multiplier;
+        std::vector<Collidable*> hit_enemies;
         void Tick(float delta_time) override;
         void Draw() override;
         Collision_Type Get_Collision_Type() const override;
