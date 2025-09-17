@@ -4,6 +4,36 @@
 
 #include "MainMenuScene.h"
 
+static void EnsureFileExists(const std::string& filename) {
+    namespace fs = std::filesystem;
+    std::error_code ec;
+
+    fs::path p(filename);
+
+    // Create parent directories if they don't exist
+    if (p.has_parent_path()) {
+        fs::create_directories(p.parent_path(), ec);
+        if (ec) {
+            TraceLog(LOG_WARNING, "EnsureFileExists: could not create directories for '%s' : %s",
+                     filename.c_str(), ec.message().c_str());
+        } else {
+            TraceLog(LOG_INFO, "EnsureFileExists: parent directories exist/created for '%s'", filename.c_str());
+        }
+    }
+
+    // Create the file if it doesn't exist
+    if (!fs::exists(p)) {
+        std::ofstream f(filename, std::ios::out);
+        if (!f.is_open()) {
+            TraceLog(LOG_ERROR, "EnsureFileExists: failed to create file '%s'", filename.c_str());
+        } else {
+            TraceLog(LOG_INFO, "EnsureFileExists: created new file '%s'", filename.c_str());
+            f.close();
+        }
+    } else {
+        TraceLog(LOG_INFO, "EnsureFileExists: file exists '%s'", filename.c_str());
+    }
+}
 
 MainMenuScene::MainMenuScene() {
     this->counter=0;
@@ -113,11 +143,13 @@ void MainMenuScene::main_Update() {
                 break;
             }
             case 1:{
+                counter=0;
                 state=options;
                 break;
             }
             case 2:{
                 state=list;
+                loaded= false;
                 break;
             }
             case 3:{
@@ -265,13 +297,60 @@ void MainMenuScene::options_Draw() {
 }
 void MainMenuScene::list_Update() {
     Input_Check_Back();
+    if (!loaded){
+        lines=LoadHighscores("HighscoreList.txt");
+        loaded= true;
+    }
+
+
+
 }
 void MainMenuScene::list_Draw() {
+    DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-420-20,20+90*3-100},0,4,WHITE);
+    DrawTexturePro(TB,{30+230*2,1,230,48},{game::Config::kStageWidth/2-460,20,230*4,48*4},{0,0},0,WHITE);
+    DrawTextPro(game::core::Store::font,"Highscores:", {game::Config::kStageWidth/2-150,game::Config::kStageHeight/2-200}, {0,0}, 0, 50, 3, BLACK);
 
+
+    for (int s = 0; s < lines.size(); s++) {
+        std::string output;
+        output=std::to_string(s+1) +". "+lines[s].name+":";
+
+        DrawTextPro(game::core::Store::font,std::to_string(lines[s].score).c_str(), {game::Config::kStageWidth/2+100,game::Config::kStageHeight/2-100+s*50}, {0,0}, 0, 50, 3, BLACK);
+
+        DrawTextPro(game::core::Store::font,output.c_str(), {game::Config::kStageWidth/2-400+80,game::Config::kStageHeight/2-100+s*50}, {0,0}, 0, 50, 3, BLACK);
+    }
 }
 void MainMenuScene::credits_Update() {
     Input_Check_Back();
 }
 void MainMenuScene::credits_Draw() {
 
+}
+
+std::vector<HighscoreEntry> MainMenuScene::LoadHighscores(const std::string& filename) {
+    EnsureFileExists(filename);
+
+    std::vector<HighscoreEntry> highscores;
+    std::ifstream infile(filename);
+    if (!infile.is_open()) {
+        TraceLog(LOG_WARNING, "LoadHighscores: could not open '%s' for reading (returning empty).", filename.c_str());
+        return highscores;
+    }
+
+    std::string name;
+    int score;
+    while (infile >> name >> score) {
+        highscores.push_back({name, score});
+    }
+    infile.close();
+
+    std::sort(highscores.begin(), highscores.end(),
+              [](const HighscoreEntry& a, const HighscoreEntry& b) {
+                  return a.score > b.score;
+              });
+
+    if (highscores.size() > 10) highscores.resize(10);
+
+    TraceLog(LOG_INFO, "LoadHighscores: returning %d entries from '%s'", (int)highscores.size(), filename.c_str());
+    return highscores;
 }

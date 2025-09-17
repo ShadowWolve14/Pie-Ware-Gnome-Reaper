@@ -10,7 +10,10 @@
 #include "../config.h.in"
 #include "store.h"
 #include "GameScene.h"
-
+struct HighscoreEntry {
+    std::string name;
+    int score;
+};
 class MainMenuScene : public game::core::Scene{
 private:
     Texture2D start_button= LoadTexture(game::Config::start_button_asset);
@@ -34,7 +37,10 @@ Music song = LoadMusicStream("assets/audio/tracks/MainMenuMusic.wav");
 
 bool slider;
 bool prot;
-float vol=100;
+float vol=5;
+
+    std::vector<HighscoreEntry> lines;
+    bool loaded= false;
 
 void Input_Check_Mov();
 bool Input_Check_Sel();
@@ -48,6 +54,9 @@ void main_Draw();
     void credits_Draw();
     void list_Update();
     void list_Draw();
+
+    std::vector<HighscoreEntry> LoadHighscores(const std::string& filename);
+
 public:
     MainMenuScene();
 
