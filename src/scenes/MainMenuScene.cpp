@@ -35,11 +35,45 @@ static void EnsureFileExists(const std::string& filename) {
     }
 }
 
+static void SaveValue(const std::string& filename, float value) {
+    EnsureFileExists(filename);
+    std::ofstream f(filename, std::ios::out | std::ios::trunc); // overwrite mode
+    if (!f.is_open()) {
+        TraceLog(LOG_ERROR, "SaveValue: failed to open file '%s'", filename.c_str());
+        return;
+    }
+    f << value << std::endl;
+    TraceLog(LOG_INFO, "SaveValue: wrote value to '%s'", filename.c_str());
+    f.close();
+}
+
+static float ReadValue(const std::string& filename) {
+    EnsureFileExists(filename);
+    std::ifstream f(filename);
+    if (!f.is_open()) {
+        TraceLog(LOG_ERROR, "ReadValue: failed to open file '%s'", filename.c_str());
+        return 5.0f; // fallback if cannot open
+    }
+
+    float value;
+    if (!(f >> value)) {
+        TraceLog(LOG_WARNING, "ReadValue: file '%s' empty or invalid, using default value 5.0", filename.c_str());
+        value = 5.0f;
+        SaveValue(filename, value); // make sure file contains the default
+    } else {
+        TraceLog(LOG_INFO, "ReadValue: read value from '%s'", filename.c_str());
+    }
+
+    f.close();
+    return value;
+}
 MainMenuScene::MainMenuScene() {
     this->counter=0;
     state=main;
     song.looping= true;
     PlayMusicStream(song);
+
+    game::core::Store::volume= ReadValue("AudioSettings.txt");
 
     Text.resize(33);
     Text[0]="Gnome Reaper von Pie Ware";
@@ -75,6 +109,8 @@ MainMenuScene::MainMenuScene() {
     Text[30]="";
     Text[31]="";
     Text[32]="";
+
+
 
 }
 MainMenuScene::~MainMenuScene() { }
@@ -268,6 +304,7 @@ void MainMenuScene::options_Update() {
     if (slider){
         if (IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_ENTER)) {
             slider = !slider;
+
         }
         if (IsKeyPressed(game::Config::key_Left)){
             game::core::Store::volume=game::core::Store::volume-0.5;
@@ -281,6 +318,7 @@ void MainMenuScene::options_Update() {
                 game::core::Store::volume=5;
             }
         }
+        SaveValue("AudioSettings.txt",game::core::Store::volume);
 
     } else{
         Input_Check_Mov();
