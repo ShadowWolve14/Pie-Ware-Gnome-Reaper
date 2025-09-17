@@ -626,6 +626,8 @@ namespace game
         inline static constexpr const char* kIconHealthPotion3_Use = "PieWare/assets/UI/HUD/Button_Item_Potionl_Use.png";
         inline static const char* kIconAdrenalinNeedle = "PieWare/assets/UI/HUD/Button_Item_Adrenaline.png";
         inline static const char* kIconAdrenalinNeedle_Use = "PieWare/assets/UI/HUD/Button_Item_Adrenaline_Use.png";
+        inline static const char* kIconLuckNeedle = "PieWare/assets/UI/HUD/Button_Item_Luckspritze.png";
+        inline static const char* kIconLuckNeedle_Use = "PieWare/assets/UI/HUD/Button_Item_Luckspritze_Use.png";
 
        //____________________Rätsel: Steinverschieben____________________________
         // ------ Allgemeine Rätsel-Mechaniken ------

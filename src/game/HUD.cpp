@@ -19,6 +19,8 @@ HUD::HUD(Player_Class_One* mp):mp(mp) {
     IBombU = LoadTexture(game::Config::kIconIceBomb_Use);
     IAU = LoadTexture(game::Config::kIconAdrenalinNeedle_Use);
     IA = LoadTexture(game::Config::kIconAdrenalinNeedle);
+    ILN = LoadTexture(game::Config::kIconLuckNeedle);
+    ILNU = LoadTexture(game::Config::kIconLuckNeedle_Use);
 }
 
 void HUD::HUD_update()
@@ -47,6 +49,8 @@ void HUD::HUD_update()
             this->it = testo;
         } else if (currentItemType == ItemType::ADRENALINE_NEEDLE) {
         this->it = adrenalin;
+        } else if (currentItemType ==  ItemType::LUCK_NEEDLE){
+            this->it = luck;
         }
     }
 
@@ -225,6 +229,9 @@ void HUD::HUD_draw() {
                 if (UC > 0) { DrawTextureEx(IP3U, v6, rot, 3, WHITE); }
                 break;
             }
+            case luck: {
+                if (UC > 0) { DrawTextureEx(ILNU, v6, rot, 3, WHITE); }
+            }
             default: {
                 if (UC > 0) { DrawTextureEx(IEU, v6, rot, 3, WHITE); }
                 break;
@@ -294,6 +301,10 @@ void HUD::HUD_draw() {
             }
             case potion3: {
                 DrawTextureEx(IP3, v6, rot, 3, WHITE);
+                break;
+            }
+            case luck: {
+                DrawTextureEx(ILN, v6, rot, 3, WHITE);
                 break;
             }
             default: {
