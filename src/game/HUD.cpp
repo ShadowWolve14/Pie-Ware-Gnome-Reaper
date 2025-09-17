@@ -83,6 +83,7 @@ void HUD::HUD_update()
     }
     prevhp=mp->Get_Health();
     c--;
+    cb--;
 }
 void HUD::HUD_shake() {
     if (ct<1){
@@ -133,6 +134,9 @@ void HUD::HUD_draw() {
 
     if (c>0){
         DrawTexturePro(damge,{1+(float)c*512,1,512,288},{0,0,512*3.8,288*3.8},{0,0},0,WHITE);
+    }
+    if (cb>0){
+        DrawTexturePro(freeze,{1+(float)cb*512,1,512,288},{0,0,512*3.8,288*3.8},{0,0},0,WHITE);
     }
 
     DrawTextureEx(HS,v1,rot,3,WHITE);
@@ -203,6 +207,7 @@ void HUD::HUD_draw() {
             }
             case icebomb: {
                if (UC > 0) { DrawTextureEx(IBombU, v6, rot, 3, WHITE);}
+               cb=game::Config::kIceBombFreezeDuration*7;
                 break;
             }
             case key: {
