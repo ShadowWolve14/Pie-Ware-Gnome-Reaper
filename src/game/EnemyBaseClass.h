@@ -18,6 +18,7 @@ namespace enemy
     {
     protected:
         // KI-Parameter
+        float freeze_immunity_timer = 0.0f;
         EnemyState currentState = E_WALKING;
         float seek_weight;
         float separation_weight;

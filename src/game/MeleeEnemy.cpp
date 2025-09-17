@@ -227,6 +227,7 @@ namespace enemy
         {
             this->is_frozen = false;
             this->freeze_timer = 0.0f;
+            this->freeze_immunity_timer = game::Config::bomb_Explosion_Damage_Lifetime;
         }
         if (currentState == E_DYING)
         {
@@ -244,6 +245,7 @@ namespace enemy
             knockback_timer = game::Config::kAIBase_Knockback_Duration;
             hit_stun_timer = this->hit_animation_duration;
 
+            this->last_known_player_center = game::core::Store::player_state->player.Get_Player_Center();
             Vector2 self_center = { hitbox.x + hitbox.width / 2.0f, hitbox.y + hitbox.height / 2.0f };
             Vector2 direction_away_from_player = Vector2Normalize(Vector2Subtract(self_center, this->last_known_player_center));
 

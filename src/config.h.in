@@ -383,16 +383,17 @@ namespace game
         inline static constexpr float item_Attraction_Speed = 10.0f;        // Geschwindigkeit, mit der das Item zum Spieler gezogen wird
 
         // ------ Item Drop Rates from Enemies ------
-        inline static constexpr int enemy_Item_Drop_Chance_Percent = 100; // Globale Chance in %, dass ein Gegner überhaupt ein Item droppt
+        inline static constexpr int enemy_Item_Drop_Chance_Percent = 15; // Globale Chance in %, dass ein Gegner überhaupt ein Item droppt
 
         // Die folgenden Werte sind "Gewichte". Ein höherer Wert bedeutet eine höhere Chance im Vergleich zu den anderen.
         // Ein Wert von 0 bedeutet, dass dieses Item niemals von Gegnern gedroppt wird. 10 und 1 bedeutet das Item mit 10 kommt 10 mal häufiger
         inline static constexpr int item_Drop_Weight_Heal = 70;
         inline static constexpr int item_Drop_Weight_Heal_2 = 25;
         inline static constexpr int item_Drop_Weight_Heal_3 = 5;
-        inline static constexpr int item_Drop_Weight_Bomb = 250;
-        inline static constexpr int item_Drop_Weight_IceBomb = 500;
+        inline static constexpr int item_Drop_Weight_Bomb = 25;
+        inline static constexpr int item_Drop_Weight_IceBomb = 25;
         inline static constexpr int item_Drop_Weight_TestoNeedle = 5;
+        inline static constexpr int item_Drop_Weight_Adrenaline = 5;
         inline static constexpr int item_Drop_Weight_Key = 0; // Schlüssel soll nicht von Gegnern droppen
         inline static constexpr int item_Drop_Weight_Fairy = 0; // Fee soll nicht von Gegnern droppen
 
@@ -439,6 +440,7 @@ namespace game
         inline static constexpr Color kIceBombFreezeTint = {53, 133, 158, 255}; // Farbe aus unserer Farbpalette (mir persönlich scheiß egal wenn sie davon abweicht)
         inline static constexpr bool kIceBombFreezesTimerGlobally = false; // Friert die Sanduhr immer ein, egal wo sie explodiert?
         inline static constexpr int kIceBombMaxOnMap = 2;
+
         // ------ Testonadel-Item ------
         inline static constexpr float testo_Needle_Buff_Duration = 150.0f;  // Dauer des Buffs in Sekunden 100 = 10 Sek
         inline static constexpr float testo_Needle_Speed_Boost = 0.75f;     // Multiplikator für die Geschwindigkeit
@@ -449,6 +451,35 @@ namespace game
         inline static constexpr Vector2 testo_Needle_Anim_Size = {16.0f, 16.0f};
         inline static constexpr int testo_Needle_Frame_Count = 9;
         inline static constexpr float testo_Needle_Anim_Speed = 1.0f;
+
+        // Adrenalin Needle Item Settings
+        inline static constexpr float adrenaline_Needle_Buff_Duration = 150.0f;
+        inline static constexpr int adrenaline_Needle_Max_On_Map = 1;
+        inline static const char* kAdrenalineNeedleAnim = "PieWare/assets/Items/Item Variants/Item_Variant_Adrenalinspritze.png";
+        inline static const Vector2 adrenaline_Needle_Anim_Size = { 16.0f, 16.0f };
+        inline static constexpr int adrenaline_Needle_Frame_Count = 9;
+        inline static constexpr float adrenaline_Needle_Anim_Speed = 1.0f;
+        inline static constexpr float adrenaline_Needle_Blinking_Start_Time = 3.0f;
+        inline static constexpr bool adrenaline_Grants_Invincibility = true;
+
+        // Boni (werden zum Basiswert addiert)
+        inline static constexpr int   adrenalin_Ranged_Damage_Boost = 10;
+        inline static constexpr float adrenalin_Movement_Speed_Boost = 3.0f;
+        inline static constexpr int   adrenalin_Pierce_Count_Boost = 2;
+        inline static constexpr int adrenalin_Pierce_Multiplier_Boost_Percent = 25; // ist mit 25 auf 100 also kein Schadenverlust mehr
+        inline static constexpr int adrenalin_Attack_Speed_Boost_Percent = 20;
+        // Adrenalin VFX Settings (visueller Effekt auf dem Spieler)
+        inline static const char* kAdrenalineVFXAnim = "PieWare/assets/Spritesheets/VFX/Healing Effect.png";
+        inline static const Vector2 adrenaline_VFX_Anim_Size = { 32.0f, 32.0f };
+        inline static constexpr int adrenaline_VFX_Frame_Count = 5;
+        inline static constexpr float adrenaline_VFX_Anim_Speed = 3.0f;
+        inline static constexpr int adrenaline_VFX_Transparency = 150; // Transparenz (0-255)
+
+        // Adrenalin Projectile Settings (animiertes Projektil)
+        inline static const char* kAdrenalineProjectileAnim = "PieWare/assets/Items/Projectile_Right_White.png";
+        inline static const Vector2 adrenaline_Projectile_Anim_Size = { 16.0f, 16.0f };
+        inline static constexpr int adrenaline_Projectile_Frame_Count = 1;
+        inline static constexpr float adrenaline_Projectile_Anim_Speed = 1.0f;
 
         // ------ Testonadel Buff-Animationen ------
         // Hier definieren wir alle 16 neuen Animationspfade, wie du es wolltest.
@@ -581,7 +612,8 @@ namespace game
         inline static constexpr const char* kIconHealthPotion2_Use = "PieWare/assets/UI/HUD/Button_Item_HelthpotionV2_Use.png";
         inline static constexpr const char* kIconHealthPotion3 = "PieWare/assets/UI/HUD/Button_Item_Potionl.png";
         inline static constexpr const char* kIconHealthPotion3_Use = "PieWare/assets/UI/HUD/Button_Item_Potionl_Use.png";
-
+        inline static const char* kIconAdrenalinNeedle = "PieWare/assets/UI/HUD/Button_Item_Adrenaline.png";
+        inline static const char* kIconAdrenalinNeedle_Use = "PieWare/assets/UI/HUD/Button_Item_Adrenaline_Use.png";
 
        //____________________Rätsel: Steinverschieben____________________________
         // ------ Allgemeine Rätsel-Mechaniken ------

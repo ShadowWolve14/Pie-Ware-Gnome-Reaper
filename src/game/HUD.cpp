@@ -17,6 +17,8 @@ HUD::HUD(Player_Class_One* mp):mp(mp) {
     IP3U = LoadTexture(game::Config::kIconHealthPotion3_Use);
     IBomb = LoadTexture(game::Config::kIconIceBomb);
     IBombU = LoadTexture(game::Config::kIconIceBomb_Use);
+    IAU = LoadTexture(game::Config::kIconAdrenalinNeedle_Use);
+    IA = LoadTexture(game::Config::kIconAdrenalinNeedle);
 }
 
 void HUD::HUD_update()
@@ -41,10 +43,10 @@ void HUD::HUD_update()
             this->it = potion2;
         } else if (currentItemType == ItemType::HEALTH_POTION_3) {
             this->it = potion3;
-        } else if (currentItemType == ItemType::ICE_BOMB) {
-            this->it = icebomb;
         } else if (currentItemType == ItemType::TESTO_NEEDLE) {
             this->it = testo;
+        } else if (currentItemType == ItemType::ADRENALINE_NEEDLE) {
+        this->it = adrenalin;
         }
     }
 
@@ -132,7 +134,6 @@ void HUD::HUD_draw() {
     DrawTextureEx(HS,v1,rot,3,WHITE);
     DrawTextureEx(SCC,v2,rot,3,WHITE);
     DrawTextureEx(SOC,v3,rot,3,WHITE);
-    DrawTextureEx(SA,v4,rot,3,WHITE);
 
     if (mp->IsBuffed())
     {
@@ -143,9 +144,26 @@ void HUD::HUD_draw() {
         DrawTextureEx(AA, v5, rot, 3, WHITE);
     }
 
+    if (mp->IsAdrenalinBuffed())
+    {
+        DrawTextureEx(AA, v4, rot, 3, WHITE);
+    }
+    else
+    {
+        DrawTextureEx(SA, v4, rot, 3, WHITE);
+    }
+
     if (st==ma){
-        if (UC>0){
-            DrawTextureEx(SAU,v4,rot,3,WHITE);
+        if (UC>0)
+        {
+            if (mp->IsAdrenalinBuffed())
+            {
+                DrawTextureEx(AAU, v4, rot, 3, WHITE);
+            }
+            else
+            {
+                DrawTextureEx(SAU, v4, rot, 3, WHITE);
+            }
         }
     }
     if (st==ra){
@@ -189,6 +207,10 @@ void HUD::HUD_draw() {
             }
             case testo: {
                 if (UC > 0) { DrawTextureEx(ITU, v6, rot, 3, WHITE); }
+                break;
+            }
+            case adrenalin: {
+                if (UC > 0) { DrawTextureEx(IAU, v6, rot, 3, WHITE); }
                 break;
             }
             case potion1: {
@@ -235,6 +257,26 @@ void HUD::HUD_draw() {
                 if (should_draw)
                 {
                     DrawTextureEx(IT, v6, rot, 3, WHITE);
+                }
+                else
+                {
+                    DrawTextureEx(IE, v6, rot, 3, WHITE);
+                }
+                break;
+            }
+            case adrenalin: {
+                bool should_draw = true;
+                if (mp->IsAdrenalinBuffed() && mp->GetAdrenalinBuffTimer() <= game::Config::adrenaline_Needle_Blinking_Start_Time)
+                {
+                    if ((int)(GetTime() * 10) % 2 == 0)
+                    {
+                        should_draw = false;
+                    }
+                }
+
+                if (should_draw)
+                {
+                    DrawTextureEx(IA, v6, rot, 3, WHITE);
                 }
                 else
                 {

@@ -57,6 +57,10 @@ protected:
     Texture2D* itemvfx= nullptr;
     int vfxtype=0;
 
+	float adrenalin_buff_timer = 0.0f;
+	bool is_invincible = false;
+	float original_melee_cooldown;
+	float original_ranged_cooldown;
 	Sound ats= LoadSound("assets/audio/sfx/Gnome_CloseAttack.wav");
 	Sound rats= LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
 	Sound hits= LoadSound("assets/audio/sfx/Gnome_Hit.wav");
@@ -68,13 +72,13 @@ public:
 	game::scenes::GameScene* scene_ptr = nullptr;
 	Player_Base_Class(int max_Health, float movement_Speed, float damage_multiplier, Vector2 start_Position);
 	bool Is_Dead() const;
-
+	bool is_adrenalin_buffed = false;
 	~Player_Base_Class() override;
 	void Player_Input();
 	void Tick(float delta_time) override;
 	void On_Collision(Collidable* other) override;
 	virtual void Draw() override;
-
+	float GetAdrenalinBuffTimer() const;
 	virtual void Melee_Attack();
 	void Heal_To_Full();
 	void Update_Previous_Position();
@@ -104,10 +108,10 @@ public:
 	Facing_Direction Get_Facing_Direction() const { return facing_Direction; }
 	bool IsMoving() const { return is_Moving; }
     void KillYourself();
-
+	void ApplyAdrenalineBuff();
 	static bool LineIntersectsLine(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4);
 	static bool CheckCollisionLineRec(Vector2 startPos, Vector2 endPos, Rectangle rec);
-
+	bool IsAdrenalinBuffed() const;
 	void SetMeleeDamage(int dmg) { melee_Base_Damage = dmg; }
 	void SetRangedDamage(int dmg) { ranged_Base_Damage = dmg; }
 	void SetAttackCooldown(float cd) { melee_Base_Cooldown = cd; }

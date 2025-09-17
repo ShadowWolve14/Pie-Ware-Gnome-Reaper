@@ -30,6 +30,7 @@
 #include "../game/HealthPotion3.h"
 #include "../game/IceBombItem.h"
 #include "../game/IceBombExplosionHitbox.h"
+#include "../game/AdrenalineNeedle.h"
 
 using namespace std::string_literals;
 
@@ -50,7 +51,6 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
     PlayMusicStream(*Active_Song);
     SetMusicVolume(*Active_Song,game::core::Store::volume);
     enemy::Melee_Enemy::Load_All_Melee_Assets();
-    game::Player_Projectile::LoadAssets();
     BombExplosionHitbox::LoadAssets();
     MovableWall::LoadAssets();
     this->current_level = level_to_load;
@@ -111,7 +111,6 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
 game::scenes::GameScene::~GameScene()
 {
     enemy::Melee_Enemy::Unload_All_Melee_Assets();
-    game::Player_Projectile::UnloadAssets();
     BombExplosionHitbox::UnloadAssets();
     MovableWall::UnloadAssets();
 }
@@ -252,6 +251,7 @@ objectManager.Cleanup_Objects([this, &dead_enemy_positions](Collidable* cleaned_
     int bombs_to_spawn = 0;
     int needles_to_spawn = 0;
     int ice_bombs_to_spawn = 0;
+    int adrenaline_needles_to_spawn = 0;
 
 for (const auto& pos : dead_enemy_positions)
 {
@@ -263,14 +263,16 @@ for (const auto& pos : dead_enemy_positions)
             {ItemType::HEALTH_POTION_3, game::Config::item_Drop_Weight_Heal_3},
             {ItemType::BOMB,          game::Config::item_Drop_Weight_Bomb},
             {ItemType::ICE_BOMB,      game::Config::item_Drop_Weight_IceBomb},
-            {ItemType::TESTO_NEEDLE,  game::Config::item_Drop_Weight_TestoNeedle}
+            {ItemType::TESTO_NEEDLE,  game::Config::item_Drop_Weight_TestoNeedle},
+            {ItemType::ADRENALINE_NEEDLE, game::Config::item_Drop_Weight_Adrenaline}
         };
         int total_weight = game::Config::item_Drop_Weight_Heal +
                         game::Config::item_Drop_Weight_Heal_2 +
                         game::Config::item_Drop_Weight_Heal_3 +
                         game::Config::item_Drop_Weight_Bomb +
                         game::Config::item_Drop_Weight_IceBomb +
-                        game::Config::item_Drop_Weight_TestoNeedle;
+                        game::Config::item_Drop_Weight_TestoNeedle +
+                            game::Config::item_Drop_Weight_Adrenaline;
 
         if (total_weight <= 0) continue;
 
@@ -331,7 +333,15 @@ for (const auto& pos : dead_enemy_positions)
                     needles_to_spawn++;
                 }
             break;
+
+            case ItemType::ADRENALINE_NEEDLE:
+                if (CountItemsOfType(ItemType::ADRENALINE_NEEDLE, objectManager, *player_ptr) + adrenaline_needles_to_spawn < game::Config::adrenaline_Needle_Max_On_Map) {
+                    spawned_item = new AdrenalineNeedle(pos);
+                    adrenaline_needles_to_spawn++;
+                }
+            break;
         }
+
 
         if (spawned_item)
         {

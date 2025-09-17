@@ -18,7 +18,8 @@ enum class ItemType
     ICE_BOMB,
     TESTO_NEEDLE,
     KEY,
-    FAIRY
+    FAIRY,
+    ADRENALINE_NEEDLE
 };
 
 class ItemBase : public Collidable

@@ -38,19 +38,22 @@ namespace enemy
     void Enemy_Base_Class::Tick_AI(float delta_time, Vector2 player_center, const std::vector<Enemy_Base_Class*>& all_enemies)
 {
     ai_update_timer -= delta_time;
-
-    if (is_frozen)
-    {
-        freeze_timer -= delta_time;
-        if (freeze_timer <= 0.0f) {
-            is_frozen = false;
+        if (freeze_immunity_timer > 0.0f)
+        {
+            freeze_immunity_timer -= delta_time;
         }
-        return;
-   }
-    if (is_frozen || currentState == E_KNOCKBACK || currentState == E_DYING)
-    {
-        return;
-    }
+        if (is_frozen)
+        {
+            freeze_timer -= delta_time;
+            if (freeze_timer <= 0.0f) {
+                is_frozen = false;
+            }
+        }
+        if (is_frozen || currentState == E_KNOCKBACK || currentState == E_DYING)
+        {
+            this->velocity = Vector2Scale(this->velocity, this->drag);
+            return;
+        }
     if (ai_update_timer <= 0.0f)
     {
         ai_update_timer = 0.2;
@@ -176,7 +179,11 @@ namespace enemy
     }
     void enemy::Enemy_Base_Class::ApplyFreeze(float duration)
     {
+        if (this->freeze_immunity_timer > 0.0f)
+        {
+            return;
+        }
         this->is_frozen = true;
-        this->freeze_timer = duration;
+        this->freeze_timer = std::max(this->freeze_timer, duration);
     }
 }
