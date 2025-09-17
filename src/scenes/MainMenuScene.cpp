@@ -41,6 +41,41 @@ MainMenuScene::MainMenuScene() {
     song.looping= true;
     PlayMusicStream(song);
 
+    Text.resize(33);
+    Text[0]="Gnome Reaper von Pie Ware";
+    Text[1]="";
+    Text[2]="Game Designer Jonas Hever";
+    Text[3]="";
+    Text[4]="Artist Kira Kutzer";
+    Text[5]="Artist Leonardo Castrucci";
+    Text[6]="Artist Leon Schermann";
+    Text[7]="";
+    Text[8]="Lead Programmer Will Becker";
+    Text[9]="Programmer Finn Kruse";
+    Text[10]="Programmer Marcel Rende";
+    Text[11]="";
+    Text[12]="";
+    Text[13]="Ein riesen Dank gilt unseren externen Helfer*innen!";
+    Text[14]="";
+    Text[15]="Musik von Jana Schmidt";
+    Text[16]="";
+    Text[17]="Arcade Automat von Thorsten Heilmann";
+    Text[18]="";
+    Text[19]="Sponsor Steffen Hever";
+    Text[20]="Sponsor Tobias Wessbecher";
+    Text[21]="";
+    Text[22]="Balancing und Excel Support Oliver Pruchnicki";
+    Text[23]="";
+    Text[24]="";
+    Text[25]="Vielen Dank auch an unsere vielen Tester!";
+    Text[26]="";
+    Text[27]="";
+    Text[28]="Natürlich auch Danke an euch fürs spielen!";
+    Text[29]="";
+    Text[30]="";
+    Text[31]="";
+    Text[32]="";
+
 }
 MainMenuScene::~MainMenuScene() { }
 
@@ -324,6 +359,23 @@ void MainMenuScene::credits_Update() {
     Input_Check_Back();
 }
 void MainMenuScene::credits_Draw() {
+    DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-795,1500},-90,7,WHITE);
+    DrawTexturePro(TB,{20+230*1,1,230,48},{game::Config::kStageWidth/2-460,20,230*4,48*4},{0,0},0,WHITE);
+
+    for (int l = 0; l < 4; ++l) {
+        for (int i = 0; i < 8; ++i) {
+            if (i+8*s<=Text.size()-1){
+                DrawTextPro(game::core::Store::font,Text[i+8*s].c_str(),{game::Config::kStageWidth/2-TextLength(Text[i+8*s].c_str())*11,game::Config::kStageHeight/2-150+50*i},{0,0},0,35,5,BLACK);
+            } else{
+                s=-1;
+            }
+      }
+        d++;
+        if (d==60*8){
+            s++;
+            d=0;
+        }
+    }
 
 }
 
