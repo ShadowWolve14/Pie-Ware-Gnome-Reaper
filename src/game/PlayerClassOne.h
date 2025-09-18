@@ -32,6 +32,12 @@ private:
     float vfx_timer = 0.0f;
     int b=1;
     int clim=0;
+    float luckc=1;
+    int luck_vfx_c;
+    int luck_offset=2;
+    int uu=1;
+    int ofs=0;
+    int ofs_d=0;
 
 
 public:

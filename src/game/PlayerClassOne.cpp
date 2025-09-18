@@ -185,6 +185,44 @@ void Player_Class_One::Tick(float delta_time)
 
 void Player_Class_One::Draw()
 {
+    if (IsAdrenalinBuffed())
+    {
+        Vector2 vfx_draw_pos = {
+                this->hitbox.x - (adrenalin_vfx_animation.size.x - this->hitbox.width) / 2.0f,
+                this->hitbox.y - (adrenalin_vfx_animation.size.y - this->hitbox.height) / 2.0f
+        };
+        Color vfx_tint = { 255, 255, 255, (unsigned char)game::Config::adrenaline_VFX_Transparency };
+        adrenalin_vfx_animation.Draw_Current_Frame(vfx_draw_pos, vfx_tint);
+    }
+    if (game::core::Store::drop_chance_change_duration>=0){
+
+        Vector2 vfx_draw_pos = {
+                this->hitbox.x - (48 - this->hitbox.width) / 2.0f,
+                this->hitbox.y - (32 - this->hitbox.height) / 2.0f+luck_offset
+        };
+
+        if (luck_vfx_c>1*5){
+            luckc++;
+            luck_vfx_c=0;
+
+        }
+        if (ofs>1*8){
+            uu=uu*(-1);
+            ofs=0;
+        }
+        if (ofs_d>5){
+            luck_offset=luck_offset-uu;
+            ofs++;
+        }
+        DrawTextureRec(luckvfx, { 1.0f + 48 * luckc, 1.0f, 48.0f, 32.0f }, vfx_draw_pos, WHITE);
+
+        if (luckc>=14){
+            luckc=0;
+        }
+        luck_vfx_c++;
+
+        ofs_d++;
+    }
     if (currentState == DAMAGED)
     {
         Facing_Direction primaryDirection = facing_Direction;
@@ -284,6 +322,7 @@ void Player_Class_One::Draw()
             anim_speed = game::Config::kSmokeVFXAnimSpeed;
         }
 
+
         int current_frame = static_cast<int>(vfx_timer * anim_speed);
 
         if (current_frame < frame_limit)
@@ -297,15 +336,6 @@ void Player_Class_One::Draw()
             itemvfx = nullptr;
             vfx_timer = 0.0f;
         }
-    }
-    if (IsAdrenalinBuffed())
-    {
-        Vector2 vfx_draw_pos = {
-            this->hitbox.x - (adrenalin_vfx_animation.size.x - this->hitbox.width) / 2.0f,
-            this->hitbox.y - (adrenalin_vfx_animation.size.y - this->hitbox.height) / 2.0f
-        };
-        Color vfx_tint = { 255, 255, 255, (unsigned char)game::Config::adrenaline_VFX_Transparency };
-        adrenalin_vfx_animation.Draw_Current_Frame(vfx_draw_pos, vfx_tint);
     }
 }
 

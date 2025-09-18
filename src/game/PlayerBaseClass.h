@@ -53,6 +53,7 @@ protected:
     std::vector<std::unique_ptr<game::Player_Projectile>> sp_projectiles;
     Texture2D potionvfx= LoadTexture("PieWare/assets/Spritesheets/VFX/Healing Effect.png");
     Texture2D testovfx= LoadTexture("PieWare/assets/Spritesheets/VFX/Smoke.png");
+    Texture2D luckvfx= LoadTexture("PieWare/assets/Spritesheets/VFX/Luck_Aura_VFX.png");
 
 
     Texture2D* itemvfx= nullptr;

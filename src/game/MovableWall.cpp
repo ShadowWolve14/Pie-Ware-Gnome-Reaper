@@ -123,17 +123,46 @@ void MovableWall::Reset()
     StopPushing();
 }
 
-void MovableWall::Draw()
-{
+void MovableWall::Draw() {
+
     Vector2 draw_pos =
-    {
-        this->hitbox.x - game::Config::movable_wall_hitbox_offset.x,
-        this->hitbox.y - game::Config::movable_wall_hitbox_offset.y
-    };
+            {
+                    this->hitbox.x - game::Config::movable_wall_hitbox_offset.x,
+                    this->hitbox.y - game::Config::movable_wall_hitbox_offset.y
+            };
+    if (moving && pushing_player != nullptr) {
+        if (vfxfc > 7) { vfxfc = 0; }
+        if (pushing_player->Get_Facing_Direction() == Facing_Direction::RIGHT) {
+            DrawTextureRec(spr, {1 + 32 * vfxfc, 1, 32, 32}, {draw_pos.x,draw_pos.y+2}, WHITE);
+        }
+        if (pushing_player->Get_Facing_Direction() == Facing_Direction::LEFT) {
+            DrawTextureRec(spl, {1 + 32 * vfxfc, 1, 32, 32}, {draw_pos.x + 16, draw_pos.y+2}, WHITE);
+        }
+        vfxfc++;
+    } else {
+        vfxfc = 0;
+    }
+
+    if (reset_vfx_counter >= 0) {
+        Rectangle source_rec = {(float) reset_vfx_counter * game::Config::kSmokeVFXSize.x, 0,
+                                game::Config::kSmokeVFXSize.x, game::Config::kSmokeVFXSize.y};
+        Vector2 disappear_draw_pos = {
+                vfx_pos_disappear.x + (this->hitbox.width / 2.0f) - (game::Config::kSmokeVFXSize.x / 2.0f),
+                vfx_pos_disappear.y + this->hitbox.height - game::Config::kSmokeVFXSize.y + 1.0f};
+        Vector2 respawn_draw_pos = {
+                vfx_pos_respawn.x + (this->hitbox.width / 2.0f) - (game::Config::kSmokeVFXSize.x / 2.0f),
+                vfx_pos_respawn.y + this->hitbox.height - game::Config::kSmokeVFXSize.y + 1.0f};
+        DrawTextureRec(smoke_spritesheet, source_rec, disappear_draw_pos, WHITE);
+        DrawTextureRec(smoke_spritesheet, source_rec, respawn_draw_pos, WHITE);
+        reset_vfx_counter++;
+        if (reset_vfx_counter >= game::Config::kSmokeVFXFrameCount) {
+            reset_vfx_counter = -1;
+        }
+    }
 
     if (is_activating) {
         activation_timer += GetFrameTime() * 10.0f;
-        if ((int)(activation_timer) % 8 < 4) {
+        if ((int) (activation_timer) % 8 < 4) {
             DrawTextureRec(spritesheet, active_frame, draw_pos, WHITE);
         } else {
             DrawTextureRec(spritesheet, inactive_frame, draw_pos, WHITE);
@@ -145,33 +174,6 @@ void MovableWall::Draw()
         DrawTextureRec(spritesheet, active_frame, draw_pos, WHITE);
     } else {
         DrawTextureRec(spritesheet, inactive_frame, draw_pos, WHITE);
-    }
-
-    if (moving && pushing_player != nullptr) {
-        if (vfxfc > 7) { vfxfc = 0; }
-        if (pushing_player->Get_Facing_Direction() == Facing_Direction::RIGHT) {
-            DrawTextureRec(spr, {1 + 32 * vfxfc, 1, 32, 32}, draw_pos, WHITE);
-        }
-        if (pushing_player->Get_Facing_Direction() == Facing_Direction::LEFT) {
-            DrawTextureRec(spl, {1 + 32 * vfxfc, 1, 32, 32}, {draw_pos.x + 16, draw_pos.y}, WHITE);
-        }
-        vfxfc++;
-    } else {
-        vfxfc = 0;
-    }
-
-    if (reset_vfx_counter >= 0)
-    {
-        Rectangle source_rec = { (float)reset_vfx_counter * game::Config::kSmokeVFXSize.x, 0, game::Config::kSmokeVFXSize.x, game::Config::kSmokeVFXSize.y };
-        Vector2 disappear_draw_pos = { vfx_pos_disappear.x + (this->hitbox.width / 2.0f) - (game::Config::kSmokeVFXSize.x / 2.0f), vfx_pos_disappear.y + this->hitbox.height - game::Config::kSmokeVFXSize.y + 1.0f };
-        Vector2 respawn_draw_pos = { vfx_pos_respawn.x + (this->hitbox.width / 2.0f) - (game::Config::kSmokeVFXSize.x / 2.0f), vfx_pos_respawn.y + this->hitbox.height - game::Config::kSmokeVFXSize.y + 1.0f };
-        DrawTextureRec(smoke_spritesheet, source_rec, disappear_draw_pos, WHITE);
-        DrawTextureRec(smoke_spritesheet, source_rec, respawn_draw_pos, WHITE);
-        reset_vfx_counter++;
-        if (reset_vfx_counter >= game::Config::kSmokeVFXFrameCount)
-        {
-            reset_vfx_counter = -1;
-        }
     }
 }
 
