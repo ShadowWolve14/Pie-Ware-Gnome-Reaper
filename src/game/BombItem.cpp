@@ -75,5 +75,5 @@ void BombItem::Activate(Player_Base_Class* player)
 
 std::string BombItem::GetName() const
 {
-        return "Bomb";
+        return "Bombe";
 }

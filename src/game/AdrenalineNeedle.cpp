@@ -22,5 +22,5 @@ void AdrenalineNeedle::Activate(Player_Base_Class* player)
 
 std::string AdrenalineNeedle::GetName() const
 {
-    return "Adrenaline";
+    return "Adrenalin";
 }

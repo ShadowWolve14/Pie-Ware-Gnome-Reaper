@@ -6,7 +6,7 @@
 #include "PlayerBaseClass.h"
 #include "Store.h"
 #include "../Config.h.in"
-
+Texture2D FairyItem::smoke_vfx_spritesheet;
 FairyItem::FairyItem(Vector2 position, int current_level)
     : ItemBase(position, ItemType::FAIRY, "", false, {0,0}, 0, 0),
       aura_vfx(
@@ -16,7 +16,8 @@ FairyItem::FairyItem(Vector2 position, int current_level)
           game::Config::fairy_Aura_VFX_Frame_Count,
           game::Config::fairy_Aura_VFX_Anim_Speed
       ),
-      collected_in_level(current_level)
+      collected_in_level(current_level),
+        spawn_vfx_counter(0)
 {
     const char* anim_path;
     Vector2 item_size;
@@ -58,6 +59,14 @@ void FairyItem::Tick(float delta_time)
 {
     ItemBase::Tick(delta_time);
     aura_vfx.Update_Frame(delta_time);
+    if (spawn_vfx_counter >= 0)
+    {
+        spawn_vfx_counter++;
+        if (spawn_vfx_counter >= game::Config::kSmokeVFXFrameCount)
+        {
+            spawn_vfx_counter = -1;
+        }
+    }
 }
 
 void FairyItem::Draw()
@@ -74,6 +83,24 @@ void FairyItem::Draw()
     aura_vfx.Draw_Current_Frame(vfx_pos, vfx_tint);
 
     ItemBase::Draw();
+
+    if (spawn_vfx_counter >= 0)
+    {
+        Rectangle sourceRec = {
+            (float)spawn_vfx_counter * game::Config::kSmokeVFXSize.x,
+            0,
+            game::Config::kSmokeVFXSize.x,
+            game::Config::kSmokeVFXSize.y
+        };
+        const float scale = 3.0f;
+        Rectangle destRec = {
+            item_center.x - (sourceRec.width * scale / 2.0f),
+            item_center.y - (sourceRec.height * scale / 2.0f) - 20,
+            sourceRec.width * scale,
+            sourceRec.height * scale
+        };
+        DrawTexturePro(smoke_vfx_spritesheet, sourceRec, destRec, {0, 0}, 0.0f, WHITE);
+    }
 }
 void FairyItem::Activate(Player_Base_Class* player)
 {
@@ -87,5 +114,13 @@ void FairyItem::Activate(Player_Base_Class* player)
 }
 std::string FairyItem::GetName() const
 {
-    return "Fairy Item";
+    return "Feen Item";
+}
+void FairyItem::LoadAssets()
+{
+    smoke_vfx_spritesheet = LoadTexture("PieWare/assets/Spritesheets/VFX/Smoke.png");
+}
+void FairyItem::UnloadAssets()
+{
+    UnloadTexture(smoke_vfx_spritesheet);
 }

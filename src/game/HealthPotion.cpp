@@ -24,5 +24,5 @@ void HealthPotion::Activate(Player_Base_Class* player)
 }
 std::string HealthPotion::GetName() const
 {
-    return "Health";
+    return "Heilung";
 }

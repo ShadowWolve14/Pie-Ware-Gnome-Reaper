@@ -56,6 +56,7 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
     IceBombExplosionHitbox::LoadAssets();
     MovableWall::LoadAssets();
     Player_Projectile::LoadAssets();
+    FairyItem::LoadAssets();
     this->current_level = level_to_load;
     puzzle_one = std::make_unique<PuzzleOne>(objectManager);
     puzzle_one->Load(this->current_level);
@@ -119,6 +120,7 @@ game::scenes::GameScene::~GameScene()
     MovableWall::UnloadAssets();
     IceBombExplosionHitbox::UnloadAssets();
     Player_Projectile::UnloadAssets();
+    FairyItem::UnloadAssets();
 }
 
 void game::scenes::GameScene::Update()

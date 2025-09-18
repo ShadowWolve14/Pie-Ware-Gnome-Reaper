@@ -28,5 +28,5 @@ void Luck_Needle::Activate(Player_Base_Class* player)
 }
 std::string Luck_Needle::GetName() const
 {
-    return "Health";
+    return "Glück";
 }
