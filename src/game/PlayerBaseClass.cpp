@@ -231,12 +231,14 @@ void Player_Base_Class::On_Collision(Collidable* other)
             {
                 item->Activate(this);
                 SetHasFairy(true);
+                game::core::Store::player_state->score+=item->Get_Value();
                 item->Mark_For_Destruction();
             }
             else if (item->GetType() == ItemType::KEY)
             {
                 PlaySound(s_item_pickup_sound);
                 item->Activate(this);
+                game::core::Store::player_state->score+=item->Get_Value();
                 item->Mark_For_Destruction();
             }
             else if (!HasItem())
