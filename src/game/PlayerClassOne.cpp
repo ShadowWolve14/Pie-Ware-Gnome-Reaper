@@ -20,6 +20,16 @@ Player_Class_One::Player_Class_One(Vector2 start_Position)
           game::Config::adrenaline_VFX_Anim_Speed
       )
 {
+    const float anim_speed = game::Config::player_Hit_Frame_Count / (game::Config::player_Hit_Anim_Duration / 10.0f);
+    Vector2 anim_size = game::Config::player_Hit_Anim_Size;
+    int frame_count = game::Config::player_Hit_Frame_Count;
+    int spl = frame_count;
+
+    hit_Animations.try_emplace(DOWN,  anim_size, game::Config::kPlayerHitDownAnim, frame_count, spl, anim_speed);
+    hit_Animations.try_emplace(UP,    anim_size, game::Config::kPlayerHitUpAnim,   frame_count, spl, anim_speed);
+    hit_Animations.try_emplace(LEFT,  anim_size, game::Config::kPlayerHitLeftAnim, frame_count, spl, anim_speed);
+    hit_Animations.try_emplace(RIGHT, anim_size, game::Config::kPlayerHitRightAnim,frame_count, spl, anim_speed);
+
     int player_Walk_Anim_Speed = game::Config::player_Walk_Anim_Speed;
     Vector2 player_Walk_Anim_Size = game::Config::player_Walk_Anim_Size;
     int player_Walk_Frame_Count = game::Config::player_Walk_Frame_Count;
@@ -130,10 +140,11 @@ void Player_Class_One::Tick(float delta_time)
         }
     }
 
-    if (currentState != ATTACKING_MELEE && currentState != ATTACKING_RANGED)
+    if (currentState != ATTACKING_MELEE && currentState != ATTACKING_RANGED && currentState != DAMAGED)
     {
         currentState = is_Moving ? WALKING : IDLE;
     }
+
     auto* active_walking_map = IsBuffed() ? &buff_walking_Animations : &walking_Animations;
     auto* active_idle_map = IsBuffed() ? &buff_idle_Animations : &idle_Animations;
     auto* active_melee_map = IsBuffed() ? &buff_melee_Attack_Animations : &melee_Attack_Animations;
@@ -164,11 +175,33 @@ void Player_Class_One::Tick(float delta_time)
                 ranged_Attack_Animations.at(attack_Direction).Update_Frame(delta_time);
             }
             break;
+        case DAMAGED:
+            if (hit_Animations.count(primaryDirection)) {
+                hit_Animations.at(primaryDirection).Update_Frame(delta_time);
+            }
+        break;
     }
 }
 
 void Player_Class_One::Draw()
 {
+    if (currentState == DAMAGED)
+    {
+        Facing_Direction primaryDirection = facing_Direction;
+        if (facing_Direction == UP_LEFT || facing_Direction == DOWN_LEFT) primaryDirection = LEFT;
+        if (facing_Direction == UP_RIGHT || facing_Direction == DOWN_RIGHT) primaryDirection = RIGHT;
+
+        if (hit_Animations.count(primaryDirection))
+        {
+            Animations& hit_anim = hit_Animations.at(primaryDirection);
+            Vector2 draw_pos;
+            draw_pos.x = this->hitbox.x - (hit_anim.size.x - this->hitbox.width) / 2.0f;
+            draw_pos.y = this->hitbox.y - (hit_anim.size.y - this->hitbox.height) / 2.0f;
+            hit_anim.Draw_Current_Frame({roundf(draw_pos.x), roundf(draw_pos.y)});
+
+            return;
+        }
+    }
     Animations* current_attack_anim = nullptr;
     RepeatAnimation* current_loop_anim = nullptr;
     Vector2 draw_pos;
@@ -309,4 +342,19 @@ void Player_Class_One::ReapplyUpgrades()
     SetMovementSpeed(eff.movement_speed);
     SetMaxHealth(eff.max_health);
     SetDMGMult(eff.DMGxMult);
+}
+
+void Player_Class_One::TriggerHitAnimation()
+{
+    Facing_Direction primaryDirection = facing_Direction;
+    if (facing_Direction == UP_LEFT || facing_Direction == DOWN_LEFT || facing_Direction == UP_RIGHT || facing_Direction == DOWN_RIGHT)
+    {
+        if (facing_Direction == UP_LEFT || facing_Direction == DOWN_LEFT) primaryDirection = LEFT;
+        if (facing_Direction == UP_RIGHT || facing_Direction == DOWN_RIGHT) primaryDirection = RIGHT;
+    }
+
+    if (hit_Animations.count(primaryDirection))
+    {
+        hit_Animations.at(primaryDirection).First_Frame();
+    }
 }

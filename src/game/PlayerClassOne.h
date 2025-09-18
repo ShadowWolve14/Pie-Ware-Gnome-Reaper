@@ -20,6 +20,7 @@ private:
     std::map<Facing_Direction, RepeatAnimation> idle_Animations;
     std::map<Facing_Direction, Animations> ranged_Attack_Animations;
     std::map<Facing_Direction, Animations> melee_Attack_Animations;
+    std::map<Facing_Direction, Animations> hit_Animations;
     std::map<Facing_Direction, RepeatAnimation> buff_walking_Animations;
     std::map<Facing_Direction, RepeatAnimation> buff_idle_Animations;
     std::map<Facing_Direction, Animations> buff_melee_Attack_Animations;
@@ -43,6 +44,7 @@ public:
     void Ranged_Attack() override;
     void Melee_Attack() override;
     void ReapplyUpgrades();
+    void TriggerHitAnimation() override;
 };
 
 
