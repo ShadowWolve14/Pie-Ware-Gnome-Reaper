@@ -217,9 +217,8 @@ namespace game::scenes {
         SetSoundVolume(sound2,game::core::Store::volume);
         SetSoundVolume(sound3,game::core::Store::volume);
 
-        if (IsKeyPressed(KEY_K)){
-            auto newGameScene = std::make_shared<GameScene>(current_level+1);
-            game::core::Store::stage->SwitchToNewScene("GameScene", newGameScene);
+        if (IsKeyPressed(game::Config::key_Ranged_Attack)){
+            this->counter=0;
         }
         UpdateMusicStream(song);
         // tick fail flash timer
