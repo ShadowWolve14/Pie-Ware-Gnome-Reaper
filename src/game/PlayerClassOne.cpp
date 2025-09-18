@@ -181,10 +181,14 @@ void Player_Class_One::Tick(float delta_time)
             }
         break;
     }
+    item_pick_c--;
 }
 
 void Player_Class_One::Draw()
 {
+    if (item_pick_c>0){
+        DrawTextPro(game::core::Store::font,std::to_string(item_val).c_str(),item_pick_pos,{0,0},0,4,1,WHITE);
+    }
     if (IsAdrenalinBuffed())
     {
         Vector2 vfx_draw_pos = {

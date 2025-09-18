@@ -232,6 +232,10 @@ void Player_Base_Class::On_Collision(Collidable* other)
                 item->Activate(this);
                 SetHasFairy(true);
                 game::core::Store::player_state->score+=item->Get_Value();
+                item_pick_pos.x= this->hitbox.x;
+                item_pick_pos.y= this->hitbox.y;
+                item_val=item->Get_Value();
+                item_pick_c=30;
                 item->Mark_For_Destruction();
             }
             else if (item->GetType() == ItemType::KEY)
@@ -239,6 +243,10 @@ void Player_Base_Class::On_Collision(Collidable* other)
                 PlaySound(s_item_pickup_sound);
                 item->Activate(this);
                 game::core::Store::player_state->score+=item->Get_Value();
+                item_pick_pos.x= this->hitbox.x;
+                item_pick_pos.y= this->hitbox.y;
+                item_val=item->Get_Value();
+                item_pick_c=30;
                 item->Mark_For_Destruction();
             }
             else if (!HasItem())
@@ -437,6 +445,10 @@ void Player_Base_Class::PickUpItem(ItemBase* item_to_pick_up)
     {
         held_item = item_to_pick_up;
         game::core::Store::player_state->score+= item_to_pick_up->Get_Value();
+        item_pick_pos.x= this->hitbox.x;
+        item_pick_pos.y= this->hitbox.y;
+        item_val=item_to_pick_up->Get_Value();
+        item_pick_c=30;
         object_manager_ptr->RemoveObject(item_to_pick_up);
     }
 }

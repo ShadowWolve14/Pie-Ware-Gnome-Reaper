@@ -70,6 +70,10 @@ protected:
 	static Sound s_death_sound;
 	static Sound s_item_pickup_sound;
 
+    int item_val=0;
+    int item_pick_c=0;
+    Vector2 item_pick_pos;
+
 	//Sound ats= LoadSound("assets/audio/sfx/Gnome_CloseAttack.wav");
 	//Sound rats= LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
 	//Sound hits= LoadSound("assets/audio/sfx/Gnome_Hit.wav");
