@@ -259,14 +259,16 @@ namespace game::scenes {
 
         DrawTexturePro(soulcounter_bg,
                     {0, 0, 64, 30},                     // source rect (part of sheet)
-                    {game::Config::kStageWidth/4 - 180, 200, 64*4.0f, 30*4.0f},        // dest rect (x,y,w,h → scaled ×4)
+                    {game::Config::kStageWidth/4 - 180, 50, 64*4.0f, 30*4.0f},        // dest rect (x,y,w,h → scaled ×4)
                     {0, 0},                                         // origin (pivot top-left)
                         0.0f,                                                // rotation
                         WHITE                                                // tint
                     );
 
         std::string Text_SoulsToSpend = std::to_string(souls_to_spend);
-        DrawTextEx(GnomeFont, Text_SoulsToSpend.c_str(), Vector2{ game::Config::kStageWidth/4 - 80, 255 }, 36, 1, Color{126, 196, 193, 255});
+
+
+        DrawTextEx(GnomeFont, Text_SoulsToSpend.c_str(), Vector2{ game::Config::kStageWidth/4 - 80, 105 }, 36, 1, Color{126, 196, 193, 255});
         fairyAnim.Draw_Current_Frame_Pro(Vector2{ 140.0f, 400 });
 
         Vector2 Text_BasePos = {game::Config::kStageWidth / 2.0f + 140.0f, 170};
@@ -301,7 +303,8 @@ namespace game::scenes {
                     { 0, 0 },
                     0.0f,
                     WHITE
-);
+            );
+            DrawTextEx(GnomeFont, game::Config::upHealth, Vector2{ game::Config::kStageWidth/4 - 230, 250 }, 36, 1, Color{126, 196, 193, 255});
         }
         else{
             abilities.x=1;
@@ -341,7 +344,9 @@ namespace game::scenes {
                     { 0, 0 },
                     0.0f,
                     WHITE
-);
+            );
+        DrawTextEx(GnomeFont, game::Config::upSpeed, Vector2{ game::Config::kStageWidth/4 - 230, 250 }, 36, 1, Color{126, 196, 193, 255});
+
         }
         else{
             //Draw Regular Button Asset
@@ -382,7 +387,9 @@ namespace game::scenes {
                     { 0, 0 },
                     0.0f,
                     WHITE
-);
+            );
+        DrawTextEx(GnomeFont, game::Config::upAtkSpeed, Vector2{ game::Config::kStageWidth/4 - 230, 250 }, 36, 1, Color{126, 196, 193, 255});
+
         }
         else{
             //Draw Regular Button Asset
@@ -423,7 +430,9 @@ namespace game::scenes {
                     { 0, 0 },
                     0.0f,
                     WHITE
-);
+            );
+            DrawTextEx(GnomeFont, game::Config::upDMGMult, Vector2{ game::Config::kStageWidth/4 - 230, 250 }, 36, 1, Color{126, 196, 193, 255});
+
         }
         else{
             //Draw Regular Button Asset
@@ -464,7 +473,9 @@ namespace game::scenes {
                     { 0, 0 },
                     0.0f,
                     WHITE
-);
+            );
+        DrawTextEx(GnomeFont, game::Config::upDMGMeele, Vector2{ game::Config::kStageWidth/4 - 230, 250 }, 36, 1, Color{126, 196, 193, 255});
+
         }
         else{
             //Draw Regular Button Asset
@@ -505,7 +516,9 @@ namespace game::scenes {
                     { 0, 0 },
                     0.0f,
                     WHITE
-);
+            );
+        DrawTextEx(GnomeFont, game::Config::upDMGRanged, Vector2{ game::Config::kStageWidth/4 - 230, 250 }, 36, 1, Color{126, 196, 193, 255});
+
         }
         else{
             //Draw Regular Button Asset
