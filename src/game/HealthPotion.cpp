@@ -10,7 +10,8 @@
 HealthPotion::HealthPotion(Vector2 position, ItemType type, const char* anim_path, int p_heal_amount)
     : ItemBase(position, type, anim_path, true,
                game::Config::health_Potion_Anim_Size, game::Config::health_Potion_Frame_Count, game::Config::health_Potion_Anim_Speed),
-      heal_amount(p_heal_amount)  { }
+      heal_amount(p_heal_amount)
+      {this->score_value=game::Config::health_Potion_value; }
 
 HealthPotion::HealthPotion(Vector2 position)
 : HealthPotion(position, ItemType::HEALTH_POTION, game::Config::kHealthPotionAnim, game::Config::health_Potion_Heal_Amount) {}

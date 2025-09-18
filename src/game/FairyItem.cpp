@@ -27,14 +27,17 @@ FairyItem::FairyItem(Vector2 position, int current_level)
         case 1:
             anim_path = game::Config::kFairyAnimLvl1;
         item_size = game::Config::fairy_Anim_Size_Lvl1;
+            this->score_value=game::Config::fairy_1_value;
         break;
         case 2:
             anim_path = game::Config::kFairyAnimLvl2;
         item_size = game::Config::fairy_Anim_Size_Lvl2;
+            this->score_value=game::Config::fairy_2_value;
         break;
         case 3:
             anim_path = game::Config::kFairyAnimLvl3;
         item_size = game::Config::fairy_Anim_Size_Lvl3;
+            this->score_value=game::Config::fairy_3_value;
         break;
         default:
             anim_path = game::Config::kFairyAnimLvl1;
