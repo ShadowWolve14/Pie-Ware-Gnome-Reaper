@@ -134,7 +134,7 @@ namespace game::scenes
             if (IsGamepadButtonPressed(0,7)) {
                 textmode = true;
             }
-            if (IsGamepadButtonPressed(0,8)) {
+            if (IsGamepadButtonPressed(0,6)) {
                 auto mainMenu = std::make_shared<MainMenuScene>();
                 game::core::Store::stage->SwitchToNewScene("MainMenu", mainMenu);
             }

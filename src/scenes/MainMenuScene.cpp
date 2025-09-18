@@ -204,7 +204,7 @@ bool MainMenuScene::Input_Check_Sel() {
     }
 }
 void MainMenuScene::Input_Check_Back() {
-    if (IsGamepadButtonPressed(0,8)){
+    if (IsGamepadButtonPressed(0,6)){
         state=main;
         PlaySound(sound2);
     }
