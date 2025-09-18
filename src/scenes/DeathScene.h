@@ -29,6 +29,7 @@ namespace game::scenes
         int limx=0;
         int fc=0;
         int f=0;
+        int sk=0;
 
         Texture dsprite= LoadTexture("PieWare/assets/Spritesheets/Gnome_Dying.png");
         Texture good1= LoadTexture("PieWare/assets/UI/DeathScreem/Level_1_Upgradet.png");

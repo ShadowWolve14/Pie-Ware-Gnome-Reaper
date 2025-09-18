@@ -421,7 +421,7 @@ void MainMenuScene::credits_Draw() {
             }
       }
         d++;
-        if (d==60*10){
+        if (d==60*game::Config::credits_anim_speed*10){
             s++;
             d=0;
         }

@@ -28,6 +28,8 @@ namespace game::scenes {
             );
             fairyAnim.First_Frame();
         }
+        xframe=0;
+        yframe=0;
 
 
 
@@ -36,8 +38,8 @@ namespace game::scenes {
                 case 1: {
                     act_anim=&good1;
                     limx=10;
-                    limy=33;
-                    fc=330-10;
+                    limy=36;
+                    fc=(360-8)*game::Config::text_anim_speed;
                     break;
                 }
                 case 2: {
@@ -45,7 +47,7 @@ namespace game::scenes {
                                    //{1920 / 2 - 256 * 2, 1080 / 2 - sa + 150, 512 * 2, 208 * 2}, {0, 0}, 0, WHITE);
                     act_anim=&good2;
                     limx=30;
-                    fc=9*30-12;
+                    fc=(9*30-12)*game::Config::text_anim_speed;
                     limy=9;
                     break;
                 }
@@ -53,7 +55,7 @@ namespace game::scenes {
                     act_anim=&good3;
                     limx=30;
                     limy=9;
-                    fc=9*30-21;
+                    fc=(9*30-21)*game::Config::text_anim_speed;
                     break;
                 }
             }
@@ -63,21 +65,21 @@ namespace game::scenes {
                     act_anim=&bad1;
                     limx=10;
                     limy=21;
-                    fc=210-2;
+                    fc=(210-2)*game::Config::text_anim_speed;
                     break;
                 }
                 case 2: {
                     act_anim=&bad2;
                     limx=30;
                     limy=11;
-                    fc=11*30-17;
+                    fc=(11*30-17)*game::Config::text_anim_speed;
                     break;
                 }
                 case 3: {
                     act_anim=&bad3;
                     limx=30;
                     limy=8;
-                    fc=8*30-29;
+                    fc=(8*30-29)*game::Config::text_anim_speed;
                     break;
                 }
             }
@@ -92,11 +94,16 @@ namespace game::scenes {
         fairyAnim.Update_Frame(GetFrameTime());
         if (frame>=13&&sa>=300){
             if (f<=fc){
-                xframe++;
-                if(xframe>=limx){
-                    yframe++;
-                    xframe=0;
+                if (sk>1*game::Config::text_anim_speed){
+                    xframe++;
+                    if(xframe>=limx){
+                        yframe++;
+                        xframe=0;
+                    }
+                    sk=0;
                 }
+                sk++;
+
             }
             f++;
 
@@ -170,10 +177,11 @@ namespace game::scenes {
             if (sa < 300) {
                 sa = sa + 5;
             } else {
-                fairyAnim.Draw_Current_Frame_Pro(Vector2{ 140.0f, 400 });
                 DrawTexturePro(*act_anim, {xframe * 512 + 1, 1+208*yframe, 512, 208},
-                {1920 / 2 - 256 , 1080 / 2 - sa + 150, 512 * 2, 208 * 2}, {0, 0}, 0, WHITE);
-            }
+                                {1920 / 2 - 256 , 1080 / 2 - sa + 150, 512 * 2, 208 * 2}, {0, 0}, 0, WHITE);
+                fairyAnim.Draw_Current_Frame_Pro(Vector2{ 140.0f, 400 });
+
+               }
             if (f>fc+50){
                 if (has_fairy&&current_level==3){
                     DrawTextEx(game::core::Store::font,"Drücke J um zum Main Menu zurück zu kehren",{1920 /2, 1080 / 2 - sa + 600},30,1,RED);
