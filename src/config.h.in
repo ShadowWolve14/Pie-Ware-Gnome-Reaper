@@ -592,18 +592,29 @@ namespace game
             inline static constexpr const char* abilityLevel_asset = "PieWare/assets/UI/UpgradeScreen/AbilityLevel.png";
             inline static std::string fairy_spritesheet_path(int Lvl_Nbr)
             {
-            switch (Lvl_Nbr)
-            {
-            case 1:
-            return "PieWare/assets/Spritesheets/Erzfee/ErzfeeAnimationLv1.png";
-            case 2:
-            return "PieWare/assets/Spritesheets/Erzfee/ErzfeeLv2Animation.png";
-            case 3:
-            return "PieWare/assets/Spritesheets/Erzfee/ErzfeeLv3Animation.png";
-            default:
-            return "no sprite found";
+                switch (Lvl_Nbr)
+                {
+                case 1:
+                return "PieWare/assets/Spritesheets/Erzfee/ErzfeeAnimationLv1.png";
+                case 2:
+                return "PieWare/assets/Spritesheets/Erzfee/ErzfeeLv2Animation.png";
+                case 3:
+                return "PieWare/assets/Spritesheets/Erzfee/ErzfeeLv3Animation.png";
+                default:
+                return "no sprite found";
+                }
             }
-            }
+
+
+        //Texte für die einzelnen Upgrades
+        //Für Zeilenumbruch "\n" tippen
+        //Bsp. "Verbessere deine \n Maximalen Leben"
+        inline static constexpr const char* upHealth = "Verbessere deine \nMaximalen Leben";
+        inline static constexpr const char* upSpeed = "Verbessere deine \nLaufgeschwindigkeit";
+        inline static constexpr const char* upAtkSpeed = "Verbessere deine \nAngriffgeschwindigkeit";
+        inline static constexpr const char* upDMGMult = "Verbessere deinen \nSchaden Multiplikator";
+        inline static constexpr const char* upDMGMeele = "Verbessere deinen \nNahkampf Schaden";
+        inline static constexpr const char* upDMGRanged = "Verbessere deinen \nFernkapf Schaden";
 
 
 
