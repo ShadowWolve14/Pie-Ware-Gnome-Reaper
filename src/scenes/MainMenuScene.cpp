@@ -317,12 +317,21 @@ void MainMenuScene::main_Draw() {
     }
 }
 void MainMenuScene::options_Update() {
-
-    if (slider){
-        if (IsGamepadButtonPressed(0,7)) {
-            slider = !slider;
-
+        Input_Check_Mov();
+        if (counter>1){
+            counter=counter-2;
         }
+        if (counter<0){
+            counter=0;
+        }
+        Input_Check_Back();
+
+        if (Input_Check_Sel()){
+            if (counter==0){
+                ToggleFullscreen();
+            }
+        }
+    if (counter==1){
         if (GetGamepadAxisMovement(0, 0) < -0.5&&input_delay<1){
             game::core::Store::volume=game::core::Store::volume-0.5;
             if (game::core::Store::volume<0){
@@ -339,27 +348,7 @@ void MainMenuScene::options_Update() {
         }
         input_delay--;
         SaveValue("AudioSettings.txt",game::core::Store::volume);
-
-    } else{
-        Input_Check_Mov();
-        if (counter>1){
-            counter=counter-2;
-        }
-        if (counter<0){
-            counter=0;
-        }
-        Input_Check_Back();
-
-        if (Input_Check_Sel()){
-            if (counter==0){
-                ToggleFullscreen();
-            } else{
-                slider=!slider;
-            }
-        }
-
     }
-
 
 }
 void MainMenuScene::options_Draw() {
