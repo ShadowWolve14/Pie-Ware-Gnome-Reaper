@@ -390,6 +390,11 @@ void game::scenes::GameScene::Draw()
     {
         obj->Draw();
     }
+    if (game::Config::visualize_Spawn_Areas)
+    {
+        DrawRectangleLinesEx(game::Config::kEnemySpawnArea, 2.0f, GREEN);
+        DrawRectangleLinesEx(game::Config::kEnemySpawnExclusionZone, 2.0f, RED);
+    }
     screen.Draw_Level(this->cam, true);
     EndMode2D();
     hud.HUD_draw();
