@@ -106,12 +106,14 @@ void Player_Base_Class::Tick(float delta_time)
     }
     if (is_buffed)
     {
+        is_invincible=true;
         buff_timer -= delta_time;
         if (buff_timer <= 0.0f)
         {
             is_buffed = false;
             player_Movement_Speed = original_movement_speed;
             player_Damage_Multiplier = original_damage_multiplier;
+            is_invincible= false;
             RemoveHeldItem();
         }
     }
