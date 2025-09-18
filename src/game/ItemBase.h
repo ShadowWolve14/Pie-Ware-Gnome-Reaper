@@ -35,6 +35,7 @@ protected:
     bool is_being_attracted = false;
     bool has_despawn_timer;
     bool is_rendered = true;
+    int score_value;
 
 public:
     ItemBase(Vector2 position, ItemType type, const char* anim_path, bool has_timer,
@@ -52,6 +53,7 @@ public:
     void SetAttracted(bool attracted) { is_being_attracted = attracted; }
     Collision_Type Get_Collision_Type() const override { return Collision_Type::CONSUMABLE; }
     void Set_Position(Vector2 position) override;
+    int Get_Value(){return score_value;}
 };
 
 

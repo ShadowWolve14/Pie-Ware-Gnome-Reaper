@@ -434,6 +434,7 @@ void Player_Base_Class::PickUpItem(ItemBase* item_to_pick_up)
     if (!HasItem() && object_manager_ptr != nullptr)
     {
         held_item = item_to_pick_up;
+        game::core::Store::player_state->score+= item_to_pick_up->Get_Value();
         object_manager_ptr->RemoveObject(item_to_pick_up);
     }
 }

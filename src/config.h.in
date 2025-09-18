@@ -412,14 +412,17 @@ namespace game
         inline static constexpr int health_Potion_Heal_Amount = 40;        // Wie viel Leben wiederhergestellt wird
         inline static constexpr int health_Potion_Max_On_Map = 5;          // Maximale Anzahl (Map + Inventar)
         inline static constexpr const char* kHealthPotionAnim = "PieWare/assets/Items/Item Variants/Item_Variant_HeiltrankVariant1.png";
+        inline static constexpr int health_Potion_value = 40;
 
         // ------ Heil-Item 2 ------
+        inline static constexpr int health_Potion_2_value = 80;
         inline static constexpr int health_Potion_2_Heal_Amount = 80;
         inline static constexpr int health_Potion_2_Max_On_Map = 3;
         // Wie gewünscht, erstmal die gleichen Assets:
         inline static constexpr const char* kHealthPotion2Anim = "PieWare/assets/Items/Item Variants/Animation_Healthpotion.png";
 
         // ------ Heil-Item 3 ------
+        inline static constexpr int health_Potion_3_value = 120;
         inline static constexpr int health_Potion_3_Heal_Amount = 120;
         inline static constexpr int health_Potion_3_Max_On_Map = 2;
         inline static constexpr const char* kHealthPotion3Anim = "PieWare/assets/Items/Animations/Item_Variant_HeiltrankVariant2.png";
@@ -430,6 +433,7 @@ namespace game
         inline static constexpr float kHealVFXAnimSpeed = 1.5f;
 
         // ------Luck_Spritze--------
+        inline static constexpr int Luck_Needle_value = 150;
         inline static constexpr int Luck_Needle_duration = 150;
         inline static constexpr int Luck_Needle_Max_On_Map = 2;
         inline static constexpr const char* kLuck_Needle_Anim = "PieWare/assets/Items/Item Variants/Item_Variant_SpritzedesGluecks.png";
@@ -440,7 +444,8 @@ namespace game
         inline static constexpr float kLuckVFXAnimSpeed = 1.5f;
 
         // ------ Bomben-Item ------
-        inline static constexpr int bomb_Damage = 240;                      // Schaden an Gegnern
+        inline static constexpr int bomb_value = 240;
+         inline static constexpr int bomb_Damage = 240;                      // Schaden an Gegnern
         inline static constexpr float bomb_Radius_Tiles = 6.0f;             // Radius in "Tiles" (1 Tile = 16 Pixel)
         inline static constexpr float bomb_Explosion_Damage_Lifetime = 2.5f;   // Dauer der Schadensfläche
         inline static constexpr float bomb_Explosion_Visual_Lifetime = 7.5f;   // Dauer der visuellen Fläche
@@ -461,6 +466,7 @@ namespace game
         inline static constexpr Color kIceBombFreezeTint = {53, 133, 158, 255}; // Farbe aus unserer Farbpalette (mir persönlich scheiß egal wenn sie davon abweicht)
         inline static constexpr bool kIceBombFreezesTimerGlobally = false; // Friert die Sanduhr immer ein, egal wo sie explodiert?
         inline static constexpr int kIceBombMaxOnMap = 2;
+        inline static constexpr int ice_bomb_value = 2;
 
         // ------ Testonadel-Item ------
         inline static constexpr float testo_Needle_Buff_Duration = 150.0f;  // Dauer des Buffs in Sekunden 100 = 10 Sek
@@ -472,6 +478,7 @@ namespace game
         inline static constexpr Vector2 testo_Needle_Anim_Size = {16.0f, 16.0f};
         inline static constexpr int testo_Needle_Frame_Count = 9;
         inline static constexpr float testo_Needle_Anim_Speed = 1.0f;
+         inline static constexpr int testo_Needle_value = 9;
 
         // Adrenalin Needle Item Settings
         inline static constexpr float adrenaline_Needle_Buff_Duration = 150.0f;
@@ -482,6 +489,7 @@ namespace game
         inline static constexpr float adrenaline_Needle_Anim_Speed = 1.0f;
         inline static constexpr float adrenaline_Needle_Blinking_Start_Time = 3.0f;
         inline static constexpr bool adrenaline_Grants_Invincibility = true;
+        inline static constexpr int adrenaline_Needle_value = 1;
 
         // Boni (werden zum Basiswert addiert)
         inline static constexpr int   adrenalin_Ranged_Damage_Boost = 15;
@@ -494,7 +502,7 @@ namespace game
         inline static const Vector2 adrenaline_VFX_Anim_Size = { 32.0f, 32.0f };
         inline static constexpr int adrenaline_VFX_Frame_Count = 5;
         inline static constexpr float adrenaline_VFX_Anim_Speed = 3.0f;
-        inline static constexpr int adrenaline_VFX_Transparency = 150; // Transparenz (0-255)
+        inline static constexpr int adrenaline_VFX_Transparency = 255; // Transparenz (0-255)
 
         // Adrenalin Projectile Settings (animiertes Projektil)
         inline static const char* kAdrenalineProjectileAnim = "PieWare/assets/Items/Animations/AdrenalineArrow.png";
@@ -538,6 +546,7 @@ namespace game
         inline static constexpr Vector2 key_Anim_Size = {16.0f, 16.0f};
         inline static constexpr int key_Frame_Count = 9;
         inline static constexpr float key_Anim_Speed = 1.0f;
+         inline static constexpr int key_value = 9;
 
         // ------ Feen-Item ------
         inline static constexpr Vector2 fairy_Spawn_Position = {768.0f, 788.0f}; // Spawn Position des Feenitems
@@ -554,6 +563,9 @@ namespace game
         inline static constexpr int fairy_Aura_VFX_Frame_Count = 6;
         inline static constexpr float fairy_Aura_VFX_Anim_Speed = 2.5f;
         inline static constexpr int fairy_Aura_VFX_Transparency = 255; // Transparenz (0-255)
+        inline static constexpr int fairy_1_value = 9;
+        inline static constexpr int fairy_2_value = 9;
+        inline static constexpr int fairy_3_value = 9;
 
         // ------ Hard-coded Item Positions ------
         inline static constexpr Vector2 initial_Testo_Needle_Position = {104.0f, 464.0f}; // Position Testonadel im Tempel

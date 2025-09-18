@@ -14,6 +14,7 @@ BombItem::BombItem(Vector2 position)
                    game::Config::bomb_Item_Anim_Size, game::Config::bomb_Item_Frame_Count, game::Config::bomb_Item_Anim_Speed)
 {
     SetSoundVolume(us,game::core::Store::volume*game::Config::Bomb_Sound_Volume);
+    this->score_value=game::Config::bomb_value;
 }
 
 void BombItem::Activate(Player_Base_Class* player)

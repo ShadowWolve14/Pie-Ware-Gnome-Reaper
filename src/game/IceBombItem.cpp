@@ -14,6 +14,7 @@ IceBombItem::IceBombItem(Vector2 position)
     : ItemBase(position, ItemType::ICE_BOMB, game::Config::kIceBombItemAnim, true,
                game::Config::bomb_Item_Anim_Size, game::Config::bomb_Item_Frame_Count, game::Config::bomb_Item_Anim_Speed)
 {
+    this->score_value=game::Config::ice_bomb_value;
 }
 
 std::string IceBombItem::GetName() const

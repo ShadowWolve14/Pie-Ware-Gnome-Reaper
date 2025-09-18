@@ -13,7 +13,7 @@
 Luck_Needle::Luck_Needle(Vector2 position, ItemType type, const char* anim_path, int p_heal_amount)
         : ItemBase(position, type, anim_path, true,
                    game::Config::Luck_Needle_Anim_Size, game::Config::Luck_Needle_Frame_Count, game::Config::Luck_Needle_Anim_Speed),
-          duration(p_heal_amount)  { }
+          duration(p_heal_amount)  { this->score_value=game::Config::Luck_Needle_value;}
 
 Luck_Needle::Luck_Needle(Vector2 position)
         : Luck_Needle(position, ItemType::LUCK_NEEDLE, game::Config::kLuck_Needle_Anim, game::Config::Luck_Needle_duration) {}

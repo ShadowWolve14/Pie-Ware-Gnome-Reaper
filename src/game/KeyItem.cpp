@@ -9,7 +9,8 @@
 
 KeyItem::KeyItem(Vector2 position)
         : ItemBase(position, ItemType::KEY, game::Config::kKeyAnim, false,
-                   game::Config::key_Anim_Size, game::Config::key_Frame_Count, game::Config::key_Anim_Speed) { }
+                   game::Config::key_Anim_Size, game::Config::key_Frame_Count, game::Config::key_Anim_Speed)
+                   {this->score_value=game::Config::key_value; }
 
 void KeyItem::Activate(Player_Base_Class* player)
 {
