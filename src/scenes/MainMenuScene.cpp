@@ -3,74 +3,64 @@
 //
 
 #include "MainMenuScene.h"
+#include <filesystem>
+#include <fstream>
+#include <algorithm>
+#include <system_error>
 
-static void EnsureFileExists(const std::string& filename) {
-    namespace fs = std::filesystem;
-    std::error_code ec;
-
-    fs::path p(filename);
-
-    // Create parent directories if they don't exist
-    if (p.has_parent_path()) {
-        fs::create_directories(p.parent_path(), ec);
-        if (ec) {
-            TraceLog(LOG_WARNING, "EnsureFileExists: could not create directories for '%s' : %s",
-                     filename.c_str(), ec.message().c_str());
-        } else {
-            TraceLog(LOG_INFO, "EnsureFileExists: parent directories exist/created for '%s'", filename.c_str());
+namespace {
+    void EnsureFileExists(const std::string& filename)
+    {
+        namespace fs = std::filesystem;
+        std::error_code ec;
+        fs::path p(filename);
+        if (p.has_parent_path()) {
+            fs::create_directories(p.parent_path(), ec);
+        }
+        if (!fs::exists(p)) {
+            std::ofstream f(filename, std::ios::out);
         }
     }
 
-    // Create the file if it doesn't exist
-    if (!fs::exists(p)) {
-        std::ofstream f(filename, std::ios::out);
-        if (!f.is_open()) {
-            TraceLog(LOG_ERROR, "EnsureFileExists: failed to create file '%s'", filename.c_str());
-        } else {
-            TraceLog(LOG_INFO, "EnsureFileExists: created new file '%s'", filename.c_str());
-            f.close();
+    float ReadValue(const std::string& filename)
+    {
+        EnsureFileExists(filename);
+        std::ifstream f(filename);
+        if (!f.is_open()) return 5.0f;
+        float value;
+        if (!(f >> value)) {
+            return 5.0f;
         }
-    } else {
-        TraceLog(LOG_INFO, "EnsureFileExists: file exists '%s'", filename.c_str());
+        f.close();
+        return value;
+    }
+
+    void SaveValue(const std::string& filename, float value)
+    {
+        EnsureFileExists(filename);
+        std::ofstream f(filename, std::ios::out | std::ios::trunc);
+        if (!f.is_open()) return;
+        f << value << std::endl;
+        f.close();
     }
 }
 
-static void SaveValue(const std::string& filename, float value) {
-    EnsureFileExists(filename);
-    std::ofstream f(filename, std::ios::out | std::ios::trunc); // overwrite mode
-    if (!f.is_open()) {
-        TraceLog(LOG_ERROR, "SaveValue: failed to open file '%s'", filename.c_str());
-        return;
-    }
-    f << value << std::endl;
-    TraceLog(LOG_INFO, "SaveValue: wrote value to '%s'", filename.c_str());
-    f.close();
+MainMenuScene::MainMenuScene()
+{
+    this->state = main;
+    Initialize();
 }
 
-static float ReadValue(const std::string& filename) {
-    EnsureFileExists(filename);
-    std::ifstream f(filename);
-    if (!f.is_open()) {
-        TraceLog(LOG_ERROR, "ReadValue: failed to open file '%s'", filename.c_str());
-        return 5.0f; // fallback if cannot open
-    }
-
-    float value;
-    if (!(f >> value)) {
-        TraceLog(LOG_WARNING, "ReadValue: file '%s' empty or invalid, using default value 5.0", filename.c_str());
-        value = 5.0f;
-        SaveValue(filename, value); // make sure file contains the default
-    } else {
-        TraceLog(LOG_INFO, "ReadValue: read value from '%s'", filename.c_str());
-    }
-
-    f.close();
-    return value;
+MainMenuScene::MainMenuScene(int final_score)
+{
+    this->state = list;
+    this->final_score = final_score;
+    Initialize();
 }
-MainMenuScene::MainMenuScene() {
-    this->counter=0;
-    state=main;
-    song.looping= true;
+
+void MainMenuScene::Initialize() {
+    this->counter = 0;
+    song.looping = true;
     PlayMusicStream(song);
 
     game::core::Store::volume = ReadValue("MusicSettings.txt");
@@ -78,7 +68,14 @@ MainMenuScene::MainMenuScene() {
 
     customFont = LoadFont("PieWare/assets/Font/GnomishGame.ttf");
     BackButton = LoadTexture("PieWare/assets/UI/Allgemein/Button_Back.png");
+    ConfirmButton = LoadTexture("PieWare/assets/UI/Allgemein/Confirm.png");
     SFXSlider = LoadTexture("PieWare/assets/UI/Allgemein/Volume.png");
+
+    LoadHighscores();
+
+    if (final_score != -1) {
+        CheckForNewHighscore();
+    }
 
     Text.resize(33);
     Text[0]="Gnome Reaper von Pie Ware";
@@ -114,81 +111,34 @@ MainMenuScene::MainMenuScene() {
     Text[30]="";
     Text[31]="";
     Text[32]="";
-
-
-
 }
+
 MainMenuScene::~MainMenuScene()
 {
     UnloadTexture(BackButton);
+    UnloadTexture(ConfirmButton);
     UnloadTexture(SFXSlider);
     UnloadFont(customFont);
 }
 
 void MainMenuScene::Update()
 {
-    SetMusicVolume(song,game::core::Store::volume);
+    SetMusicVolume(song, game::core::Store::volume);
     UpdateMusicStream(song);
     SetSoundVolume(sound1, sfx_volume);
     SetSoundVolume(sound2, sfx_volume);
     SetSoundVolume(sound3, sfx_volume);
 
-    switch (state) {
-        case main:{
-            Input_Check_Mov();
-            main_Update();
-            break;
-        }
-        case options:{
-            options_Update();
-            break;
-        }
-        case list:{
-            list_Update();
-            break;
-        }
-        case credits:{
-            credits_Update();
-            break;
-        }
-        case end:{
-            game::core::Store::running= false;
-            PlaySound(sound4);
-
-            break;
-        }
-    }
-
-}
-
-void MainMenuScene::Draw()
-{
-    Color grer{100,125,52,255};
-
-    ClearBackground(grer);
-
-    DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-315,20+90*3-50},0,3,WHITE);
-
-
-    switch (state) {
-        case main:{
-            main_Draw();
-            break;
-        }
-        case options:{
-            options_Draw();
-            break;
-        }
-        case list:{
-            list_Draw();
-            break;
-        }
-        case credits:{
-            credits_Draw();
-            break;
-        }
+    switch (state)
+    {
+        case main:    main_Update();    break;
+        case options: options_Update(); break;
+        case list:    list_Update();    break;
+        case credits: credits_Update(); break;
+        case end:     game::core::Store::running = false; PlaySound(sound4); break;
     }
 }
+
 void MainMenuScene::Input_Check_Mov() {
     if (IsKeyPressed(game::Config::key_Up)){
         this->counter= this->counter-1;
@@ -210,110 +160,108 @@ bool MainMenuScene::Input_Check_Sel() {
 }
 
 void MainMenuScene::main_Update() {
+    Input_Check_Mov();
 
-    if (counter>4){
-        counter=counter-5;
+    if (counter > 4) {
+        counter = 0;
     }
-    if (counter<0){
-        counter=4;
+    if (counter < 0) {
+        counter = 4;
     }
-    if (Input_Check_Sel()){
-
+    if (Input_Check_Sel()) {
         switch (counter) {
-            case 0:{
+            case 0: {
                 game::core::Store::player_state = nullptr;
                 game::core::upgrades = {};
                 game::core::Store::stage->ReplaceWithNewScene("menu", "game", std::make_unique<game::scenes::GameScene>());
                 break;
             }
-            case 1:{
-                counter=0;
-                state=options;
+            case 1: {
+                counter = 0;
+                state = options;
                 break;
             }
-            case 2:{
-                state=list;
-                loaded= false;
+            case 2: {
+                state = list;
+                list_state = VIEWING;
+                counter = 0;
                 break;
             }
-            case 3:{
-                state=credits;
+            case 3: {
+                state = credits;
                 break;
             }
-            case 4:{
-                state=end;
+            case 4: {
+                state = end;
                 break;
             }
         }
     }
 }
-void MainMenuScene::main_Draw() {
 
+void MainMenuScene::main_Draw() {
+    DrawTextureEx(scroll_button, {game::Config::kStageWidth / 2 - 420 - 20, 20 + 90 * 3 - 100}, 0, 4, WHITE);
     DrawTextPro(game::core::Store::font,"Drücke Range Attack um ins Hauptmenü zurück zu kehren", {game::Config::kStageWidth/2-950,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
     DrawTextPro(game::core::Store::font,"Drücke Meele Attack um den Aktuellen Button auszuwählen", {game::Config::kStageWidth/2+150,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
+    DrawTextureEx(sign_button, {game::Config::kStageWidth / 2 - 3 * 228, 20}, 0, 3, WHITE);
+    Rectangle dest{game::Config::kStageWidth / 2 - 148, 0, 280, 64};
 
+    if (counter == 0) {
+        src.x = 145;
+        dest.y = 350;
+        DrawTexturePro(start_button, src, dest, {0, 0}, 0, WHITE);
+    } else {
+        src.x = 1;
+        dest.y = 350;
+        DrawTexturePro(start_button, src, dest, {0, 0}, 0, WHITE);
+    }
+    if (counter == 1) {
+        src.x = 145;
+        dest.y = 440;
+        DrawTexturePro(options_button, src, dest, {0, 0}, 0, WHITE);
+    } else {
+        src.x = 1;
+        dest.y = 440;
+        DrawTexturePro(options_button, src, dest, {0, 0}, 0, WHITE);
+    }
+    if (counter == 2) {
+        src.x = 145;
+        dest.y = 530;
+        DrawTexturePro(ranking_button, src, dest, {0, 0}, 0, WHITE);
+    } else {
+        src.x = 1;
+        dest.y = 530;
+        DrawTexturePro(ranking_button, src, dest, {0, 0}, 0, WHITE);
+    }
+    if (counter == 3) {
+        src.x = 145;
+        dest.y = 620;
+        DrawTexturePro(credits_button, src, dest, {0, 0}, 0, WHITE);
+    } else {
+        src.x = 1;
+        dest.y = 620;
+        DrawTexturePro(credits_button, src, dest, {0, 0}, 0, WHITE);
+    }
+    if (counter == 4) {
+        src.x = 145;
+        dest.y = 710;
+        DrawTexturePro(quit_button, src, dest, {0, 0}, 0, WHITE);
+    } else {
+        src.x = 1;
+        dest.y = 710;
+        DrawTexturePro(quit_button, src, dest, {0, 0}, 0, WHITE);
+    }
+}
 
-    DrawTextureEx(sign_button,{game::Config::kStageWidth/2-3*228,20},0,3,WHITE);
-    Rectangle dest{game::Config::kStageWidth/2-140,150,280,64};
-    if (counter==0){
-        // Draw Highlited Button
-        src.x=145;
-        dest.y=350;
-        DrawTexturePro(start_button,src,dest,{0,0},0,WHITE);
+void MainMenuScene::Draw() {
+    Color grer{100,125,52,255};
+    ClearBackground(grer);
 
-    }
-    else{
-        src.x=1;
-        dest.y=350;
-        DrawTexturePro(start_button,src,dest,{0,0},0,WHITE);
-    }
-    if (counter==1){
-// Draw Highlited Button
-        src.x=145;
-        dest.y=420;
-        DrawTexturePro(options_button,src,dest,{0,0},0,WHITE);
-    }
-    else{
-//Draw Regular Button Asset
-        src.x=1;
-        dest.y=420;
-        DrawTexturePro(options_button,src,dest,{0,0},0,WHITE);
-    }
-    if (counter==2){
-// Draw Highlited Button
-        src.x=145;
-        dest.y=490;
-        DrawTexturePro(ranking_button,src,dest,{0,0},0,WHITE);
-    }
-    else{
-//Draw Regular Button Asset
-        src.x=1;
-        dest.y=490;
-        DrawTexturePro(ranking_button,src,dest,{0,0},0,WHITE);
-    }
-    if (counter==3){
-// Draw Highlited Button
-        src.x=145;
-        dest.y=560;
-        DrawTexturePro(credits_button,src,dest,{0,0},0,WHITE);
-    }
-    else{
-//Draw Regular Button Asset
-        src.x=1;
-        dest.y=560;
-        DrawTexturePro(credits_button,src,dest,{0,0},0,WHITE);
-    }
-    if (counter==4){
-// Draw Highlited Button
-        src.x=145;
-        dest.y=630;
-        DrawTexturePro(quit_button,src,dest,{0,0},0,WHITE);
-    }
-    else{
-//Draw Regular Button Asset
-        src.x=1;
-        dest.y=630;
-        DrawTexturePro(quit_button,src,dest,{0,0},0,WHITE);
+    switch (state) {
+        case main:    main_Draw();    break;
+        case options: options_Draw(); break;
+        case list:    list_Draw();    break;
+        case credits: credits_Draw(); break;
     }
 }
 void MainMenuScene::options_Update() {
@@ -406,68 +354,164 @@ void MainMenuScene::options_Draw() {
     DrawTexturePro(BackButton, back_source, back_dest, {0,0}, 0, WHITE);
 }
 void MainMenuScene::list_Update() {
-    if (!loaded){
-        lines=LoadHighscores("HighscoreList.txt");
-        loaded= true;
+    switch(list_state) {
+        case VIEWING: {
+            if (Input_Check_Sel() || IsKeyPressed(KEY_ESCAPE)) {
+                state = main;
+                counter = 2;
+                PlaySound(sound2);
+            }
+            break;
+        }
+
+        case AWAITING_INPUT: {
+            Input_Check_Mov();
+            if (counter > 1) counter = 0;
+            if (counter < 0) counter = 1;
+
+            if (Input_Check_Sel()) {
+                if (counter == 0) {
+                    list_state = TYPING_NAME;
+                } else if (counter == 1) {
+                    if (new_highscore_rank != -1) {
+                        if (player_name_input.empty()) {
+                            highscores[new_highscore_rank].name = "________";
+                        } else {
+                            highscores[new_highscore_rank].name = player_name_input;
+                        }
+                        SaveHighscores();
+                    }
+                    state = main;
+                    counter = 2;
+                }
+            }
+            break;
+        }
+
+        case TYPING_NAME: {
+            int key = GetCharPressed();
+            while (key > 0) {
+                if ((key >= 32) && (key <= 125) && (player_name_input.length() < max_name_length)) {
+                    player_name_input.push_back((char)key);
+                    PlaySound(sound1);
+                } else if (player_name_input.length() >= max_name_length) {
+                    PlaySound(sound2);
+                }
+                key = GetCharPressed();
+            }
+
+            if (IsKeyPressed(KEY_BACKSPACE) && !player_name_input.empty()) {
+                player_name_input.pop_back();
+                PlaySound(sound2);
+            }
+
+            if (IsKeyPressed(KEY_ENTER)) {
+                PlaySound(sound1);
+                list_state = AWAITING_INPUT;
+                counter = 0;
+            }
+            break;
+        }
     }
-
-
-
 }
 void MainMenuScene::list_Draw() {
-    DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-420-20,20+90*3-100},0,4,WHITE);
-    DrawTexturePro(TB,{30+230*2,1,230,48},{game::Config::kStageWidth/2-460,20,230*4,48*4},{0,0},0,WHITE);
-    DrawTextPro(game::core::Store::font,"Highscores:", {game::Config::kStageWidth/2-150,game::Config::kStageHeight/2-200}, {0,0}, 0, 50, 3, BLACK);
-    DrawTextPro(game::core::Store::font,"Drücke Range Attack um ins Hauptmenü zurück zu kehren", {game::Config::kStageWidth/2-950,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
-    DrawTextPro(game::core::Store::font,"Drücke Meele Attack um den Aktuellen Button auszuwählen", {game::Config::kStageWidth/2+150,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
+    DrawTextureEx(scroll_button, {game::Config::kStageWidth / 2 - 420 - 20, 20 + 90 * 3 - 100}, 0, 4, WHITE);
+    DrawTexturePro(TB, {30 + 230 * 2, 1, 230, 48}, {game::Config::kStageWidth / 2 - 460, 20, 230 * 4, 48 * 4}, {0, 0}, 0, WHITE);
+    Vector2 titlePos = {game::Config::kStageWidth / 2 - 150, 282};
+    DrawTextPro(customFont, "Highscores:", titlePos, {0, 0}, 0, 50, 3, BLACK);
+    Vector2 titleSize = MeasureTextEx(customFont, "Highscores:", 50, 3);
+    DrawRectangle((int)titlePos.x, (int)(titlePos.y + titleSize.y - 5), (int)titleSize.x, 4, BLACK);
+    Color highlightColor = {228, 148, 59, 255};
 
+    for (int i = 0; i < 10; ++i) {
+        float y_pos = 350 + i * 50;
+        std::string rank_str = std::to_string(i + 1) + ".";
+        std::string name_str = "----------------";
+        std::string score_str = "0";
+        Color name_color = BLACK;
 
+        if (i < highscores.size()) {
+            if (highscores[i].name != "________") { name_str = highscores[i].name; }
+            score_str = std::to_string(highscores[i].score);
+        }
 
-    for (int s = 0; s < lines.size(); s++) {
-        std::string output;
-        output=std::to_string(s+1) +". "+lines[s].name+":";
+        if (i == new_highscore_rank && final_score != -1) {
+            score_str = std::to_string(final_score);
+            name_color = highlightColor;
 
-        DrawTextPro(game::core::Store::font,std::to_string(lines[s].score).c_str(), {game::Config::kStageWidth/2+100,game::Config::kStageHeight/2-100+s*50}, {0,0}, 0, 50, 3, BLACK);
+            if (player_name_input.empty()) {
+                if (list_state == TYPING_NAME) {
+                    if ((int)(GetTime() * 2.5f) % 2 == 0) name_str = "Dein Name";
+                    else name_str = " ";
+                } else {
+                     name_str = "Dein Name";
+                }
+            } else {
+                name_str = player_name_input;
+            }
 
-        DrawTextPro(game::core::Store::font,output.c_str(), {game::Config::kStageWidth/2-400+80,game::Config::kStageHeight/2-100+s*50}, {0,0}, 0, 50, 3, BLACK);
+            if (list_state == TYPING_NAME && (int)(GetTime() * 2.0f) % 2 == 0) {
+                name_str += "_";
+            }
+        }
+
+        DrawTextEx(customFont, rank_str.c_str(), {680, y_pos}, 40, 2, BLACK);
+        DrawTextEx(customFont, name_str.c_str(), {750, y_pos}, 40, 2, name_color);
+        DrawTextEx(customFont, score_str.c_str(), {1104, y_pos}, 40, 2, BLACK);
+    }
+
+    const float button_y_pos = 840.0f;
+
+    if (list_state == VIEWING) {
+        float source_x = 160.0f;
+        Rectangle source = {source_x, 0, 160, 48};
+        Rectangle dest = {game::Config::kStageWidth / 2 - (160 * 2.0f / 2), button_y_pos, 160 * 2.0f, 48 * 2.0f};
+        DrawTexturePro(BackButton, source, dest, {0, 0}, 0, WHITE);
+    } else {
+        float source_x = (counter == 1 && list_state == AWAITING_INPUT) ? 160.0f : 0.0f;
+        Rectangle source = {source_x, 0, 160, 48};
+        Rectangle dest = {game::Config::kStageWidth / 2 - (160 * 2.0f / 2), button_y_pos, 160 * 2.0f, 48 * 2.0f};
+        DrawTexturePro(ConfirmButton, source, dest, {0, 0}, 0, WHITE);
     }
 }
-void MainMenuScene::credits_Update() {
+
+void MainMenuScene::credits_Update()
+{
 
 }
-void MainMenuScene::credits_Draw() {
+void MainMenuScene::credits_Draw()
+{
     DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-795,1500},-90,7,WHITE);
     DrawTexturePro(TB,{20+230*1,1,230,48},{game::Config::kStageWidth/2-460,20,230*4,48*4},{0,0},0,WHITE);
     DrawTextPro(game::core::Store::font,"Drücke Range Attack um ins Hauptmenü zurück zu kehren", {game::Config::kStageWidth/2-950,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
     DrawTextPro(game::core::Store::font,"Drücke Meele Attack um den Aktuellen Button auszuwählen", {game::Config::kStageWidth/2+150,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
 
-
     for (int l = 0; l < 4; ++l) {
         for (int i = 0; i < 8; ++i) {
-            if (i+8*s<=Text.size()-1){
-                DrawTextPro(game::core::Store::font,Text[i+8*s].c_str(),{game::Config::kStageWidth/2-TextLength(Text[i+8*s].c_str())*11,game::Config::kStageHeight/2-150+50*i},{0,0},0,35,5,BLACK);
-            } else{
-                s=-1;
+            if (i+8*s <= Text.size()-1) {
+
+                Vector2 textPos = {
+                    (float)(game::Config::kStageWidth/2 - TextLength(Text[i+8*s].c_str())*11),
+                    (float)(game::Config::kStageHeight/2 - 150 + 50*i)
+                };
+                DrawTextPro(game::core::Store::font, Text[i+8*s].c_str(), textPos, {0,0}, 0, 35, 5, BLACK);
+            } else {
+                s = -1;
             }
-      }
+        }
         d++;
-        if (d==60*game::Config::credits_anim_speed*10){
+        if (d == 60 * game::Config::credits_anim_speed * 10) {
             s++;
-            d=0;
+            d = 0;
         }
     }
-
 }
 
-std::vector<HighscoreEntry> MainMenuScene::LoadHighscores(const std::string& filename) {
+void MainMenuScene::LoadHighscores(const std::string& filename) {
     EnsureFileExists(filename);
-
-    std::vector<HighscoreEntry> highscores;
+    highscores.clear();
     std::ifstream infile(filename);
-    if (!infile.is_open()) {
-        TraceLog(LOG_WARNING, "LoadHighscores: could not open '%s' for reading (returning empty).", filename.c_str());
-        return highscores;
-    }
+    if (!infile.is_open()) return;
 
     std::string name;
     int score;
@@ -476,13 +520,45 @@ std::vector<HighscoreEntry> MainMenuScene::LoadHighscores(const std::string& fil
     }
     infile.close();
 
-    std::sort(highscores.begin(), highscores.end(),
-              [](const HighscoreEntry& a, const HighscoreEntry& b) {
-                  return a.score > b.score;
-              });
+    std::sort(highscores.begin(), highscores.end(), [](const HighscoreEntry& a, const HighscoreEntry& b) {
+        return a.score > b.score;
+    });
 
-    if (highscores.size() > 10) highscores.resize(10);
+    highscores_loaded = true;
+}
 
-    TraceLog(LOG_INFO, "LoadHighscores: returning %d entries from '%s'", (int)highscores.size(), filename.c_str());
-    return highscores;
+void MainMenuScene::SaveHighscores(const std::string& filename) {
+    EnsureFileExists(filename);
+    std::ofstream outfile(filename, std::ios::trunc);
+    if (!outfile.is_open()) return;
+
+    for (const auto& entry : highscores) {
+        outfile << entry.name << " " << entry.score << "\n";
+    }
+    outfile.close();
+}
+
+void MainMenuScene::CheckForNewHighscore() {
+    int rank = -1;
+    for (int i = 0; i < 10; ++i) {
+        if (i >= highscores.size() || final_score > highscores[i].score) {
+            rank = i;
+            break;
+        }
+    }
+
+    if (rank != -1) {
+        new_highscore_rank = rank;
+        player_name_input = "";
+        HighscoreEntry new_entry = {"________", final_score};
+        highscores.insert(highscores.begin() + rank, new_entry);
+        if (highscores.size() > 10) {
+            highscores.resize(10);
+        }
+        list_state = TYPING_NAME;
+    } else {
+        new_highscore_rank = -1;
+        list_state = AWAITING_INPUT;
+        counter = 0;
+    }
 }

@@ -10,12 +10,16 @@
 #include "../config.h.in"
 #include "store.h"
 #include "GameScene.h"
-struct HighscoreEntry {
+
+struct HighscoreEntry
+{
     std::string name;
     int score;
 };
+
 class MainMenuScene : public game::core::Scene{
 private:
+
     Texture2D start_button= LoadTexture(game::Config::start_button_asset);
     Texture2D options_button= LoadTexture(game::Config::option_button_asset);
     Texture2D ranking_button= LoadTexture(game::Config::ranking_button_asset);
@@ -28,34 +32,40 @@ private:
     Texture2D TB= LoadTexture("PieWare/assets/UI/Allgemein/Title_Banner.png");
     Texture2D SFXSlider;
     Texture2D BackButton;
+    Texture2D ConfirmButton;
     Font customFont;
+
     Rectangle src{1,1,140,32};
+
 
     enum menustate {main,options, credits ,end,list};
     menustate state;
-int counter;
 
-Music song = LoadMusicStream("assets/audio/tracks/MainMenuMusic.wav");
-Sound sound1 = LoadSound("assets/audio/sfx/Item_Obtained.wav");
+    enum liststate { VIEWING, AWAITING_INPUT, TYPING_NAME };
+    liststate list_state = VIEWING;
+    int counter;
+
+    Music song = LoadMusicStream("assets/audio/tracks/MainMenuMusic.wav");
+    Sound sound1 = LoadSound("assets/audio/sfx/Item_Obtained.wav");
     Sound sound2 = LoadSound("assets/audio/sfx/Enemy_Hit.wav");
     Sound sound3 = LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
     Sound sound4 = LoadSound("assets/audio/sfx/Willhelm Scream.wav");
-
-
-    bool slider;
-    bool prot;
-    float vol = 5.0f;
     float sfx_volume = 5.0f;
 
-    std::vector<HighscoreEntry> lines;
-    bool loaded= false;
+    std::vector<HighscoreEntry> highscores;
+    bool highscores_loaded = false;
+    int final_score = -1;
+    int new_highscore_rank = -1;
+    std::string player_name_input;
+    const int max_name_length = 10;
+
     std::vector<std::string> Text;
     int d=0;
     int s=0;
 
     void Input_Check_Mov();
     bool Input_Check_Sel();
-
+    void Initialize();
     void main_Update();
     void main_Draw();
     void options_Update();
@@ -65,15 +75,18 @@ Sound sound1 = LoadSound("assets/audio/sfx/Item_Obtained.wav");
     void list_Update();
     void list_Draw();
 
-    std::vector<HighscoreEntry> LoadHighscores(const std::string& filename);
+    void LoadHighscores(const std::string& filename = "HighscoreList.txt");
+    void SaveHighscores(const std::string& filename = "HighscoreList.txt");
+    void CheckForNewHighscore();
+
 
 public:
     MainMenuScene();
-    ~MainMenuScene() override ;
+    explicit MainMenuScene(int final_score);
+    ~MainMenuScene() override;
+
     void Update() override;
-
     void Draw() override;
-
 };
 
 

@@ -9,8 +9,6 @@ add_library(scenes STATIC MenuScene.h MenuScene.cpp GameScene.h GameScene.cpp Pa
         DeathScene.h
         UpgradeScene.cpp
         UpgradeScene.h
-        ScoreboardScene.cpp
-        ScoreboardScene.h
         ../core/PlayerEffectiveStats.h
         ../core/FairyAnim.h)
 
