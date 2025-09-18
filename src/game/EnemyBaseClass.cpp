@@ -8,6 +8,10 @@
 #include "CollisionResponse.h"
 #include "MeleeEnemy.h"
 #include "PlayerBaseClass.h"
+#include "../core/Store.h"
+
+Sound enemy::Enemy_Base_Class::s_attack_sound;
+Sound enemy::Enemy_Base_Class::s_hit_sound;
 
 bool enemy::Enemy_Base_Class::sound_played_this_frame = false;
 
@@ -110,13 +114,16 @@ namespace enemy
 
         if (!sound_played_this_frame)
         {
-            PlaySound(hitS);
+            PlaySound(s_hit_sound);
             sound_played_this_frame = true;
         }
         this->Take_Damage_Check(damage_amount);
     }
 
-    void enemy::Enemy_Base_Class::Melee_Attack() { }
+    void enemy::Enemy_Base_Class::Melee_Attack()
+    {
+        PlaySound(s_attack_sound);
+    }
 
     void enemy::Enemy_Base_Class::Set_Position(Vector2 position)
     {
@@ -185,5 +192,16 @@ namespace enemy
         }
         this->is_frozen = true;
         this->freeze_timer = std::max(this->freeze_timer, duration);
+    }
+    void enemy::Enemy_Base_Class::LoadEnemySounds()
+    {
+        s_attack_sound = LoadSound("assets/audio/sfx/Enemy_Attack.wav");
+        s_hit_sound = LoadSound("assets/audio/sfx/Enemy_Hit.wav");
+        SetSoundVolume(s_attack_sound, game::core::Store::volume * game::Config::Enemy_Attack_Sound_Volume);
+    }
+    void enemy::Enemy_Base_Class::UnloadEnemySounds()
+    {
+        UnloadSound(s_attack_sound);
+        UnloadSound(s_hit_sound);
     }
 }

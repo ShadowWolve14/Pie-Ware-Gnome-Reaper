@@ -52,6 +52,8 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
     PlayMusicStream(*Active_Song);
     SetMusicVolume(*Active_Song,game::core::Store::volume);
     enemy::Melee_Enemy::Load_All_Melee_Assets();
+    Player_Base_Class::LoadPlayerSounds();
+    enemy::Enemy_Base_Class::LoadEnemySounds();
     BombExplosionHitbox::LoadAssets();
     IceBombExplosionHitbox::LoadAssets();
     MovableWall::LoadAssets();
@@ -72,6 +74,7 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
         game::core::Store::player_state->player.ReapplyUpgrades();
         game::core::Store::player_state->player.Reset_For_New_Level();
         game::core::Store::player_state->fairy_collected_in_level = 0;
+
     }
 
     this->player_ptr = &game::core::Store::player_state->player;
@@ -116,6 +119,8 @@ game::scenes::GameScene::GameScene(int level_to_load) : Level_Nbr(level_to_load)
 game::scenes::GameScene::~GameScene()
 {
     enemy::Melee_Enemy::Unload_All_Melee_Assets();
+    Player_Base_Class::UnloadPlayerSounds();
+    enemy::Enemy_Base_Class::UnloadEnemySounds();
     BombExplosionHitbox::UnloadAssets();
     MovableWall::UnloadAssets();
     IceBombExplosionHitbox::UnloadAssets();

@@ -279,7 +279,7 @@ void Player_Class_One::Draw()
 void Player_Class_One::Ranged_Attack()
 {
     this->attack_Direction = this->facing_Direction;
-    PlaySound(rats);
+    PlaySound(s_ranged_attack_sound);
     Player_Base_Class::Ranged_Attack();
     if (ranged_Attack_Animations.count(this->attack_Direction)) {
         ranged_Attack_Animations.at(this->attack_Direction).First_Frame();
@@ -288,7 +288,7 @@ void Player_Class_One::Ranged_Attack()
 void Player_Class_One::Melee_Attack()
 {
     this->attack_Direction = this->facing_Direction;
-    PlaySound(ats);
+    PlaySound(s_attack_sound);
     Player_Base_Class::Melee_Attack();
     auto* active_melee_map = IsBuffed() ? &buff_melee_Attack_Animations : &melee_Attack_Animations;
     if (active_melee_map->count(this->attack_Direction))

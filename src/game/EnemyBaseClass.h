@@ -25,8 +25,12 @@ namespace enemy
         float player_separation_weight;
         float desired_separation;
         float drag;
-        Sound atS= LoadSound("assets/audio/sfx/Enemy_Attack.wav");
-        Sound hitS= LoadSound("assets/audio/sfx/Enemy_Hit.wav");
+        //Sound atS= LoadSound("assets/audio/sfx/Enemy_Attack.wav");
+        //Sound hitS= LoadSound("assets/audio/sfx/Enemy_Hit.wav");
+
+        static Sound s_attack_sound;
+        static Sound s_hit_sound;
+
         Vector2 knockback_velocity = {0.0f, 0.0f};
         float knockback_timer = 0.0f;
         float ai_update_timer = 0.0f;
@@ -76,6 +80,9 @@ namespace enemy
         float Get_Movement_Speed() const { return enemy_Movement_Speed; };
         Vector2 Get_Velocity() const { return velocity; }
         Collision_Type Get_Collision_Type() const override { return Collision_Type::ENEMY; }
+
+        static void LoadEnemySounds();
+        static void UnloadEnemySounds();
     };
 }
 #endif
