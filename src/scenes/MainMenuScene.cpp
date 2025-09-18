@@ -73,7 +73,12 @@ MainMenuScene::MainMenuScene() {
     song.looping= true;
     PlayMusicStream(song);
 
-    game::core::Store::volume= ReadValue("AudioSettings.txt");
+    game::core::Store::volume = ReadValue("MusicSettings.txt");
+    sfx_volume = ReadValue("SFXSettings.txt");
+
+    customFont = LoadFont("PieWare/assets/Font/GnomishGame.ttf");
+    BackButton = LoadTexture("PieWare/assets/UI/Allgemein/Button_Back.png");
+    SFXSlider = LoadTexture("PieWare/assets/UI/Allgemein/Volume.png");
 
     Text.resize(33);
     Text[0]="Gnome Reaper von Pie Ware";
@@ -113,17 +118,20 @@ MainMenuScene::MainMenuScene() {
 
 
 }
-MainMenuScene::~MainMenuScene() { }
+MainMenuScene::~MainMenuScene()
+{
+    UnloadTexture(BackButton);
+    UnloadTexture(SFXSlider);
+    UnloadFont(customFont);
+}
 
 void MainMenuScene::Update()
 {
     SetMusicVolume(song,game::core::Store::volume);
     UpdateMusicStream(song);
-    SetSoundVolume(sound1,game::core::Store::volume);
-    SetSoundVolume(sound2,game::core::Store::volume);
-    SetSoundVolume(sound3,game::core::Store::volume);
-
-
+    SetSoundVolume(sound1, sfx_volume);
+    SetSoundVolume(sound2, sfx_volume);
+    SetSoundVolume(sound3, sfx_volume);
 
     switch (state) {
         case main:{
@@ -200,12 +208,7 @@ bool MainMenuScene::Input_Check_Sel() {
         return false;
     }
 }
-void MainMenuScene::Input_Check_Back() {
-    if (IsKeyPressed(game::Config::key_Ranged_Attack)){
-        state=main;
-        PlaySound(sound2);
-    }
-}
+
 void MainMenuScene::main_Update() {
 
     if (counter>4){
@@ -314,42 +317,58 @@ void MainMenuScene::main_Draw() {
     }
 }
 void MainMenuScene::options_Update() {
-        Input_Check_Mov();
-        if (counter>1){
-            counter=counter-2;
-        }
-        if (counter<0){
-            counter=0;
-        }
-        Input_Check_Back();
-
-        if (Input_Check_Sel()){
-            if (counter==0){
-                ToggleFullscreen();
-            }
-        }
-    if (counter==1){
-        if (IsKeyPressed(game::Config::key_Left)){
-            game::core::Store::volume=game::core::Store::volume-0.5;
-            if (game::core::Store::volume<0){
-                game::core::Store::volume=0;
-            }
-        }
-        if (IsKeyPressed(game::Config::key_Right)){
-            game::core::Store::volume=game::core::Store::volume+0.5;
-            if (game::core::Store::volume>5){
-                game::core::Store::volume=5;
-            }
-        }
-        SaveValue("AudioSettings.txt",game::core::Store::volume);
+    Input_Check_Mov();
+    if (counter > 3) {
+        counter = 0;
+    }
+    if (counter < 0) {
+        counter = 3;
     }
 
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        state = main;
+        counter = 1;
+        PlaySound(sound2);
+        return;
+    }
+
+    if (counter == 1) {
+        if (IsKeyPressed(game::Config::key_Left)) {
+            game::core::Store::volume -= 0.5;
+            if (game::core::Store::volume < 0) game::core::Store::volume = 0;
+        }
+        if (IsKeyPressed(game::Config::key_Right)) {
+            game::core::Store::volume += 0.5;
+            if (game::core::Store::volume > 5) game::core::Store::volume = 5;
+        }
+        SaveValue("MusicSettings.txt", game::core::Store::volume);
+
+    } else if (counter == 2) {
+        if (IsKeyPressed(game::Config::key_Left)) {
+            sfx_volume -= 0.5;
+            if (sfx_volume < 0) sfx_volume = 0;
+            PlaySound(sound1);
+        }
+        if (IsKeyPressed(game::Config::key_Right)) {
+            sfx_volume += 0.5;
+            if (sfx_volume > 5) sfx_volume = 5;
+            PlaySound(sound1);
+        }
+        SaveValue("SFXSettings.txt", sfx_volume);
+    }
+
+    if (Input_Check_Sel()) {
+        if (counter == 0) {
+            ToggleFullscreen();
+        } else if (counter == 3) {
+            state = main;
+            counter = 1;
+        }
+    }
 }
 void MainMenuScene::options_Draw() {
     DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-420,20+90*3-100},0,4,WHITE);
     DrawTexturePro(TB,{40+230*3,1,230,48},{game::Config::kStageWidth/2-460,20,230*4,48*4},{0,0},0,WHITE);
-    DrawTextPro(game::core::Store::font,"Drücke Range Attack um ins Hauptmenü zurück zu kehren", {game::Config::kStageWidth/2-950,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
-    DrawTextPro(game::core::Store::font,"Drücke Meele Attack um den Aktuellen Button auszuwählen", {game::Config::kStageWidth/2+150,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
 
     if (counter==0){
         if (IsWindowFullscreen()){
@@ -365,17 +384,28 @@ void MainMenuScene::options_Draw() {
             DrawTexturePro(FullscreenButton,{150*2-10,1,144,64},{game::Config::kStageWidth/2-72*2,350,144*2,64*2},{0,0},0,WHITE);
         }
     }
-    if (counter==1){
-        DrawTexturePro(VolumeSlider,{128*10-128*game::core::Store::volume*2,1,128,48},{game::Config::kStageWidth/2-64*3,500,128*3,48*3},{0,0},0,WHITE);
+    DrawTextEx(customFont, "Musik", {game::Config::kStageWidth/2 - 50, 480}, 40, 2, BLACK);
+    int music_volume_step = 10 - (int)(game::core::Store::volume * 2);
+    int music_frame_offset = (counter == 1) ? 11 : 0;
+    float music_source_x = (float)((music_volume_step + music_frame_offset) * 128);
+    Rectangle music_source_rect = { music_source_x, 1, 128, 48 };
+    Rectangle music_dest_rect = { game::Config::kStageWidth/2 - (128 * 2.4f / 2), 520, 128 * 2.4f, 48 * 2.4f };
+    DrawTexturePro(VolumeSlider, music_source_rect, music_dest_rect, {0,0}, 0, WHITE);
 
-    } else{
-        DrawTexturePro(VolumeSlider,{128*10-128*game::core::Store::volume*2,1,128,48},{game::Config::kStageWidth/2-64*2,500,128*2,48*2},{0,0},0,WHITE);
+    DrawTextEx(customFont, "SFX", {game::Config::kStageWidth/2 - 30, 640}, 40, 2, BLACK);
+    int sfx_volume_step = 10 - (int)(sfx_volume * 2);
+    int sfx_frame_offset = (counter == 2) ? 11 : 0;
+    float sfx_source_x = (float)((sfx_volume_step + sfx_frame_offset) * 128);
+    Rectangle sfx_source_rect = { sfx_source_x, 1, 128, 48 };
+    Rectangle sfx_dest_rect = { game::Config::kStageWidth/2 - (128 * 2.4f / 2), 680, 128 * 2.4f, 48 * 2.4f };
+    DrawTexturePro(SFXSlider, sfx_source_rect, sfx_dest_rect, {0,0}, 0, WHITE);
 
-    }
-
+    float back_button_source_x = (counter == 3) ? 160.0f : 0.0f;
+    Rectangle back_source = { back_button_source_x, 0, 160, 48 };
+    Rectangle back_dest = { game::Config::kStageWidth/2 - (160 * 2.0f / 2), 840, 160 * 2.0f, 48 * 2.0f };
+    DrawTexturePro(BackButton, back_source, back_dest, {0,0}, 0, WHITE);
 }
 void MainMenuScene::list_Update() {
-    Input_Check_Back();
     if (!loaded){
         lines=LoadHighscores("HighscoreList.txt");
         loaded= true;
@@ -403,7 +433,7 @@ void MainMenuScene::list_Draw() {
     }
 }
 void MainMenuScene::credits_Update() {
-    Input_Check_Back();
+
 }
 void MainMenuScene::credits_Draw() {
     DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-795,1500},-90,7,WHITE);

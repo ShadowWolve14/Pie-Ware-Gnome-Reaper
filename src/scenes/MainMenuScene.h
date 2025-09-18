@@ -26,7 +26,9 @@ private:
     Texture2D FullscreenButton= LoadTexture("PieWare/assets/UI/Allgemein/FensterlosButton.png");
     Texture2D VolumeSlider= LoadTexture("PieWare/assets/UI/Allgemein/Volume.png");
     Texture2D TB= LoadTexture("PieWare/assets/UI/Allgemein/Title_Banner.png");
-
+    Texture2D SFXSlider;
+    Texture2D BackButton;
+    Font customFont;
     Rectangle src{1,1,140,32};
 
     enum menustate {main,options, credits ,end,list};
@@ -40,9 +42,10 @@ Sound sound1 = LoadSound("assets/audio/sfx/Item_Obtained.wav");
     Sound sound4 = LoadSound("assets/audio/sfx/Willhelm Scream.wav");
 
 
-bool slider;
-bool prot;
-float vol=5;
+    bool slider;
+    bool prot;
+    float vol = 5.0f;
+    float sfx_volume = 5.0f;
 
     std::vector<HighscoreEntry> lines;
     bool loaded= false;
@@ -50,12 +53,11 @@ float vol=5;
     int d=0;
     int s=0;
 
-void Input_Check_Mov();
-bool Input_Check_Sel();
-void Input_Check_Back();
+    void Input_Check_Mov();
+    bool Input_Check_Sel();
 
-void main_Update();
-void main_Draw();
+    void main_Update();
+    void main_Draw();
     void options_Update();
     void options_Draw();
     void credits_Update();
@@ -67,9 +69,7 @@ void main_Draw();
 
 public:
     MainMenuScene();
-
     ~MainMenuScene() override ;
-
     void Update() override;
 
     void Draw() override;
