@@ -66,6 +66,7 @@ class HUD {
     Texture2D fairy_icon_lvl1;
     Texture2D fairy_icon_lvl2;
     Texture2D fairy_icon_lvl3;
+    Texture2D key_icon;
 
 
 

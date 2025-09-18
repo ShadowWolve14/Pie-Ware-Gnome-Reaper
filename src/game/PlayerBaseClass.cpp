@@ -217,13 +217,12 @@ void Player_Base_Class::Tick(float delta_time)
 
 void Player_Base_Class::On_Collision(Collidable* other)
 {
-	Collision_Type otherType = other->Get_Collision_Type();
+    Collision_Type otherType = other->Get_Collision_Type();
 
-    if (otherType == Collision_Type::WALL ||
-    otherType == Collision_Type::ENEMY_SPAWNER)
+    if (otherType == Collision_Type::WALL || otherType == Collision_Type::ENEMY_SPAWNER)
     {
         CollisionResponse::Resolve_Overlap(this, other);
-	}
+    }
     else if (otherType == Collision_Type::CONSUMABLE)
     {
         if (auto* item = dynamic_cast<ItemBase*>(other))
@@ -234,7 +233,12 @@ void Player_Base_Class::On_Collision(Collidable* other)
                 SetHasFairy(true);
                 item->Mark_For_Destruction();
             }
-
+            else if (item->GetType() == ItemType::KEY)
+            {
+                PlaySound(s_item_pickup_sound);
+                item->Activate(this);
+                item->Mark_For_Destruction();
+            }
             else if (!HasItem())
             {
                 PickUpItem(item);

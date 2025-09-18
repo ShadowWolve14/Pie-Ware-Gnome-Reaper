@@ -10,7 +10,7 @@
 class KeyItem : public ItemBase
 {
 private:
-    Sound us= LoadSound("assets/audio/sfx/Key_Used.wav");
+
 public:
     KeyItem(Vector2 position);
     void Activate(Player_Base_Class* player) override;

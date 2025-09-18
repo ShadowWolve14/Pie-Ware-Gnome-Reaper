@@ -103,6 +103,7 @@ public:
 	Object_Manager* object_manager_ptr = nullptr;
 	float GetBuffTimer() const { return buff_timer; }
 	void Use_Item();
+	bool has_key = false;
 	void PickUpItem(ItemBase* item_to_pick_up);
 	bool HasItem() const;
 	ItemBase* GetHeldItem() const { return held_item; }
@@ -128,6 +129,8 @@ public:
 	void SetMaxHealth(int health) { player_Max_Health = health; }
 	void SetDMGMult(float DMGMult) { player_Damage_Multiplier = DMGMult; }
 
+	void SetHasKey(bool value) { has_key = value; }
+	bool HasKey() const { return has_key; }
 	int GetMeleeDamage() const { return melee_Base_Damage; }
 	int GetRangedDamage() const { return ranged_Base_Damage; }
 	float GetAttackCooldown() const { return melee_Base_Cooldown; }

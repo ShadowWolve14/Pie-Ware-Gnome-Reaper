@@ -19,6 +19,7 @@ private:
     Vector2 sprite_position;
     bool is_disappearing = false;
     float disappearing_timer = 0.0f;
+    Sound key_used_sound;
 
 public:
     explicit DisappearingWall(Vector2 position);

@@ -25,6 +25,7 @@ HUD::HUD(Player_Class_One* mp):mp(mp) {
     fairy_icon_lvl1 = LoadTexture("PieWare/assets/Items/FeenFluegel.png");
     fairy_icon_lvl2 = LoadTexture("PieWare/assets/Items/FeenHoerner.png");
     fairy_icon_lvl3 = LoadTexture("PieWare/assets/Items/Zepter.png");
+    key_icon = LoadTexture("PieWare/assets/Items/Item_Schluessel.png");
 }
 
 void HUD::HUD_update()
@@ -41,8 +42,6 @@ void HUD::HUD_update()
             this->it = bomb;
         } else if (currentItemType == ItemType::ICE_BOMB) {
             this->it = icebomb;
-        } else if (currentItemType == ItemType::KEY) {
-            this->it = key;
         } else if (currentItemType == ItemType::HEALTH_POTION) {
             this->it = potion1;
         } else if (currentItemType == ItemType::HEALTH_POTION_2) {
@@ -214,10 +213,6 @@ void HUD::HUD_draw() {
                cb=game::Config::kIceBombFreezeDuration*7;
                 break;
             }
-            case key: {
-                if (UC > 0) { DrawTextureEx(IKU, v6, rot, 3, WHITE); }
-                break;
-            }
             case testo: {
                 if (UC > 0) { DrawTextureEx(ITU, v6, rot, 3, WHITE); }
                 break;
@@ -254,10 +249,6 @@ void HUD::HUD_draw() {
             }
             case icebomb: {
                 DrawTextureEx(IBomb, v6, rot, 3, WHITE);
-                break;
-            }
-            case key: {
-                DrawTextureEx(IK, v6, rot, 3, WHITE);
                 break;
             }
             case testo: {
@@ -457,6 +448,27 @@ void HUD::HUD_draw() {
         Vector2 origin = { 0.0f, 0.0f };
 
         DrawTexturePro(current_icon, sourceRec, destRec, origin, 0.0f, WHITE);
+    }
+    if (mp->HasKey())
+    {
+        float fairy_end_x = 0.0f;
+        if (game::core::Store::player_state->fairy_collected_in_level > 0)
+        {
+            Rectangle fairy_dest_rec;
+            switch (game::core::Store::player_state->fairy_collected_in_level)
+            {
+                case 1: fairy_dest_rec = { 400.0f, 35.0f, (float)fairy_icon_lvl1.width * 4.0f, (float)fairy_icon_lvl1.height * 4.0f }; break;
+                case 2: fairy_dest_rec = { 405.0f, 18.0f, (float)fairy_icon_lvl2.width * 6.0f, (float)fairy_icon_lvl2.height * 6.0f }; break;
+                case 3: fairy_dest_rec = { 425.0f, 15.0f, (float)fairy_icon_lvl3.width * 3.0f, (float)fairy_icon_lvl3.height * 3.0f }; break;
+                default: fairy_dest_rec = { 400.0f, 30.0f, (float)fairy_icon_lvl1.width * 3.0f, (float)fairy_icon_lvl1.height * 3.0f }; break;
+            }
+            fairy_end_x = fairy_dest_rec.x + fairy_dest_rec.width;
+        }
+        float key_icon_x = (fairy_end_x > 0.0f) ? fairy_end_x + 5.0f : 405.0f;
+        const float scale = 4.0f;
+        Rectangle source_rec = { 0.0f, 0.0f, (float)key_icon.width, (float)key_icon.height };
+        Rectangle dest_rec = { key_icon_x, 35.0f, (float)key_icon.width * scale, (float)key_icon.height * scale };
+        DrawTexturePro(key_icon, source_rec, dest_rec, {0,0}, 0.0f, WHITE);
     }
     std::string temp=std::to_string(game::core::Store::player_state->score);
     DrawTextEx(game::core::Store::font,temp.c_str(),{v2.x+85,v2.y+36},30,1,WHITE);

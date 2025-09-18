@@ -34,6 +34,7 @@ DisappearingWall::DisappearingWall(Vector2 position)
 
     this->animation_draw_position.x = hitbox_center_x - (game::Config::disappearing_wall_anim_size.x / 2.0f);
     this->animation_draw_position.y = hitbox_center_y - (game::Config::disappearing_wall_anim_size.y / 2.0f);
+    key_used_sound = LoadSound("assets/audio/sfx/Key_Used.wav");
 }
 
 DisappearingWall::~DisappearingWall()
@@ -78,10 +79,10 @@ void DisappearingWall::On_Collision(Collidable* other)
     if (other->Get_Collision_Type() == Collision_Type::PLAYER)
     {
         auto* player = static_cast<Player_Base_Class*>(other);
-
-        if (player->HasItem() && player->GetHeldItem()->GetType() == ItemType::KEY)
+        if (player->HasKey())
         {
-            player->GetHeldItem()->Activate(player);
+            player->SetHasKey(false);
+            PlaySound(key_used_sound);
             is_disappearing = true;
             float duration = 0.0f;
             if (game::Config::disappearing_wall_anim_speed > 0) {
