@@ -11,7 +11,7 @@ TestoNeedle::TestoNeedle(Vector2 position, bool has_despawn_timer)
         : ItemBase(position, ItemType::TESTO_NEEDLE, game::Config::kTestoNeedleAnim, has_despawn_timer,
                    game::Config::testo_Needle_Anim_Size, game::Config::testo_Needle_Frame_Count, game::Config::testo_Needle_Anim_Speed)
 {
-    SetSoundVolume(us,game::core::Store::volume);
+    SetSoundVolume(us,game::core::Store::volume*game::Config::Testo_Sound_Volume);
 }
 
 void TestoNeedle::Activate(Player_Base_Class* player)
@@ -21,5 +21,5 @@ void TestoNeedle::Activate(Player_Base_Class* player)
 }
 std::string TestoNeedle::GetName() const
 {
-    return "Testo";
+    return "Testosteron";
 }

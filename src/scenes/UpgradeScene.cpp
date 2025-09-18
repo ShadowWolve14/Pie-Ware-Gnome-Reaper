@@ -213,6 +213,10 @@ namespace game::scenes {
 
     void UpgradeScene::Update()
     {
+        SetSoundVolume(sound1,game::core::Store::volume);
+        SetSoundVolume(sound2,game::core::Store::volume);
+        SetSoundVolume(sound3,game::core::Store::volume);
+
         if (IsKeyPressed(KEY_K)){
             auto newGameScene = std::make_shared<GameScene>(current_level+1);
             game::core::Store::stage->SwitchToNewScene("GameScene", newGameScene);
@@ -578,15 +582,18 @@ namespace game::scenes {
         if (GetGamepadAxisMovement(0, 1) < -0.5&&input_delay<1){
             this->counter= this->counter-1;
             input_delay=10;
+            PlaySound(sound3);
         }
         if (GetGamepadAxisMovement(0, 1) > 0.5&&input_delay<1){
             this->counter= this->counter+1;
             input_delay=10;
+            PlaySound(sound3);
         }
         input_delay--;
     }
     bool UpgradeScene::Input_Check_Sel() {
-        if (IsGamepadButtonPressed(0,7)){
+        if (IsGamepadButtonPressed(0,7)) {
+            PlaySound(sound1);
             return true;
         } else {
             return false;

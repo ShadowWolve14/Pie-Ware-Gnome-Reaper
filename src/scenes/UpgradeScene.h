@@ -23,6 +23,10 @@ namespace game::scenes
         Rectangle abilities{1,1,80,32};
         Rectangle level_counter {1,1,32,32};
 
+        Sound sound1 = LoadSound("assets/audio/sfx/Item_Obtained.wav");
+        Sound sound2 = LoadSound("assets/audio/sfx/Enemy_Hit.wav");
+        Sound sound3 = LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
+
         int souls_to_spend;
         int current_level;
         int counter;

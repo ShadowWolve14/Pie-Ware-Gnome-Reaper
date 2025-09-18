@@ -56,7 +56,7 @@ namespace enemy
                                game::Config::kAIBase_SeekWeight, game::Config::kAIBase_SeparationWeight, game::Config::kAIBase_PlayerSeparationWeight,
                                game::Config::kAIBase_DesiredSeparation, game::Config::kAIBase_Drag)
     {
-        SetSoundVolume(atS,game::core::Store::volume);
+        SetSoundVolume(s_attack_sound,game::core::Store::volume*game::Config::Enemy_Attack_Sound_Volume);
 
         this->walk_texture_left = &s_melee_textures.at(name + "_Walk_Left");
         this->walk_texture_right = &s_melee_textures.at(name + "_Walk_Right");
@@ -152,7 +152,7 @@ namespace enemy
     {
         this->attack_Direction = this->facing_Direction;
         currentState = E_ATTACKING;
-        PlaySound(atS);
+        PlaySound(s_attack_sound);
         attack_Cooldown_Timer = game::Config::melee_enemy_1_attack_cooldown;
         if (attack_animations.count(this->attack_Direction))
         {

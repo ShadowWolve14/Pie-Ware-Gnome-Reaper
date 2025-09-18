@@ -18,21 +18,21 @@ IceBombItem::IceBombItem(Vector2 position)
 
 std::string IceBombItem::GetName() const
 {
-    return "Ice Bomb";
+    return "Eisbombe";
 }
 
 void IceBombItem::Activate(Player_Base_Class* player)
 {
     if (!player || !player->object_manager_ptr || !player->scene_ptr) return;
     PlaySound(us);
-    SetSoundVolume(us, (game::core::Store::volume / 10.0f));
+    SetSoundVolume(us, (game::core::Store::volume*game::Config::IceBomb_Sound_Volume));
     if (game::Config::kIceBombFreezesTimerGlobally)
     {
         player->scene_ptr->FreezeWaveTimer(game::Config::kIceBombFreezeDuration);
         for (auto* obj : player->object_manager_ptr->managed_objects) {
             if (auto* hourglass = dynamic_cast<HourglassWall*>(obj)) {
                 hourglass->ApplyFreeze(game::Config::kIceBombFreezeDuration);
-                break; // Es gibt nur eine Sanduhr
+                break;
             }
         }
     }

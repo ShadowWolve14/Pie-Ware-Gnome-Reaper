@@ -3,9 +3,23 @@
 //
 
 #include "PuzzleOne.h"
+
+#include "Store.h"
 #include "../Config.h.in"
 
-PuzzleOne::PuzzleOne(Object_Manager& obj_manager) : object_manager(obj_manager) {}
+PuzzleOne::PuzzleOne(Object_Manager& obj_manager) : object_manager(obj_manager)
+{
+    stone_solve_sound = LoadSound(game::Config::kSfxPuzzleStoneSolve);
+    puzzle_complete_sound = LoadSound(game::Config::kSfxPuzzleCompleteAndFairySpawn);
+    SetSoundVolume(stone_solve_sound, game::core::Store::volume);
+    SetSoundVolume(puzzle_complete_sound, game::core::Store::volume);
+}
+
+PuzzleOne::~PuzzleOne()
+{
+    UnloadSound(stone_solve_sound);
+    UnloadSound(puzzle_complete_sound);
+}
 
 void PuzzleOne::Load(int level_number)
 {
@@ -64,14 +78,29 @@ void PuzzleOne::Update()
 {
     if (is_solved || puzzle_stones.empty()) return;
 
-    int solved_count = 0;
+    if (initial_sound_delay_timer > 0.0f)
+    {
+        initial_sound_delay_timer -= GetFrameTime();
+    }
+
+    int current_solved_count = 0;
     for (const auto* stone : puzzle_stones) {
         if (stone->IsSolved()) {
-            solved_count++;
+            current_solved_count++;
         }
     }
 
-    if (solved_count == puzzle_stones.size()) {
-        is_solved = true;
+    if (initial_sound_delay_timer <= 0.0f && current_solved_count > previously_solved_count)
+    {
+        if (current_solved_count == puzzle_stones.size())
+        {
+            is_solved = true;
+            PlaySound(puzzle_complete_sound);
+        }
+        else
+        {
+            PlaySound(stone_solve_sound);
+        }
     }
+    previously_solved_count = current_solved_count;
 }

@@ -26,6 +26,11 @@ namespace game::scenes
         const int maxLength = 20;
         const std::string defaultFile = "HighscoreList.txt";
 
+        Sound sound1 = LoadSound("assets/audio/sfx/Item_Obtained.wav");
+        Sound sound2 = LoadSound("assets/audio/sfx/Enemy_Hit.wav");
+        Sound sound3 = LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
+
+
 
     public:
         ScoreboardScene(int score);

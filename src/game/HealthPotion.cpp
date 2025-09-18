@@ -18,11 +18,11 @@ HealthPotion::HealthPotion(Vector2 position)
 void HealthPotion::Activate(Player_Base_Class* player)
 {
     PlaySound(us);
-    SetSoundVolume(us, game::core::Store::volume / 10.0f);
+    SetSoundVolume(us, game::core::Store::volume*game::Config::Potion_Sound_Volume);
     player->Take_Damage(-this->heal_amount);
     player->RemoveHeldItem();
 }
 std::string HealthPotion::GetName() const
 {
-    return "Health";
+    return "Heilung";
 }

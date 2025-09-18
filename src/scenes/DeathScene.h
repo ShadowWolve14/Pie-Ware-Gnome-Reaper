@@ -43,6 +43,8 @@ namespace game::scenes
 
         RepeatAnimation fairyAnim{ Vector2{32.0f, 32.0f}, "", 1, 1, 1.0f };
 
+        Sound sound1 = LoadSound("assets/audio/sfx/Item_Obtained.wav");
+
 
 
     public:

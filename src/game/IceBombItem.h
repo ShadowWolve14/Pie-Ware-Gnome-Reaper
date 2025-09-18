@@ -5,7 +5,7 @@
 #ifndef ICEBOMBITEM_H
 #define ICEBOMBITEM_H
 #include "ItemBase.h"
-
+#include "../Config.h.in"
 
 class IceBombItem : public ItemBase {
 public:
@@ -14,7 +14,7 @@ public:
     std::string GetName() const override;
 
 private:
-    Sound us = LoadSound("assets/audio/sfx/Bomb_detonation.wav");
+    Sound us = LoadSound(game::Config::kSfxIceBombUse);
 };
 
 #endif //ICEBOMBITEM_H

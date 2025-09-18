@@ -61,11 +61,18 @@ protected:
 	bool is_invincible = false;
 	float original_melee_cooldown;
 	float original_ranged_cooldown;
-	Sound ats= LoadSound("assets/audio/sfx/Gnome_CloseAttack.wav");
-	Sound rats= LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
-	Sound hits= LoadSound("assets/audio/sfx/Gnome_Hit.wav");
-	Sound deaths= LoadSound("assets/audio/sfx/Gnome_Death.wav");
-	Sound itoS= LoadSound("assets/audio/sfx/Item_Obtained.wav");
+
+	static Sound s_attack_sound;
+	static Sound s_ranged_attack_sound;
+	static Sound s_hit_sound;
+	static Sound s_death_sound;
+	static Sound s_item_pickup_sound;
+
+	//Sound ats= LoadSound("assets/audio/sfx/Gnome_CloseAttack.wav");
+	//Sound rats= LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
+	//Sound hits= LoadSound("assets/audio/sfx/Gnome_Hit.wav");
+	//Sound deaths= LoadSound("assets/audio/sfx/Gnome_Death.wav");
+	//Sound itoS= LoadSound("assets/audio/sfx/Item_Obtained.wav");
 
 
 public:
@@ -127,5 +134,8 @@ public:
 	float GetMovementSpeed() const {return  player_Movement_Speed; }
 	int GetMaxHealth() { return player_Max_Health; }
 	float GetDMGMult() { return player_Damage_Multiplier; }
+
+	static void LoadPlayerSounds();
+	static void UnloadPlayerSounds();
 };
 
