@@ -31,7 +31,6 @@ namespace game::scenes
         Sound sound3 = LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
 
 
-
     public:
         ScoreboardScene(int score);
         ~ScoreboardScene() override;

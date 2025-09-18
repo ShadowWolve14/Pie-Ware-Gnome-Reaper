@@ -16,6 +16,17 @@
 
 namespace game::scenes
 {
+    static std::vector<std::string> keyboardLayout = {
+            "1234567890",
+            "qwertyuiop",
+            "asdfghjkl",
+            "zxcvbnm"
+    };
+
+// Cursor state
+    static int cursorRow = 0;
+    static int cursorCol = 0;
+
     // Helper: ensure the directory exists and the file exists (create when missing)
     static void EnsureFileExists(const std::string& filename) {
         namespace fs = std::filesystem;
@@ -70,30 +81,37 @@ namespace game::scenes
     ScoreboardScene::~ScoreboardScene() {}
 
     void ScoreboardScene::Update() {
-
         SetSoundVolume(sound1,game::core::Store::volume);
         SetSoundVolume(sound2,game::core::Store::volume);
         SetSoundVolume(sound3,game::core::Store::volume);
+
         if (textmode && !enterdname) {
-            int key = GetCharPressed();
-            while (key > 0) {
-                if ((key >= 32) && (key <= 125) && (inputText.length() < maxLength)) {
+            // Navigation
+            if (IsKeyPressed(game::Config::key_Up) && cursorRow > 0) cursorRow--;
+            if (IsKeyPressed(game::Config::key_Down) && cursorRow < (int)keyboardLayout.size()-1) cursorRow++;
+            if (IsKeyPressed(game::Config::key_Left) && cursorCol > 0) cursorCol--;
+            if (IsKeyPressed(game::Config::key_Right) && cursorCol < (int)keyboardLayout[cursorRow].size()-1) cursorCol++;
+
+            // Select key
+            if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
+                if ((int)inputText.length() < maxLength) {
+                    inputText.push_back(keyboardLayout[cursorRow][cursorCol]);
                     PlaySound(sound1);
-                    inputText.push_back((char) key);
                 }
-                key = GetCharPressed();
             }
 
+            // Backspace
             if (IsKeyPressed(KEY_BACKSPACE) && !inputText.empty()) {
                 inputText.pop_back();
                 PlaySound(sound2);
             }
-            if (IsKeyPressed(KEY_ENTER)) {
+
+            // Finalize name
+            if (IsKeyPressed(KEY_TAB)) { // e.g. TAB to finish input
                 PlaySound(sound1);
                 enterdname = true;
                 textmode = false;
 
-                // Use a filename with extension or full path if you prefer
                 const std::string filename = "HighscoreList.txt";
                 AddHighscore(filename, inputText, final_score);
                 lines= LoadHighscores(defaultFile);
@@ -110,19 +128,50 @@ namespace game::scenes
         }
     }
 
-    void ScoreboardScene::Draw()
-    {
-        std::string scoret="Score: "+std::to_string(final_score);
-        DrawTextPro(game::core::Store::font,scoret.c_str(), {game::Config::kStageWidth/2-200,game::Config::kStageHeight/2-400}, {0,0}, 0, 50, 3, WHITE);
 
+        void ScoreboardScene::Draw() {
         float y=0;
-        ClearBackground(BLACK);
-        if (textmode){
-            std::string namefield="Name: "+inputText;
-            DrawTextPro(game::core::Store::font,namefield.c_str(), {game::Config::kStageWidth/2-200,game::Config::kStageHeight/2-300}, {0,0}, 0, 50, 3, WHITE);
-            DrawTextPro(game::core::Store::font,"Drück Enter um deinen Namen mit deinem Score zu Speichern", {game::Config::kStageWidth/2-400,game::Config::kStageHeight/2-200}, {0,0}, 0, 35, 3, GREEN);
-            y=400;
-        }
+            std::string scoret = "Score: " + std::to_string(final_score);
+            DrawTextPro(game::core::Store::font, scoret.c_str(),
+                        {game::Config::kStageWidth / 2 - 200, game::Config::kStageHeight / 2 - 400}, {0, 0}, 0, 50, 3,
+                        WHITE);
+
+            ClearBackground(BLACK);
+
+            if (textmode) {
+                y=600;
+                // Show typed name
+                std::string namefield = "Name: " + inputText;
+                DrawTextPro(game::core::Store::font, namefield.c_str(),
+                            {game::Config::kStageWidth / 2 - 200, game::Config::kStageHeight / 2 - 300}, {0, 0}, 0, 50,
+                            3, WHITE);
+
+                // Draw keyboard
+                int keySize = 80;
+                int spacing = 10;
+                int startX = game::Config::kStageWidth / 2 - 400;
+                int startY = game::Config::kStageHeight / 2 - 160;
+
+                for (int r = 0; r < keyboardLayout.size(); r++) {
+                    for (int c = 0; c < keyboardLayout[r].size(); c++) {
+                        int x = startX + c * (keySize + spacing);
+                        int y = startY + r * (keySize + spacing);
+
+                        Rectangle keyRect = {(float) x, (float) y, (float) keySize, (float) keySize};
+                        if (r == cursorRow && c == cursorCol) {
+                            DrawRectangleRec(keyRect, SKYBLUE);
+                        } else {
+                            DrawRectangleLinesEx(keyRect, 2, DARKGRAY);
+                        }
+
+                        char keyChar = keyboardLayout[r][c];
+                        DrawText(TextFormat("%c", keyChar),
+                                 x + keySize / 2 - 5,
+                                 y + keySize / 2 - 10,
+                                 30, WHITE);
+                    }
+                }
+            }
         DrawTextPro(game::core::Store::font,"Highscores:", {game::Config::kStageWidth/2-200,game::Config::kStageHeight/2-300+y}, {0,0}, 0, 50, 3, YELLOW);
 
 
