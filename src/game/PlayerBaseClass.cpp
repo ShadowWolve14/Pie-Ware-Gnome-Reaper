@@ -163,7 +163,7 @@ void Player_Base_Class::Tick(float delta_time)
         // Deadzones
         float deadzone = 0.5f;
         is_Moving = move_Direction.x > deadzone || move_Direction.x < -deadzone || move_Direction.y > deadzone || move_Direction.y < -deadzone;
-                
+
 
         if(is_Moving)
         {

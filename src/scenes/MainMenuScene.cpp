@@ -184,12 +184,12 @@ void MainMenuScene::Draw()
 void MainMenuScene::Input_Check_Mov() {
     if (GetGamepadAxisMovement(0, 1) < -0.5&&input_delay<1){
         this->counter= this->counter-1;
-        input_delay=10;
+        input_delay=20;
         PlaySound(sound3);
     }
     if (GetGamepadAxisMovement(0, 1) > 0.5&&input_delay<1){
         this->counter= this->counter+1;
-        input_delay=10;
+        input_delay=20;
         PlaySound(sound3);
     }
     input_delay--;
@@ -337,14 +337,14 @@ void MainMenuScene::options_Update() {
             if (game::core::Store::volume<0){
                 game::core::Store::volume=0;
             }
-            input_delay = 10;
+            input_delay = 20;
         }
         if (GetGamepadAxisMovement(0, 0) > 0.5&&input_delay<1){
             game::core::Store::volume=game::core::Store::volume+0.5;
             if (game::core::Store::volume>5){
                 game::core::Store::volume=5;
             }
-            input_delay = 10;
+            input_delay = 20;
         }
         input_delay--;
         SaveValue("AudioSettings.txt",game::core::Store::volume);
