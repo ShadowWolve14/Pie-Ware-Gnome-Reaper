@@ -29,7 +29,7 @@ namespace game::scenes
 
         int souls_to_spend;
         int current_level;
-        int counter;
+        int counter = 0;
         int input_delay = 0;
         Music song= LoadMusicStream("assets/audio/tracks/CutsceneMusic.wav");
 
