@@ -364,10 +364,13 @@ for (const auto& pos : dead_enemy_positions)
                 }
             break;
             case ItemType::LUCK_NEEDLE:
-                if (CountItemsOfType(ItemType::LUCK_NEEDLE, objectManager, *player_ptr) + luck_needles_to_spawn < game::Config::Luck_Needle_Max_On_Map) {
-                    spawned_item = new Luck_Needle(pos);
-                    luck_needles_to_spawn++;
+                if (game::core::Store::drop_chance_change_duration<=0){
+                    if (CountItemsOfType(ItemType::LUCK_NEEDLE, objectManager, *player_ptr) + luck_needles_to_spawn < game::Config::Luck_Needle_Max_On_Map) {
+                        spawned_item = new Luck_Needle(pos);
+                        luck_needles_to_spawn++;
+                    }
                 }
+
         }
 
 
