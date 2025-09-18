@@ -12,6 +12,12 @@
 #include "raymath.h"
 #include "../Config.h.in"
 
+Sound Player_Base_Class::s_attack_sound;
+Sound Player_Base_Class::s_ranged_attack_sound;
+Sound Player_Base_Class::s_hit_sound;
+Sound Player_Base_Class::s_death_sound;
+Sound Player_Base_Class::s_item_pickup_sound;
+
 Player_Base_Class::Player_Base_Class(int max_Health, float movement_Speed, float damage_multiplier, Vector2 start_Position)
     : player_Max_Health(max_Health), player_Health((float)max_Health), player_Movement_Speed(movement_Speed),
         player_Damage_Multiplier(damage_multiplier), melee_Base_Damage(game::Config::player_Melee_Damage_Value),
@@ -79,13 +85,6 @@ void Player_Base_Class::Player_Input()
 
 void Player_Base_Class::Tick(float delta_time)
 {
-    SetSoundVolume(this->itoS,game::core::Store::volume*game::Config::Player_Item_Obtained_Sound_Volume);
-    SetSoundVolume(this->hits,game::core::Store::volume*game::Config::Player_Took_Damage_Sound_Volume);
-    SetSoundVolume(this->deaths,game::core::Store::volume*game::Config::Player_Death_Sound_Volume);
-    SetSoundVolume(this->ats,game::core::Store::volume*game::Config::Player_Attack_Sound_Volume);
-    SetSoundVolume(this->rats,game::core::Store::volume*game::Config::Player_Ranged_Attack_Sound_Volume);
-
-
     if (item_removal_timer > 0.0f)
     {
         item_removal_timer -= delta_time;
@@ -343,7 +342,7 @@ void Player_Base_Class::Take_Damage(int damage_amount)
 
     if (damage_amount > 0)
     {
-        PlaySound(hits);
+        PlaySound(s_hit_sound);
     }
     player_Health -= damage_amount;
     player_Health = std::min(player_Health, (float)player_Max_Health);
@@ -412,7 +411,7 @@ bool Player_Base_Class::HasItem() const
 
 void Player_Base_Class::PickUpItem(ItemBase* item_to_pick_up)
 {
-    PlaySound(itoS);
+    PlaySound(s_item_pickup_sound);
     if (!HasItem() && object_manager_ptr != nullptr)
     {
         held_item = item_to_pick_up;
@@ -604,4 +603,27 @@ bool Player_Base_Class::IsAdrenalinBuffed() const
 float Player_Base_Class::GetAdrenalinBuffTimer() const
 {
     return adrenalin_buff_timer;
+}
+
+void Player_Base_Class::LoadPlayerSounds()
+{
+    s_attack_sound = LoadSound("assets/audio/sfx/Gnome_CloseAttack.wav");
+    s_ranged_attack_sound = LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
+    s_hit_sound = LoadSound("assets/audio/sfx/Gnome_Hit.wav");
+    s_death_sound = LoadSound("assets/audio/sfx/Gnome_Death.wav");
+    s_item_pickup_sound = LoadSound("assets/audio/sfx/Item_Obtained.wav");
+
+    SetSoundVolume(s_attack_sound, game::core::Store::volume * game::Config::Player_Attack_Sound_Volume);
+    SetSoundVolume(s_ranged_attack_sound, game::core::Store::volume * game::Config::Player_Attack_Sound_Volume);
+    SetSoundVolume(s_hit_sound, game::core::Store::volume * game::Config::Player_Attack_Sound_Volume);
+    SetSoundVolume(s_death_sound, game::core::Store::volume * game::Config::Player_Attack_Sound_Volume);
+    SetSoundVolume(s_item_pickup_sound, game::core::Store::volume * game::Config::Player_Attack_Sound_Volume);
+}
+void Player_Base_Class::UnloadPlayerSounds()
+{
+    UnloadSound(s_attack_sound);
+    UnloadSound(s_ranged_attack_sound);
+    UnloadSound(s_hit_sound);
+    UnloadSound(s_death_sound);
+    UnloadSound(s_item_pickup_sound);
 }
