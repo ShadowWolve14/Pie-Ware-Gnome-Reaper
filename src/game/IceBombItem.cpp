@@ -18,7 +18,7 @@ IceBombItem::IceBombItem(Vector2 position)
 
 std::string IceBombItem::GetName() const
 {
-    return "Ice Bomb";
+    return "Eisbombe";
 }
 
 void IceBombItem::Activate(Player_Base_Class* player)

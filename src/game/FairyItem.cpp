@@ -87,5 +87,5 @@ void FairyItem::Activate(Player_Base_Class* player)
 }
 std::string FairyItem::GetName() const
 {
-    return "Fairy Item";
+    return "Feen Item";
 }

@@ -22,5 +22,5 @@ void KeyItem::Activate(Player_Base_Class* player)
 
 std::string KeyItem::GetName() const
 {
-    return "Key";
+    return "Schlüssel";
 }

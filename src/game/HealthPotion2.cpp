@@ -10,5 +10,5 @@ HealthPotion2::HealthPotion2(Vector2 position)
 
 std::string HealthPotion2::GetName() const
 {
-    return "Health +1";
+    return "Heilung +1";
 }

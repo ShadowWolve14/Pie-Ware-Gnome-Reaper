@@ -8,7 +8,7 @@ namespace game
     {
         public:
         inline static constexpr const char* kProjectName = "Gnome Reaper";
-        inline static constexpr const char* kProjectVersion = "1.0";
+        inline static constexpr const char* kProjectVersion = "1.1";
         inline static constexpr const char* kProjectVersionMajor = "@PROJECT_VERSION_MAJOR@";
         inline static constexpr const char* kProjectVersionMinor = "@PROJECT_VERSION_MINOR@";
         inline static constexpr const char* kProjectVersionPatch = "@PROJECT_VERSION_PATCH@";
@@ -26,7 +26,7 @@ namespace game
         inline static constexpr int kTargetFps = 60;
 
         // Start game in window or fullscreen mode
-        inline static constexpr const bool kFullScreen = false;
+        inline static constexpr const bool kFullScreen = true;
 
         // Define if the game uses a mouse/mouse pointer
         // The mouse position is then accessible in game::core::Store in the mouse_position attribute
@@ -93,16 +93,16 @@ namespace game
 
 //use ...SwordAttack_UPWalk, etc. or cut down framecount to 7
         inline static constexpr float player_Melee_Attack_Anim_Speed = 1.85f;
-        inline static constexpr int player_Melee_Attack_Frame_Count = 13;
+        inline static constexpr int player_Melee_Attack_Frame_Count = 10;
         inline static constexpr Vector2 player_Melee_Attack_Anim_Size{48, 48};
-        inline static constexpr const char* kPlayerMeleeAttackUpAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_Up.png";
-        inline static constexpr const char* kPlayerMeleeAttackDownAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_Down.png";
-        inline static constexpr const char* kPlayerMeleeAttackLeftAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_Left.png";
-        inline static constexpr const char* kPlayerMeleeAttackRightAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_Right.png";
-        inline static constexpr const char* kPlayerMeleeAttackUpLeftAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_LeftUp.png";
-        inline static constexpr const char* kPlayerMeleeAttackUpRightAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_RightUp.png";
-        inline static constexpr const char* kPlayerMeleeAttackDownLeftAnim = "PieWare/assets/Spritesheets/GnomeSwordAttack_LeftDown.png";
-        inline static constexpr const char* kPlayerMeleeAttackDownRightAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_RightDown.png";
+        inline static constexpr const char* kPlayerMeleeAttackUpAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_UpWalk.png";
+        inline static constexpr const char* kPlayerMeleeAttackDownAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_DownWalk.png";
+        inline static constexpr const char* kPlayerMeleeAttackLeftAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_LeftWalk.png";
+        inline static constexpr const char* kPlayerMeleeAttackRightAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_RightWalk.png";
+        inline static constexpr const char* kPlayerMeleeAttackUpLeftAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_LeftUpWalk.png";
+        inline static constexpr const char* kPlayerMeleeAttackUpRightAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_RightUpWalk.png";
+        inline static constexpr const char* kPlayerMeleeAttackDownLeftAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_LeftDownWalk.png";
+        inline static constexpr const char* kPlayerMeleeAttackDownRightAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_RightDownWalk.png";
 
         // ------Player_Range_Attack------
         inline static constexpr float player_Class_One_Projectile_Speed = 40.0f;
@@ -115,9 +115,9 @@ namespace game
         inline static constexpr const char* kProjectileSprite = "PieWare/assets/Items/Projectile_Right_White.png";
 
         // ------Player_Projectile Piercing Settings------
-        inline static constexpr bool enable_piercing_upgrades = true;     // Sollen Upgrades die Anzahl der Durchschläge erhöhen?
+        inline static constexpr bool enable_piercing_upgrades = false;     // Sollen Upgrades die Anzahl der Durchschläge erhöhen?
         inline static constexpr int base_projectile_pierce_count = 2;      // Wie viele Gegner durchschlägt ein Pfeil standardmäßig? (1 = kein Durchschlag)
-        inline static constexpr int projectile_pierce_damage_multiplier_percent = 75; // Wie viel % Schaden machen Treffer nach dem ersten? (100 = kein Schadensverlust)
+        inline static constexpr int projectile_pierce_damage_multiplier_percent = 50; // Wie viel % Schaden machen Treffer nach dem ersten? (100 = kein Schadensverlust)
 
        // ------Player_Melee_Attack------
        // Diese Werte gelten für den normalen Zustand.
@@ -146,7 +146,7 @@ namespace game
        inline static constexpr float player_Melee_Buff_Diag_Width_Tiles = 2.5f;
 
         // Gegner Rückstoß
-        inline static constexpr float kAIBase_Knockback_Speed = 90.0f;     // Wie schnell der Gegner zurückgestoßen wird.
+        inline static constexpr float kAIBase_Knockback_Speed = 45.0f;     // Wie schnell der Gegner zurückgestoßen wird.
         inline static constexpr float kAIBase_Knockback_Duration = 0.4f;  // Wie lange der Rückstoß dauert (in Sekunden).
         //____________________Gegner Bauer____________________________
         // ------Melee_Enemy_Type1 Settings------
@@ -190,7 +190,7 @@ namespace game
 
         // ------Melee_Enemy_Type2 Attack------
         inline static constexpr int melee_enemy_2_damage = 20;
-        inline static constexpr float melee_enemy_2_attack_cooldown = 30.0f;
+        inline static constexpr float melee_enemy_2_attack_cooldown = 20.0f;
 
         // ------Melee_Enemy_Type2 Animations ------
         inline static constexpr float melee_enemy_2_walk_anim_speed = 1.0f;
@@ -222,7 +222,7 @@ namespace game
 
         // ------Melee_Enemy_Type3 Attack------
         inline static constexpr int melee_enemy_3_damage = 40;
-        inline static constexpr float melee_enemy_3_attack_cooldown = 30.0f;
+        inline static constexpr float melee_enemy_3_attack_cooldown = 15.0f;
 
         // ------Melee_Enemy_Type3 Animations ------
 
@@ -258,7 +258,7 @@ namespace game
         inline static constexpr Rectangle kEnemySpawnArea = { 16.0f, 16.0f, 1504.0f, 928.0f };
 
         // Definiert eine Zone innerhalb des Spawn-Bereichs, in der KEINE Gegner spawnen dürfen
-        inline static constexpr Rectangle kEnemySpawnExclusionZone = { 48.0f, 416.0f, 128.0f, 128.0f };
+        inline static constexpr Rectangle kEnemySpawnExclusionZone = { 16.0f, 400.0f, 160.0f, 176.0f };
 
         //____________________Wellen Spawner Level 1____________________________
 
@@ -402,19 +402,19 @@ namespace game
 
         // ------ Heil-Item: Health Potion ------
         inline static constexpr int health_Potion_Heal_Amount = 40;        // Wie viel Leben wiederhergestellt wird
-        inline static constexpr int health_Potion_Max_On_Map = 4;          // Maximale Anzahl (Map + Inventar)
-        inline static constexpr const char* kHealthPotionAnim = "PieWare/assets/Items/Item Variants/Item_Variant_HeiltrankVariant2.png";
+        inline static constexpr int health_Potion_Max_On_Map = 5;          // Maximale Anzahl (Map + Inventar)
+        inline static constexpr const char* kHealthPotionAnim = "PieWare/assets/Items/Item Variants/Item_Variant_HeiltrankVariant1.png";
 
         // ------ Heil-Item 2 ------
         inline static constexpr int health_Potion_2_Heal_Amount = 80;
         inline static constexpr int health_Potion_2_Max_On_Map = 3;
         // Wie gewünscht, erstmal die gleichen Assets:
-        inline static constexpr const char* kHealthPotion2Anim = "PieWare/assets/Items/Item Variants/Item_Variant_HeiltrankVariant1.png";
+        inline static constexpr const char* kHealthPotion2Anim = "PieWare/assets/Items/Item Variants/Animation_Healthpotion.png";
 
         // ------ Heil-Item 3 ------
         inline static constexpr int health_Potion_3_Heal_Amount = 120;
         inline static constexpr int health_Potion_3_Max_On_Map = 2;
-        inline static constexpr const char* kHealthPotion3Anim = "PieWare/assets/Items/Animations/Animation_Healthpotion.png";
+        inline static constexpr const char* kHealthPotion3Anim = "PieWare/assets/Items/Animations/Item_Variant_HeiltrankVariant2.png";
 
         inline static constexpr Vector2 health_Potion_Anim_Size = {16.0f, 16.0f};
         inline static constexpr int health_Potion_Frame_Count = 9;
@@ -422,7 +422,7 @@ namespace game
         inline static constexpr float kHealVFXAnimSpeed = 1.5f;
 
         // ------Luck_Spritze--------
-        inline static constexpr int Luck_Needle_duration = 120;
+        inline static constexpr int Luck_Needle_duration = 150;
         inline static constexpr int Luck_Needle_Max_On_Map = 2;
         inline static constexpr const char* kLuck_Needle_Anim = "PieWare/assets/Items/Item Variants/Item_Variant_SpritzedesGluecks.png";
 
@@ -476,10 +476,10 @@ namespace game
         inline static constexpr bool adrenaline_Grants_Invincibility = true;
 
         // Boni (werden zum Basiswert addiert)
-        inline static constexpr int   adrenalin_Ranged_Damage_Boost = 10;
+        inline static constexpr int   adrenalin_Ranged_Damage_Boost = 15;
         inline static constexpr float adrenalin_Movement_Speed_Boost = 3.0f;
         inline static constexpr int   adrenalin_Pierce_Count_Boost = 2;
-        inline static constexpr int adrenalin_Pierce_Multiplier_Boost_Percent = 25; // ist mit 25 auf 100 also kein Schadenverlust mehr
+        inline static constexpr int adrenalin_Pierce_Multiplier_Boost_Percent = 50; // ist mit 25 auf 100 also kein Schadenverlust mehr
         inline static constexpr int adrenalin_Attack_Speed_Boost_Percent = 20;
         // Adrenalin VFX Settings (visueller Effekt auf dem Spieler)
         inline static const char* kAdrenalineVFXAnim = "PieWare/assets/Spritesheets/VFX/AdrenalineVFX.png";
@@ -624,12 +624,12 @@ namespace game
         inline static constexpr const char* Symbol_SOC ="PieWare/assets/UI/HUD/SoulCounter_Static.png";
         inline static constexpr const char* Symbol_IT ="PieWare/assets/UI/HUD/Button_Item_Testonadel.png";
         inline static constexpr const char* Symbol_ITU ="PieWare/assets/UI/HUD/Button_Item_Testonadel_Use.png";
-        inline static constexpr const char* kIconHealthPotion1 = "PieWare/assets/UI/HUD/Button_Item_HelthpotionV3.png";
-        inline static constexpr const char* kIconHealthPotion1_Use = "PieWare/assets/UI/HUD/Button_Item_HelthpotionV3_Use.png";
-        inline static constexpr const char* kIconHealthPotion2 = "PieWare/assets/UI/HUD/Button_Item_HelthpotionV2.png";
-        inline static constexpr const char* kIconHealthPotion2_Use = "PieWare/assets/UI/HUD/Button_Item_HelthpotionV2_Use.png";
-        inline static constexpr const char* kIconHealthPotion3 = "PieWare/assets/UI/HUD/Button_Item_Potionl.png";
-        inline static constexpr const char* kIconHealthPotion3_Use = "PieWare/assets/UI/HUD/Button_Item_Potionl_Use.png";
+        inline static constexpr const char* kIconHealthPotion1 = "PieWare/assets/UI/HUD/Button_Item_HelthpotionV2.png";
+        inline static constexpr const char* kIconHealthPotion1_Use = "PieWare/assets/UI/HUD/Button_Item_HelthpotionV2_Use.png";
+        inline static constexpr const char* kIconHealthPotion2 = "PieWare/assets/UI/HUD/Button_Item_Potionl.png";
+        inline static constexpr const char* kIconHealthPotion2_Use = "PieWare/assets/UI/HUD/Button_Item_Potionl_Use.png";
+        inline static constexpr const char* kIconHealthPotion3 = "PieWare/assets/UI/HUD/Button_Item_HelthpotionV3.png";
+        inline static constexpr const char* kIconHealthPotion3_Use = "PieWare/assets/UI/HUD/Button_Item_HelthpotionV3_Use.png";
         inline static const char* kIconAdrenalinNeedle = "PieWare/assets/UI/HUD/Button_Item_Adrenaline.png";
         inline static const char* kIconAdrenalinNeedle_Use = "PieWare/assets/UI/HUD/Button_Item_Adrenaline_Use.png";
         inline static const char* kIconLuckNeedle = "PieWare/assets/UI/HUD/Button_Item_Luckspritze.png";
@@ -688,7 +688,7 @@ namespace game
         inline static constexpr float kSmokeVFXAnimSpeed = 5.0f;
 
         // --- Disappearing Wall ---
-        inline static constexpr Vector2 disappearing_wall_position = {172.0f, 446.0f};
+        inline static constexpr Vector2 disappearing_wall_position = {157.5f, 439.5f};
 
         // Visuelle und Kollisions-Eigenschaften
         inline static constexpr Vector2 disappearing_wall_sprite_size = {4.0f, 64.0f}; // Die Größe von Textur & Hitbox der Wand
@@ -741,6 +741,7 @@ namespace game
         // ------ DEBUGGING ------
         inline static constexpr bool visualize_Player_Hitbox = false;
         inline static constexpr bool visualize_Attack_Hitboxes = false;
+        inline static constexpr bool visualize_Spawn_Areas = false;
 
         // Levelmap-file paths
         // Lvl_Nbr gets changed on level transition, thus also altering the path where Screen.Draw_Level() loads the
