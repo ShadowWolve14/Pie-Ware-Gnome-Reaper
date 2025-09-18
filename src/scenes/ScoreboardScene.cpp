@@ -87,13 +87,26 @@ namespace game::scenes
 
         if (textmode && !enterdname) {
             // Navigation
-            if (IsKeyPressed(game::Config::key_Up) && cursorRow > 0) cursorRow--;
-            if (IsKeyPressed(game::Config::key_Down) && cursorRow < (int)keyboardLayout.size()-1) cursorRow++;
-            if (IsKeyPressed(game::Config::key_Left) && cursorCol > 0) cursorCol--;
-            if (IsKeyPressed(game::Config::key_Right) && cursorCol < (int)keyboardLayout[cursorRow].size()-1) cursorCol++;
+            if (GetGamepadAxisMovement(0, 1) < -0.5&&input_delay<1) {
+                cursorRow--;
+                input_delay = 20;
+            }
+            if (GetGamepadAxisMovement(0, 1) > 0.5&&input_delay<1 && cursorRow < (int)keyboardLayout.size()-1) {
+                cursorRow++;
+                input_delay = 20;
+            }
+            if (GetGamepadAxisMovement(0, 0) < -0.5&&input_delay<1 && cursorCol > 0) {
+                cursorCol--;
+                input_delay = 20;
+            }
+            if (GetGamepadAxisMovement(0, 0) > 0.5&&input_delay<1 && cursorCol < (int)keyboardLayout[cursorRow].size()-1) {
+                cursorCol++;
+                input_delay = 20;
+            }
+            input_delay--;
 
             // Select key
-            if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
+            if (IsGamepadButtonPressed(0,7)) {
                 if ((int)inputText.length() < maxLength) {
                     inputText.push_back(keyboardLayout[cursorRow][cursorCol]);
                     PlaySound(sound1);
@@ -101,13 +114,13 @@ namespace game::scenes
             }
 
             // Backspace
-            if (IsKeyPressed(KEY_BACKSPACE) && !inputText.empty()) {
+            if (IsGamepadButtonPressed(0,6) && !inputText.empty()) {
                 inputText.pop_back();
                 PlaySound(sound2);
             }
 
             // Finalize name
-            if (IsKeyPressed(KEY_TAB)) { // e.g. TAB to finish input
+            if (IsGamepadButtonPressed(0,8)) { // e.g. TAB to finish input
                 PlaySound(sound1);
                 enterdname = true;
                 textmode = false;
@@ -118,10 +131,10 @@ namespace game::scenes
             }
         }
         else {
-            if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(game::Config::key_Melee_Attack)) {
+            if (IsGamepadButtonPressed(0,7)) {
                 textmode = true;
             }
-            if (IsKeyPressed(game::Config::key_Ranged_Attack)) {
+            if (IsGamepadButtonPressed(0,8)) {
                 auto mainMenu = std::make_shared<MainMenuScene>();
                 game::core::Store::stage->SwitchToNewScene("MainMenu", mainMenu);
             }
