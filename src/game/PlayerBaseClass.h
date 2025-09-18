@@ -28,6 +28,7 @@ protected:
 	float melee_Base_Cooldown;
 	float ranged_Base_Cooldown;
 
+	float hit_stun_timer = 0.0f;
 	ItemBase* held_item = nullptr;
 	bool is_buffed = false;
 	float buff_timer = 0.0f;
@@ -134,7 +135,7 @@ public:
 	float GetMovementSpeed() const {return  player_Movement_Speed; }
 	int GetMaxHealth() { return player_Max_Health; }
 	float GetDMGMult() { return player_Damage_Multiplier; }
-
+	virtual void TriggerHitAnimation() {}
 	static void LoadPlayerSounds();
 	static void UnloadPlayerSounds();
 };

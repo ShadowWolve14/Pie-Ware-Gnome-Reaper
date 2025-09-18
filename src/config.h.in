@@ -91,7 +91,6 @@ namespace game
         inline static constexpr const char* kPlayerRangeAttackDownLeftAnim = "PieWare/assets/Spritesheets/gnoooomeRangedLeftDown.png";
         inline static constexpr const char* kPlayerRangeAttackDownRightAnim = "PieWare/assets/Spritesheets/gnoooomeRangedRightDown.png";
 
-//use ...SwordAttack_UPWalk, etc. or cut down framecount to 7
         inline static constexpr float player_Melee_Attack_Anim_Speed = 1.85f;
         inline static constexpr int player_Melee_Attack_Frame_Count = 10;
         inline static constexpr Vector2 player_Melee_Attack_Anim_Size{48, 48};
@@ -103,6 +102,15 @@ namespace game
         inline static constexpr const char* kPlayerMeleeAttackUpRightAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_RightUpWalk.png";
         inline static constexpr const char* kPlayerMeleeAttackDownLeftAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_LeftDownWalk.png";
         inline static constexpr const char* kPlayerMeleeAttackDownRightAnim = "PieWare/assets/Spritesheets/Gnome_SwordAttack_RightDownWalk.png";
+
+        // ------Player Hit Animation------
+        inline static constexpr float player_Hit_Anim_Duration = 1.0f; // Gesamtdauer in 1/10 Sekunden
+        inline static constexpr int player_Hit_Frame_Count = 2;
+        inline static constexpr Vector2 player_Hit_Anim_Size = {16, 16};
+        inline static constexpr const char* kPlayerHitDownAnim = "PieWare/assets/Spritesheets/gnomeHit.png";
+        inline static constexpr const char* kPlayerHitUpAnim = "PieWare/assets/Spritesheets/gnomeHitBack.png";
+        inline static constexpr const char* kPlayerHitLeftAnim = "PieWare/assets/Spritesheets/gnomeHitLeft.png";
+        inline static constexpr const char* kPlayerHitRightAnim = "PieWare/assets/Spritesheets/gnomeHitRight.png";
 
         // ------Player_Range_Attack------
         inline static constexpr float player_Class_One_Projectile_Speed = 40.0f;

@@ -47,7 +47,10 @@ Player_Base_Class::~Player_Base_Class()
 
 void Player_Base_Class::Player_Input()
 {
-
+    if (currentState == DAMAGED)
+    {
+        return;
+    }
     if (IsKeyPressed(game::Config::key_Melee_Attack) && melee_Cooldown <= 0)
     {
         if (is_adrenalin_buffed)
@@ -85,6 +88,14 @@ void Player_Base_Class::Player_Input()
 
 void Player_Base_Class::Tick(float delta_time)
 {
+    if (currentState == DAMAGED)
+    {
+        hit_stun_timer -= delta_time;
+        if (hit_stun_timer <= 0.0f)
+        {
+            currentState = IDLE;
+        }
+    }
     if (item_removal_timer > 0.0f)
     {
         item_removal_timer -= delta_time;
@@ -338,11 +349,13 @@ Vector2 Player_Base_Class::Get_Player_Pos()
 void Player_Base_Class::Take_Damage(int damage_amount)
 {
     if (is_invincible && damage_amount > 0) return;
-    if (is_buffed && damage_amount > 0) return;
 
     if (damage_amount > 0)
     {
         PlaySound(s_hit_sound);
+        this->currentState = DAMAGED;
+        this->hit_stun_timer = game::Config::player_Hit_Anim_Duration;
+        this->TriggerHitAnimation();
     }
     player_Health -= damage_amount;
     player_Health = std::min(player_Health, (float)player_Max_Health);
