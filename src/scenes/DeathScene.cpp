@@ -67,18 +67,27 @@ void DeathScene::Update() {
 
     if (text_anim_started && !textAnimation.IsFinished()) {
         float time_delta = GetFrameTime();
-
         if (is_skipping) {
-            for(int i = 0; i < 20; ++i) {
-                textAnimation.Update_Frame(time_delta);
-            }
+            for(int i = 0; i < 20; ++i) { textAnimation.Update_Frame(time_delta); }
         } else {
             textAnimation.Update_Frame(time_delta);
         }
     }
+    bool action_pressed = false;
 
-    if (IsActionKeyPressed() || IsKeyPressed(KEY_ESCAPE)) {
-        // Wenn Animation läuft -> Skippen aktivieren
+    if (game::Config::kArcadeMode) {
+        bool melee_pressed  = IsGamepadButtonPressed(0, game::Config::kArcadeButtonMelee);
+        bool ranged_pressed = IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged);
+        bool item_pressed   = IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem);
+        bool debug_confirm = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_ENTER));
+
+        action_pressed = melee_pressed || ranged_pressed || item_pressed || debug_confirm || IsKeyPressed(KEY_ESCAPE);
+    } else {
+        action_pressed = IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_K) || IsKeyPressed(KEY_L) || IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE);
+    }
+
+
+    if (action_pressed) {
         if (text_anim_started && !textAnimation.IsFinished()) {
             if (!is_skipping) {
                 is_skipping = true;

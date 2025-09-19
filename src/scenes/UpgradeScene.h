@@ -23,6 +23,8 @@ namespace game::scenes
         Rectangle abilities{1,1,80,32};
         Rectangle level_counter {1,1,32,32};
 
+        float input_delay_timer = 0.0f;
+
         Sound sound1 = LoadSound("assets/audio/sfx/Item_Obtained.wav");
         Sound sound2 = LoadSound("assets/audio/sfx/Enemy_Hit.wav");
         Sound sound3 = LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
@@ -57,9 +59,8 @@ namespace game::scenes
         static bool Cap_Melee   (int l){ return l < kUpgrade_Max_Level; }
         static bool Cap_Ranged  (int l){ return l < kUpgrade_Max_Level; }
 
-        // Buyers
         bool TryBuy_Health();
-        bool TryBuy_Speed();     // already implemented in .cpp
+        bool TryBuy_Speed();
         bool TryBuy_AtkSpeed();
         bool TryBuy_GlobalDMG();
         bool TryBuy_MeleeDMG();
@@ -68,10 +69,9 @@ namespace game::scenes
         void Input_Check_Mov();
         bool Input_Check_Sel();
 
-        // --- Fail flash (red pip) feedback ---
-        static constexpr int kRows = 6;                 // 0..5 (health, speed, atkspd, global, melee, ranged)
-        static constexpr int kFailFlashDuration = 30;   // ~1s @60fps
-        int fail_flash_timer[kRows] = {0};              // countdown per row
+        static constexpr int kRows = 6;
+        static constexpr int kFailFlashDuration = 30;
+        int fail_flash_timer[kRows] = {0};
 
         inline void TriggerFailFlash(int row) {
             if (row >= 0 && row < kRows) fail_flash_timer[row] = kFailFlashDuration;

@@ -8,11 +8,12 @@
 #include "../config.h.in"
 
 namespace game::scenes {
-    UpgradeScene::UpgradeScene(int souls, int level) {
+    static constexpr float kMenuInputDelaySeconds = 0.4f;
+    UpgradeScene::UpgradeScene(int souls, int level)
+    {
         this->souls_to_spend = souls;
         this->current_level  = level;
 
-        // load fairy animation depending on level
         const std::string path = game::Config::fairy_spritesheet_path(level);
         if (path != "no sprite found") {
             const FairyAnimMeta meta = GetFairyMetaForLevel(level);
@@ -37,7 +38,6 @@ namespace game::scenes {
         auto& souls = game::core::Store::player_state->souls;
 
         if (ups.maxhealth_level >= kUpgrade_Max_Level) {
-           // TriggerAffordFeedback("Max level reached");
             return false;
         }
         int price = GetUpgradePrice(ups.maxhealth_level);
@@ -57,7 +57,6 @@ namespace game::scenes {
         auto& souls = game::core::Store::player_state->souls;
 
         if (ups.speed_level >= kUpgrade_Max_Level) {
-           // TriggerAffordFeedback("Max level reached");
             return false;
         }
         int price = GetUpgradePrice(ups.speed_level);
@@ -77,7 +76,6 @@ namespace game::scenes {
         auto& souls = game::core::Store::player_state->souls;
 
         if (ups.atkSpeed_level >= kUpgrade_Max_Level) {
-           // TriggerAffordFeedback("Max level reached");
             return false;
         }
         int price = GetUpgradePrice(ups.atkSpeed_level);
@@ -97,7 +95,6 @@ namespace game::scenes {
         auto& souls = game::core::Store::player_state->souls;
 
         if (ups.DMGxmult_level >= kUpgrade_Max_Level) {
-           // TriggerAffordFeedback("Max level reached");
             return false;
         }
         int price = GetUpgradePrice(ups.DMGxmult_level);
@@ -117,7 +114,6 @@ namespace game::scenes {
         auto& souls = game::core::Store::player_state->souls;
 
         if (ups.meleeDMG_level >= kUpgrade_Max_Level) {
-           // TriggerAffordFeedback("Max level reached");
             return false;
         }
         int price = GetUpgradePrice(ups.meleeDMG_level);
@@ -152,7 +148,6 @@ namespace game::scenes {
         return true;
     }
 
-    // Draw pips for an upgrade using one spritesheet and two source rects.
     static void DrawUpgradeRow(
         int level, int max_level,
         bool isSelected,
@@ -161,13 +156,12 @@ namespace game::scenes {
         const Texture2D& sheet,
         const Rectangle& src_full,
         const Rectangle& src_empty,
-        const Rectangle& src_empty_hi // highlighted empty
+        const Rectangle& src_empty_hi
 ){
-        // clamp
+
         if (level < 0) level = 0;
         if (level > max_level) level = max_level;
 
-        // 1) full pips
         for (int i = 0; i < level; ++i) {
             const float x = start_x + spacing * static_cast<float>(i);
             DrawTexturePro(
@@ -180,7 +174,6 @@ namespace game::scenes {
 );
         }
 
-        // 2) highlighted empty (only one, only if selected and not at cap)
         if (isSelected && level < max_level) {
             const float x = start_x + spacing * static_cast<float>(level);
             const Color tint = flashRed ? RED : WHITE;
@@ -192,11 +185,8 @@ namespace game::scenes {
                  0.0f,
                  tint
 );
-            // advance the starting index for remaining empties
             ++level;
         }
-
-        // 3) remaining empty pips
         for (int i = level; i < max_level; ++i) {
             const float x = start_x + spacing * static_cast<float>(i);
             DrawTexturePro(
@@ -217,12 +207,14 @@ namespace game::scenes {
         SetSoundVolume(sound2,game::core::Store::volume);
         SetSoundVolume(sound3,game::core::Store::volume);
 
+        if (input_delay_timer > 0.0f) {
+            input_delay_timer -= GetFrameTime();
+        }
+
         if (IsKeyPressed(game::Config::key_Ranged_Attack)){
             this->counter=0;
         }
         UpdateMusicStream(song);
-        // tick fail flash timer
-        // tick fail flash timer
         for (int i = 0; i < kRows; ++i) {
             if (fail_flash_timer[i] > 0) --fail_flash_timer[i];
         }
@@ -232,17 +224,18 @@ namespace game::scenes {
         Input_Check_Mov();
 
         constexpr int kMaxIndex = 6;
-        if (counter > kMaxIndex) counter -= (kMaxIndex + 1);
-        if (counter < 0)         counter  = kMaxIndex;
+        if (counter > kMaxIndex) counter = 0;
+        if (counter < 0) counter = kMaxIndex;
 
         if (Input_Check_Sel()) {
+            PlaySound(sound1);
             switch (counter) {
-                case 0: { TryBuy_Health();     break; }
-                case 1: { TryBuy_Speed();      break; }
-                case 2: { TryBuy_AtkSpeed();   break; }
-                case 3: { TryBuy_GlobalDMG();  break; }
-                case 4: { TryBuy_MeleeDMG();   break; }
-                case 5: { TryBuy_RangedDMG();  break; }
+                case 0: TryBuy_Health(); break;
+                case 1: TryBuy_Speed(); break;
+                case 2: TryBuy_AtkSpeed(); break;
+                case 3: TryBuy_GlobalDMG(); break;
+                case 4: TryBuy_MeleeDMG(); break;
+                case 5: TryBuy_RangedDMG(); break;
                 case 6: {
                     int next_level = current_level + 1;
                     auto newGameScene = std::make_shared<GameScene>(next_level);
@@ -253,10 +246,42 @@ namespace game::scenes {
         }
     }
 
-    void UpgradeScene::Draw() {
-        ClearBackground(BLACK);//Color{31, 14, 28, 255}
-        //Draw Menu Backdrop
+    void UpgradeScene::Input_Check_Mov() {
+        bool moved = false;
+        if (input_delay_timer <= 0.0f) { // Prüft den neuen Timer
+            if (game::Config::kArcadeMode) {
+                float v_axis = GetGamepadAxisMovement(0, game::Config::kArcadeAxisY);
+                if (v_axis < -game::Config::kArcadeAxisDeadzone) { this->counter--; moved = true; }
+                if (v_axis > game::Config::kArcadeAxisDeadzone) { this->counter++; moved = true; }
+            }
+            if (!game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard) {
+                if (IsKeyPressed(game::Config::key_Up)) { this->counter--; moved = true; }
+                if (IsKeyPressed(game::Config::key_Down)) { this->counter++; moved = true; }
+            }
+        }
 
+        if (moved) {
+            PlaySound(sound3);
+            input_delay_timer = kMenuInputDelaySeconds;
+        }
+    }
+
+    bool UpgradeScene::Input_Check_Sel() {
+        if (game::Config::kArcadeMode)
+        {
+            bool melee_pressed  = IsGamepadButtonPressed(0, game::Config::kArcadeButtonMelee);
+            bool ranged_pressed = IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged);
+            bool item_pressed   = IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem);
+
+            bool debug_confirm = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_ENTER));
+
+            return melee_pressed || ranged_pressed || item_pressed || debug_confirm;
+        }
+        return IsKeyPressed(game::Config::key_Melee_Attack) || (game::Config::key_Ranged_Attack) ||IsKeyPressed(KEY_ENTER);
+    }
+
+    void UpgradeScene::Draw() {
+        ClearBackground(BLACK);
         DrawTexturePro(soulcounter_bg,
                     {0, 0, 64, 30},                     // source rect (part of sheet)
                     {game::Config::kStageWidth/4 - 180, 50, 64*4.0f, 30*4.0f},        // dest rect (x,y,w,h → scaled ×4)
@@ -330,11 +355,7 @@ namespace game::scenes {
             Color col = (souls_to_spend >= price) ? GREEN : RED;
         }
 
-
-
-        // -----Movement Speed-----
         if (counter==1){
-            // Draw Highlited Button
             abilities.x=80;
             DrawTexturePro(
                 speed_upgrade_button,
@@ -349,7 +370,6 @@ namespace game::scenes {
 
         }
         else{
-            //Draw Regular Button Asset
             abilities.x=1;
             DrawTexturePro(
                 speed_upgrade_button,
@@ -373,11 +393,7 @@ namespace game::scenes {
             Color col = (souls_to_spend >= price) ? GREEN : RED;
         }
 
-
-
-        // -----Attackspeed-----
         if (counter==2){
-            // Draw Highlited Button
             abilities.x=80;
             DrawTexturePro(
                 atkSpeed_upgrade_button,
@@ -392,7 +408,6 @@ namespace game::scenes {
 
         }
         else{
-            //Draw Regular Button Asset
             abilities.x=1;
             DrawTexturePro(
                 atkSpeed_upgrade_button,
@@ -416,11 +431,7 @@ namespace game::scenes {
             Color col = (souls_to_spend >= price) ? GREEN : RED;
         }
 
-
-
-        // -----Base Damage Mult-----
         if (counter==3){
-            // Draw Highlited Button
             abilities.x=80;
             DrawTexturePro(
                 DMGxMult_upgrade_button,
@@ -435,7 +446,6 @@ namespace game::scenes {
 
         }
         else{
-            //Draw Regular Button Asset
             abilities.x=1;
             DrawTexturePro(
                 DMGxMult_upgrade_button,
@@ -459,11 +469,7 @@ namespace game::scenes {
             Color col = (souls_to_spend >= price) ? GREEN : RED;
         }
 
-
-
-        // -----Meele DMG-----
         if (counter==4){
-            // Draw Highlited Button
             abilities.x=80;
             DrawTexturePro(
                 meeleDMG_upgrade_button,
@@ -478,7 +484,7 @@ namespace game::scenes {
 
         }
         else{
-            //Draw Regular Button Asset
+
             abilities.x=1;
             DrawTexturePro(
                 meeleDMG_upgrade_button,
@@ -502,11 +508,7 @@ namespace game::scenes {
             Color col = (souls_to_spend >= price) ? GREEN : RED;
         }
 
-
-
-        // -----Ranged DMG-----
         if (counter==5){
-            // Draw Highlited Button
             abilities.x=80;
             DrawTexturePro(
                 rangedDMG_upgrade_button,
@@ -521,7 +523,6 @@ namespace game::scenes {
 
         }
         else{
-            //Draw Regular Button Asset
             abilities.x=1;
             DrawTexturePro(
                 rangedDMG_upgrade_button,
@@ -545,11 +546,7 @@ namespace game::scenes {
             Color col = (souls_to_spend >= price) ? GREEN : RED;
         }
 
-
-
-        // ------ continue button-----
         if (counter==6){
-            // Draw Highlited Button
             abilities.x=80;
             DrawTexturePro(
                 continue_button_button,
@@ -562,7 +559,6 @@ namespace game::scenes {
 );
         }
         else{
-            //Draw Regular Button Asset
             abilities.x=1;
             DrawTexturePro(
                 continue_button_button,
@@ -574,38 +570,6 @@ namespace game::scenes {
                     WHITE
 );
         }
-
-
-       /* std::string souls_text = "Das ist das Upgrade Screen und du hast " + std::to_string(souls_to_spend) + " Seelen.";
-
-        auto curr = BuildEffectiveStats(game::core::upgrades); // current effective stats :contentReference[oaicite:8]{index=8}
-        auto nextUps = game::core::upgrades;                   // copy
-        nextUps.speed_level += 1;
-        auto next = BuildEffectiveStats(nextUps);
-
-        DrawText(TextFormat("Speed: %.2f -> %.2f",
-                 curr.movement_speed, next.movement_speed), 50, 260, 20, WHITE);
-        DrawText(souls_text.c_str(), 50, 200, 20, WHITE);
-        DrawText("Nur kannst du leider noch nichts upgraden.", 50, 230, 20, WHITE);
-        DrawText("Druecke Angriff oder Enter um weiter zu kommen.", 50, 280, 20, GREEN); */
     }
 
-    void UpgradeScene::Input_Check_Mov() {
-        if (IsKeyPressed(game::Config::key_Up)){
-            this->counter= this->counter-1;
-            PlaySound(sound3);
-        }
-        if (IsKeyPressed(game::Config::key_Down)){
-            this->counter= this->counter+1;
-            PlaySound(sound3);
-        }
-    }
-    bool UpgradeScene::Input_Check_Sel() {
-        if (IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_ENTER)) {
-            PlaySound(sound1);
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

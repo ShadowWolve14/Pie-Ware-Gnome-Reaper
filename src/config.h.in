@@ -6,50 +6,59 @@ namespace game
 {
     class Config final
     {
-        public:
+public:
+        // MODUS-SCHALTER: Hier wird zwischen PC- und Arcade-Version umgeschaltet.
+        inline static constexpr bool kArcadeMode = true; // true für Arcade, false für PC
+        inline static constexpr bool kArcadeDebugWithKeyboard = false;
+
         inline static constexpr const char* kProjectName = "Gnome Reaper";
         inline static constexpr const char* kProjectVersion = "1.1.1";
-        inline static constexpr const char* kProjectVersionMajor = "@PROJECT_VERSION_MAJOR@";
-        inline static constexpr const char* kProjectVersionMinor = "@PROJECT_VERSION_MINOR@";
-        inline static constexpr const char* kProjectVersionPatch = "@PROJECT_VERSION_PATCH@";
-
-        // Width and Height of the game stage. The stage will be scaled with the window size
-        inline static constexpr int kStageWidth = 1920;
-        inline static constexpr int kStageHeight = 1080;
-
         //____________________Cam stuff____________________________
         inline static constexpr const int cam_start_pos_x = 0;
         inline static constexpr const int cam_start_pos_y = 0;
         inline static constexpr const float cam_zoom = 5;
 
-        // Target FPS, default is 60 fps
+
+        inline static constexpr int kStageWidth = 1920;
+        inline static constexpr int kStageHeight = 1080;
         inline static constexpr int kTargetFps = 60;
-
-        // Start game in window or fullscreen mode
         inline static constexpr const bool kFullScreen = true;
-
-        // Define if the game uses a mouse/mouse pointer
-        // The mouse position is then accessible in game::core::Store in the mouse_position attribute
         inline static constexpr const bool kUseMouse = false;
-
-        // Raylib window config flags, e.g. for resizable window and vertical synchronisation
-        // Default: GAME_CONFIG_FLAGS FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT | FLAG_MSAA_4X_HINT
         inline static constexpr const int kWindowFlags = FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT | FLAG_MSAA_4X_HINT;
-
-        // Texture scale filter to use, e.g. TEXTURE_FILTER_POINT, TEXTURE_FILTER_BILINEAR etc.
-        // Default: TEXTURE_FILTER_POINT for no filter, only pixel approximation
         inline static constexpr const int kTextureFilter = TEXTURE_FILTER_POINT;
-
-        // Define Raylib exit key - KEY_NULL means that no key leads to the termination of the program
-        // Raylib default is KEY_ESCAPE
         inline static constexpr const int kExitKey = KEY_NULL;
-
-        // Defines if Raylib audio should be enabled
         inline static constexpr const bool kAudio = true;
 
         // Player Settings
         inline static constexpr bool enable_Health_Drain = false; // HP-Drain durch Zeit an/aus
         inline static constexpr float player_Health_Drain_Rate = 1.0f; // HP-Verlust pro Sekunde
+
+        //____________________Control Settings____________________________
+        // --- PC Keyboard Controls ---
+        inline static constexpr const int key_Up = KEY_W;
+        inline static constexpr const int key_Down = KEY_S;
+        inline static constexpr const int key_Left = KEY_A;
+        inline static constexpr const int key_Right = KEY_D;
+        inline static constexpr const int key_Melee_Attack = KEY_J;
+        inline static constexpr const int key_Ranged_Attack = KEY_K;
+        inline static constexpr const int key_Use_Item = KEY_L;
+
+        // --- Arcade Controller Mappings ---
+        // Axes
+        inline static constexpr const int kArcadeAxisX = 0; // Joystick Horizontal
+        inline static constexpr const int kArcadeAxisY = 1; // Joystick Vertical
+        inline static constexpr const float kArcadeAxisDeadzone = 0.5f;
+
+        // Buttons
+        // Menu Controls
+        inline static constexpr const int kArcadeButtonConfirm = 7;      // Roter Button (A) -> Bestätigen
+        inline static constexpr const int kArcadeButtonBack = 6;         // Blauer Button (B) -> Zurück
+        inline static constexpr const int kArcadeButtonFinalizeName = 8; // Grüner Button (X) -> Namen bestätigen
+
+        // In-Game Player Controls
+        inline static constexpr const int kArcadeButtonMelee = 7;        // Roter Button (A) -> Nahkampf
+        inline static constexpr const int kArcadeButtonRanged = 6;       // Blauer Button (B) -> Fernkampf
+        inline static constexpr const int kArcadeButtonItem = 8;         // Grüner Button (X) -> Item benutzen
 
         //____________________Spieler Klasse 1 Block____________________________
         inline static constexpr bool allow_Move_While_Attacking = true;
@@ -576,18 +585,6 @@ namespace game
         inline static constexpr Vector2 initial_Testo_Needle_Position = {104.0f, 464.0f}; // Position Testonadel im Tempel
         inline static constexpr Vector2 initial_Key_Position = {1408.0f, 464.0f}; // Position Schlüssel zu Beginn
 
-
-
-        //____________________Control Settings____________________________
-        inline static constexpr const int key_Up = KEY_W;
-        inline static constexpr const int key_Down = KEY_S;
-        inline static constexpr const int key_Left = KEY_A;
-        inline static constexpr const int key_Right = KEY_D;
-
-        inline static constexpr const int key_Melee_Attack = KEY_J;
-        inline static constexpr const int key_Ranged_Attack = KEY_K;
-        inline static constexpr const int key_Use_Item = KEY_L;
-
         // ------Main Menu -------
               inline static constexpr const char* start_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_StartButton.png";
               inline static constexpr const char* option_button_asset ="PieWare/assets/UI/MainMenu/MainMenu_OptionsButton.png";
@@ -640,19 +637,16 @@ namespace game
         //-------HUD----------
         inline static constexpr const char* Symbol_AA ="PieWare/assets/UI/HUD/Button_ArrowAttack.png";
         inline static constexpr const char* Symbol_AAU ="PieWare/assets/UI/HUD/Button_ArrowAttack_Use.png";
-        inline static constexpr const char* Symbol_AAI ="PieWare/assets/UI/HUD/Button_ArrowAttack_Input.png";
         inline static constexpr const char* Symbol_IB ="PieWare/assets/UI/HUD/Button_Item_Bomb.png";
         inline static constexpr const char* Symbol_IBU ="PieWare/assets/UI/HUD/Button_Item_Bomb_Use.png";
         inline static constexpr const char* kIconIceBomb = "PieWare/assets/UI/HUD/Button_Item_Icebomb.png";
         inline static constexpr const char* kIconIceBomb_Use = "PieWare/assets/UI/HUD/Button_Item_Icebomb_Use.png";
         inline static constexpr const char* Symbol_IE ="PieWare/assets/UI/HUD/Button_Item_Empty.png";
         inline static constexpr const char* Symbol_IEU ="PieWare/assets/UI/HUD/Button_Item_Empty_Use.png";
-        inline static constexpr const char* Symbol_II ="PieWare/assets/UI/HUD/Button_Item_Input.png";
         inline static constexpr const char* Symbol_IK ="PieWare/assets/UI/HUD/Button_Item_Key.png";
         inline static constexpr const char* Symbol_IKU ="PieWare/assets/UI/HUD/Button_Item_Key_Use.png";
         inline static constexpr const char* Symbol_SA ="PieWare/assets/UI/HUD/Button_SwordAttack.png";
         inline static constexpr const char* Symbol_SAU ="PieWare/assets/UI/HUD/Button_SwordAttack_Use.png";
-        inline static constexpr const char* Symbol_SAI ="PieWare/assets/UI/HUD/Button_SwordAttack_Input.png";
         inline static constexpr const char* Symbol_HH ="PieWare/assets/UI/HUD/Healthbar_HalfHeart.png";
         inline static constexpr const char* Symbol_H ="PieWare/assets/UI/HUD/Healthbar_Heart.png";
         inline static constexpr const char* Symbol_HS ="PieWare/assets/UI/HUD/Healthbar_Static.png";
@@ -673,6 +667,13 @@ namespace game
         inline static const char* kIconLuckNeedle = "PieWare/assets/UI/HUD/Button_Item_Luckspritze.png";
         inline static const char* kIconLuckNeedle_Use = "PieWare/assets/UI/HUD/Button_Item_Luckspritze_Use.png";
 
+        inline static constexpr const char* Symbol_AAI_PC ="PieWare/assets/UI/HUD/Button_SwordAttack_Input.png";
+        inline static constexpr const char* Symbol_II_PC ="PieWare/assets/UI/HUD/Button_Item_Input.png";
+        inline static constexpr const char* Symbol_SAI_PC ="PieWare/assets/UI/HUD/Button_ArrowAttack_Input.png";
+
+        inline static constexpr const char* Symbol_AAI_Arcade ="PieWare/assets/UI/HUD/Button_SwordAttack_Input_Arcade.png";
+        inline static constexpr const char* Symbol_II_Arcade ="PieWare/assets/UI/HUD/Button_Item_Input_Arcade.png";
+        inline static constexpr const char* Symbol_SAI_Arcade ="PieWare/assets/UI/HUD/Button_ArrowAttack_Input_Arcade.png";
        //____________________Rätsel: Steinverschieben____________________________
         // ------ Allgemeine Rätsel-Mechaniken ------
         inline static constexpr float movable_wall_push_delay = 10.0f; // Zeit die man drücken muss bevor sich Steine bwegen

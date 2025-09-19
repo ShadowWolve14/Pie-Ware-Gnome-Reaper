@@ -21,6 +21,17 @@ HUD::HUD(Player_Class_One* mp):mp(mp) {
     IA = LoadTexture(game::Config::kIconAdrenalinNeedle);
     ILN = LoadTexture(game::Config::kIconLuckNeedle);
     ILNU = LoadTexture(game::Config::kIconLuckNeedle_Use);
+    if (game::Config::kArcadeMode)
+    {
+        AAI = LoadTexture(game::Config::Symbol_AAI_Arcade);
+        II  = LoadTexture(game::Config::Symbol_II_Arcade);
+        SAI = LoadTexture(game::Config::Symbol_SAI_Arcade);
+    } else
+    {
+        AAI = LoadTexture(game::Config::Symbol_AAI_PC);
+        II  = LoadTexture(game::Config::Symbol_II_PC);
+        SAI = LoadTexture(game::Config::Symbol_SAI_PC);
+    }
 
     fairy_icon_lvl1 = LoadTexture("PieWare/assets/Items/FeenFluegel.png");
     fairy_icon_lvl2 = LoadTexture("PieWare/assets/Items/FeenHoerner.png");
@@ -70,6 +81,23 @@ void HUD::HUD_update()
         this->st=iu;
         UC=6;
     }
+
+    if (game::Config::kArcadeMode)
+    {
+        if (IsGamepadButtonDown(0, game::Config::kArcadeButtonMelee)){
+            this->st=ma;
+            UC=6;
+        }
+        if(IsGamepadButtonDown(0, game::Config::kArcadeButtonRanged)){
+            this->st=ra;
+            UC=6;
+        }
+        if (IsGamepadButtonDown(0, game::Config::kArcadeButtonItem)){
+            this->st=iu;
+            UC=6;
+        }
+    }
+
     UC--;
     if (UC<1){
         this->st=id;
@@ -314,8 +342,8 @@ void HUD::HUD_draw() {
         }
     }
 
-    DrawTextureEx(SAI,v7,rot,3,WHITE);
-    DrawTextureEx(AAI,v8,rot,3,WHITE);
+    DrawTextureEx(AAI,v7,rot,3,WHITE);
+    DrawTextureEx(SAI,v8,rot,3,WHITE);
     DrawTextureEx(II,v9,rot,3,WHITE);
 
     if (mp->Get_Health()>109){

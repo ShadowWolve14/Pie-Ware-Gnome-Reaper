@@ -39,6 +39,7 @@ Player_Base_Class::Player_Base_Class(int max_Health, float movement_Speed, float
     this->projectile_Speed = game::Config::player_Class_One_Projectile_Speed;
 }
 
+
 Player_Base_Class::~Player_Base_Class()
 {
 
@@ -51,38 +52,70 @@ void Player_Base_Class::Player_Input()
     {
         return;
     }
-    if (IsKeyPressed(game::Config::key_Melee_Attack) && melee_Cooldown <= 0)
-    {
-        if (is_adrenalin_buffed)
-        {
-            if (range_Attack_Cooldown <= 0)
-            {
-                Ranged_Attack();
-            }
-        }
-        else
-        {
-            Melee_Attack();
-        }
-    }
 
-    if (IsKeyPressed(game::Config::key_Ranged_Attack))
+    if (game::Config::kArcadeMode)
     {
-        if (is_buffed)
+        if (IsGamepadButtonPressed(0, game::Config::kArcadeButtonMelee) && melee_Cooldown <= 0)
         {
-            if (melee_Cooldown <= 0)
+            if (is_adrenalin_buffed)
+            {
+                if (range_Attack_Cooldown <= 0) Ranged_Attack();
+            }
+            else
             {
                 Melee_Attack();
             }
         }
-        else
+
+        if (IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged))
         {
-            if (range_Attack_Cooldown <= 0)
+            if (is_buffed)
             {
-                Ranged_Attack();
+                if (melee_Cooldown <= 0) Melee_Attack();
+            }
+            else
+            {
+                if (range_Attack_Cooldown <= 0) Ranged_Attack();
             }
         }
     }
+    else
+    {
+        if (IsKeyPressed(game::Config::key_Melee_Attack) && melee_Cooldown <= 0)
+        {
+            if (is_adrenalin_buffed)
+            {
+                if (range_Attack_Cooldown <= 0)
+                {
+                    Ranged_Attack();
+                }
+            }
+            else
+            {
+                Melee_Attack();
+            }
+        }
+
+        if (IsKeyPressed(game::Config::key_Ranged_Attack))
+        {
+            if (is_buffed)
+            {
+                if (melee_Cooldown <= 0)
+                {
+                    Melee_Attack();
+                }
+            }
+            else
+            {
+                if (range_Attack_Cooldown <= 0)
+                {
+                    Ranged_Attack();
+                }
+            }
+        }
+    }
+
+    // Use_Item wird von beiden Modi aufgerufen, die Logik darin ist ebenfalls getrennt.
     Use_Item();
 }
 
@@ -123,14 +156,11 @@ void Player_Base_Class::Tick(float delta_time)
         if (adrenalin_buff_timer <= 0.0f)
         {
             is_adrenalin_buffed = false;
-
             player_Movement_Speed -= game::Config::adrenalin_Movement_Speed_Boost;
             ranged_Base_Damage -= game::Config::adrenalin_Ranged_Damage_Boost;
             is_invincible = false;
-
             float speed_multiplier = 1.0f - (game::Config::adrenalin_Attack_Speed_Boost_Percent / 100.0f);
             ranged_Base_Cooldown /= speed_multiplier;
-
             RemoveHeldItem();
         }
     }
@@ -141,26 +171,61 @@ void Player_Base_Class::Tick(float delta_time)
     if (melee_Cooldown > 0) melee_Cooldown -= delta_time;
     if (range_Attack_Cooldown > 0) range_Attack_Cooldown -= delta_time;
 
-    Update_Input_Stacks();
-
     is_Moving = false;
+    Vector2 move_Direction = {0.0f, 0.0f};
+
     if (currentState != ATTACKING_RANGED || game::Config::allow_Move_While_Attacking) {
-        Vector2 move_Direction = {0.0f, 0.0f};
+        if (game::Config::kArcadeMode)
+        {
+            move_Direction.x = GetGamepadAxisMovement(0, game::Config::kArcadeAxisX);
+            move_Direction.y = GetGamepadAxisMovement(0, game::Config::kArcadeAxisY);
 
-        if (!horizontal_inputs.empty()) {
-            Input_Direction current_h = horizontal_inputs.front();
-            if (current_h == Input_Direction::LEFT) move_Direction.x = -1.0f;
-            else if (current_h == Input_Direction::RIGHT) move_Direction.x = 1.0f;
+            if (Vector2Length(move_Direction) > game::Config::kArcadeAxisDeadzone)
+            {
+                is_Moving = true;
+
+                // --- NEUE LOGIK FÜR ARCADE DIRECTION ---
+                // Bestimmt die Richtung basierend auf den rohen Joystick-Achsen,
+                // um das Problem mit den Diagonalen zu beheben.
+                float axisX = move_Direction.x;
+                float axisY = move_Direction.y;
+                const float diagonal_leniency = 0.35f; // Wie stark eine Achse sein muss, um als "dominant" zu gelten
+
+                // Priorisiere Kardinalrichtungen (oben, unten, links, rechts)
+                if (abs(axisX) > abs(axisY) + diagonal_leniency) { // Deutlich mehr horizontale als vertikale Bewegung
+                    facing_Direction = (axisX > 0) ? RIGHT : LEFT;
+                } else if (abs(axisY) > abs(axisX) + diagonal_leniency) { // Deutlich mehr vertikale als horizontale Bewegung
+                    facing_Direction = (axisY > 0) ? DOWN : UP;
+                } else { // Ansonsten ist die Bewegung diagonal
+                    if (axisY > 0) {
+                        facing_Direction = (axisX > 0) ? DOWN_RIGHT : DOWN_LEFT;
+                    } else {
+                        facing_Direction = (axisX > 0) ? UP_RIGHT : UP_LEFT;
+                    }
+                }
+                // --- ENDE NEUE ARCADE LOGIK ---
+
+            } else {
+                move_Direction = {0.0f, 0.0f};
+                is_Moving = false;
+            }
         }
-
-        if (!vertical_inputs.empty()) {
-            Input_Direction current_v = vertical_inputs.front();
-            if (current_v == Input_Direction::UP) move_Direction.y = -1.0f;
-            else if (current_v == Input_Direction::DOWN) move_Direction.y = 1.0f;
+        else
+        {
+            // Unveränderte PC-Logik
+            Update_Input_Stacks();
+            if (!horizontal_inputs.empty()) {
+                Input_Direction current_h = horizontal_inputs.front();
+                if (current_h == Input_Direction::LEFT) move_Direction.x = -1.0f;
+                else if (current_h == Input_Direction::RIGHT) move_Direction.x = 1.0f;
+            }
+            if (!vertical_inputs.empty()) {
+                Input_Direction current_v = vertical_inputs.front();
+                if (current_v == Input_Direction::UP) move_Direction.y = -1.0f;
+                else if (current_v == Input_Direction::DOWN) move_Direction.y = 1.0f;
+            }
+            is_Moving = (move_Direction.x != 0.0f || move_Direction.y != 0.0f);
         }
-
-        is_Moving = (move_Direction.x != 0.0f || move_Direction.y != 0.0f);
-        is_Moving = (move_Direction.x != 0.0f || move_Direction.y != 0.0f);
 
         if(is_Moving)
         {
@@ -198,7 +263,6 @@ void Player_Base_Class::Tick(float delta_time)
                 }
                 else
                 {
-
                     hitbox.x += potential_movement.x;
                     hitbox.y += potential_movement.y;
                 }
@@ -212,7 +276,10 @@ void Player_Base_Class::Tick(float delta_time)
     }
     player_Pos = {hitbox.x, hitbox.y};
 
-    Update_Facing_Direction();
+    // Originale Logik nur noch für PC-Modus aufrufen
+    if (!game::Config::kArcadeMode) {
+        Update_Facing_Direction();
+    }
 }
 
 void Player_Base_Class::On_Collision(Collidable* other)
@@ -455,7 +522,14 @@ void Player_Base_Class::PickUpItem(ItemBase* item_to_pick_up)
 
 void Player_Base_Class::Use_Item()
 {
-    if (IsKeyPressed(game::Config::key_Use_Item) && HasItem() && held_item->GetType() != ItemType::KEY && !is_buffed && !is_adrenalin_buffed && item_removal_timer <= 0.0f)
+    bool item_use_pressed = false;
+    if (game::Config::kArcadeMode) {
+        item_use_pressed = IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem);
+    } else {
+        item_use_pressed = IsKeyPressed(game::Config::key_Use_Item);
+    }
+
+    if (item_use_pressed && HasItem() && held_item->GetType() != ItemType::KEY && !is_buffed && !is_adrenalin_buffed && item_removal_timer <= 0.0f)
     {
         if (held_item->GetType()==ItemType::HEALTH_POTION){
             itemvfx=&potionvfx;
