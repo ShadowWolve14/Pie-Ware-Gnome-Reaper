@@ -38,7 +38,6 @@ namespace game::scenes {
         auto& souls = game::core::Store::player_state->souls;
 
         if (ups.maxhealth_level >= kUpgrade_Max_Level) {
-           // TriggerAffordFeedback("Max level reached");
             return false;
         }
         int price = GetUpgradePrice(ups.maxhealth_level);
@@ -58,7 +57,6 @@ namespace game::scenes {
         auto& souls = game::core::Store::player_state->souls;
 
         if (ups.speed_level >= kUpgrade_Max_Level) {
-           // TriggerAffordFeedback("Max level reached");
             return false;
         }
         int price = GetUpgradePrice(ups.speed_level);
@@ -78,7 +76,6 @@ namespace game::scenes {
         auto& souls = game::core::Store::player_state->souls;
 
         if (ups.atkSpeed_level >= kUpgrade_Max_Level) {
-           // TriggerAffordFeedback("Max level reached");
             return false;
         }
         int price = GetUpgradePrice(ups.atkSpeed_level);
@@ -98,7 +95,6 @@ namespace game::scenes {
         auto& souls = game::core::Store::player_state->souls;
 
         if (ups.DMGxmult_level >= kUpgrade_Max_Level) {
-           // TriggerAffordFeedback("Max level reached");
             return false;
         }
         int price = GetUpgradePrice(ups.DMGxmult_level);
@@ -118,7 +114,6 @@ namespace game::scenes {
         auto& souls = game::core::Store::player_state->souls;
 
         if (ups.meleeDMG_level >= kUpgrade_Max_Level) {
-           // TriggerAffordFeedback("Max level reached");
             return false;
         }
         int price = GetUpgradePrice(ups.meleeDMG_level);
@@ -153,7 +148,6 @@ namespace game::scenes {
         return true;
     }
 
-    // Draw pips for an upgrade using one spritesheet and two source rects.
     static void DrawUpgradeRow(
         int level, int max_level,
         bool isSelected,
@@ -162,13 +156,12 @@ namespace game::scenes {
         const Texture2D& sheet,
         const Rectangle& src_full,
         const Rectangle& src_empty,
-        const Rectangle& src_empty_hi // highlighted empty
+        const Rectangle& src_empty_hi
 ){
-        // clamp
+
         if (level < 0) level = 0;
         if (level > max_level) level = max_level;
 
-        // 1) full pips
         for (int i = 0; i < level; ++i) {
             const float x = start_x + spacing * static_cast<float>(i);
             DrawTexturePro(
@@ -181,7 +174,6 @@ namespace game::scenes {
 );
         }
 
-        // 2) highlighted empty (only one, only if selected and not at cap)
         if (isSelected && level < max_level) {
             const float x = start_x + spacing * static_cast<float>(level);
             const Color tint = flashRed ? RED : WHITE;
@@ -193,11 +185,8 @@ namespace game::scenes {
                  0.0f,
                  tint
 );
-            // advance the starting index for remaining empties
             ++level;
         }
-
-        // 3) remaining empty pips
         for (int i = level; i < max_level; ++i) {
             const float x = start_x + spacing * static_cast<float>(i);
             DrawTexturePro(
@@ -381,7 +370,6 @@ namespace game::scenes {
 
         }
         else{
-            //Draw Regular Button Asset
             abilities.x=1;
             DrawTexturePro(
                 speed_upgrade_button,
@@ -405,11 +393,7 @@ namespace game::scenes {
             Color col = (souls_to_spend >= price) ? GREEN : RED;
         }
 
-
-
-        // -----Attackspeed-----
         if (counter==2){
-            // Draw Highlited Button
             abilities.x=80;
             DrawTexturePro(
                 atkSpeed_upgrade_button,
@@ -424,7 +408,6 @@ namespace game::scenes {
 
         }
         else{
-            //Draw Regular Button Asset
             abilities.x=1;
             DrawTexturePro(
                 atkSpeed_upgrade_button,
@@ -587,20 +570,6 @@ namespace game::scenes {
                     WHITE
 );
         }
-
-
-       /* std::string souls_text = "Das ist das Upgrade Screen und du hast " + std::to_string(souls_to_spend) + " Seelen.";
-
-        auto curr = BuildEffectiveStats(game::core::upgrades); // current effective stats :contentReference[oaicite:8]{index=8}
-        auto nextUps = game::core::upgrades;                   // copy
-        nextUps.speed_level += 1;
-        auto next = BuildEffectiveStats(nextUps);
-
-        DrawText(TextFormat("Speed: %.2f -> %.2f",
-                 curr.movement_speed, next.movement_speed), 50, 260, 20, WHITE);
-        DrawText(souls_text.c_str(), 50, 200, 20, WHITE);
-        DrawText("Nur kannst du leider noch nichts upgraden.", 50, 230, 20, WHITE);
-        DrawText("Druecke Angriff oder Enter um weiter zu kommen.", 50, 280, 20, GREEN); */
     }
 
 }
