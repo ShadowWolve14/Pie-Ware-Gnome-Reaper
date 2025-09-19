@@ -8,7 +8,7 @@
 #include <system_error>
 
 namespace {
-
+    static constexpr float kMenuInputDelaySeconds = 0.4f;
     std::string ReplaceUmlauts(std::string text) {
         size_t pos = 0;
         while ((pos = text.find("ä", pos)) != std::string::npos) { text.replace(pos, 2, "ae"); pos += 2; }
@@ -173,7 +173,10 @@ void MainMenuScene::Update()
     SetSoundVolume(sound2, sfx_volume);
     SetSoundVolume(sound3, sfx_volume);
 
-    if (input_delay > 0) input_delay--;
+    // NEU: Zeitbasierten Timer herunterzählen
+    if (input_delay_timer > 0.0f) {
+        input_delay_timer -= GetFrameTime();
+    }
 
     switch (state)
     {
@@ -187,18 +190,21 @@ void MainMenuScene::Update()
 
 void MainMenuScene::Input_Check_Mov() {
     bool moved = false;
-    if (game::Config::kArcadeMode) {
-        if (input_delay <= 0) {
+    if (input_delay_timer <= 0.0f) {
+        if (game::Config::kArcadeMode) {
             float v_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
-            if (v_axis < -game::Config::kArcadeAxisDeadzone || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_UP))) {
-                this->counter--;
-                moved = true;
-            }
-            if (v_axis > game::Config::kArcadeAxisDeadzone || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_DOWN))) {
-                this->counter++;
-                moved = true;
-            }
+            if (v_axis < -game::Config::kArcadeAxisDeadzone) { this->counter--; moved = true; }
+            if (v_axis > game::Config::kArcadeAxisDeadzone) { this->counter++; moved = true; }
         }
+        if (!game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard) {
+            if (IsKeyPressed(game::Config::key_Up)) { this->counter--; moved = true; }
+            if (IsKeyPressed(game::Config::key_Down)) { this->counter++; moved = true; }
+        }
+    }
+    if (moved) {
+        PlaySound(sound3);
+        input_delay_timer = kMenuInputDelaySeconds; // Setzt den neuen Timer
+
     } else {
         if (IsKeyPressed(game::Config::key_Up)) {
             this->counter--;
@@ -212,9 +218,8 @@ void MainMenuScene::Input_Check_Mov() {
 
     if (moved) {
         PlaySound(sound3);
-        if (game::Config::kArcadeMode) input_delay = 15;
+        input_delay_timer = kMenuInputDelaySeconds;
     }
-    if (input_delay > 0) input_delay--;
 }
 
 bool MainMenuScene::Input_Check_Sel() {
@@ -345,7 +350,7 @@ void MainMenuScene::options_Update() {
 
     bool value_changed = false;
 
-    if (input_delay <= 0) {
+    if (input_delay_timer <= 0) {
         bool moved_h = false;
         if (counter == 1 || counter == 2) {
             float h_axis = 0.0f;
@@ -366,9 +371,7 @@ void MainMenuScene::options_Update() {
                 moved_h = true;
             }
         }
-        if (moved_h) {
-            input_delay = 20;
-        }
+        if (moved_h) input_delay_timer = kMenuInputDelaySeconds;
     }
 
     if (value_changed) {
@@ -669,25 +672,19 @@ void MainMenuScene::UpdateTyping()
 {
     if (game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard)
     {
-        bool shift_shortcut_pressed = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(game::Config::key_Ranged_Attack)) ||
-                                      IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged);
-
-        bool delete_shortcut_pressed = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(game::Config::key_Use_Item)) ||
-                                       IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem);
-
-        if (shift_shortcut_pressed) {
+        // BUGFIX: Nur "Is...Pressed" verwenden, um einmalige Aktionen sicherzustellen
+        if (IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged) || IsKeyPressed(game::Config::key_Ranged_Attack)) {
             is_keyboard_uppercase = !is_keyboard_uppercase;
             PlaySound(sound1);
         }
-        else if (delete_shortcut_pressed) { // else if verhindert, dass beide gleichzeitig ausgelöst werden
+        else if (IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem) || IsKeyPressed(game::Config::key_Use_Item)) {
             if (!player_name_input.empty()) {
                 player_name_input.pop_back();
                 PlaySound(sound2);
             }
         }
 
-        // Navigation (mit korrektem Delay)
-        if (input_delay <= 0) {
+        if (input_delay_timer <= 0.0f) {
             bool moved = false;
             float v_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
 
@@ -726,15 +723,14 @@ void MainMenuScene::UpdateTyping()
 
             if (moved) {
                 PlaySound(sound3);
-                input_delay = 20; // Delay auf 20 erhöht
+                input_delay_timer = kMenuInputDelaySeconds;
             }
         }
 
-        // Auswahl einer Taste mit J / rotem Knopf
         bool select_pressed = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(game::Config::key_Melee_Attack)) ||
                               IsGamepadButtonPressed(0, game::Config::kArcadeButtonConfirm);
 
-        if (select_pressed && input_delay <= 0) {
+        if (select_pressed && input_delay_timer <= 0) {
             int y = (int)arcade_keyboard_cursor.y;
             int x = (int)arcade_keyboard_cursor.x;
 
@@ -750,7 +746,7 @@ void MainMenuScene::UpdateTyping()
                     PlaySound(sound1);
                 }
             }
-            input_delay = 20;
+            input_delay_timer = kMenuInputDelaySeconds;
         }
 
         if (Input_Check_Back() && !player_name_input.empty()) {

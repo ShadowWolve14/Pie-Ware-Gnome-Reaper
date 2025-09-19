@@ -35,6 +35,8 @@ private:
     Texture2D ConfirmButton;
     Font customFont;
 
+    float input_delay_timer = 0.0f;
+
     std::vector<std::string> arcade_keyboard_layout;
     Vector2 arcade_keyboard_cursor = {0, 0};
     int input_delay = 0;

@@ -8,6 +8,7 @@
 #include "../config.h.in"
 
 namespace game::scenes {
+    static constexpr float kMenuInputDelaySeconds = 0.4f;
     UpgradeScene::UpgradeScene(int souls, int level)
     {
         this->souls_to_spend = souls;
@@ -252,28 +253,25 @@ namespace game::scenes {
     }
 }
 
-void UpgradeScene::Input_Check_Mov() {
-    bool moved = false;
-    if (game::Config::kArcadeMode && input_delay > 0) {
-        input_delay--;
-        return;
-    }
+    void UpgradeScene::Input_Check_Mov() {
+        bool moved = false;
+        if (input_delay_timer <= 0.0f) { // Prüft den neuen Timer
+            if (game::Config::kArcadeMode) {
+                float v_axis = GetGamepadAxisMovement(0, game::Config::kArcadeAxisY);
+                if (v_axis < -game::Config::kArcadeAxisDeadzone) { this->counter--; moved = true; }
+                if (v_axis > game::Config::kArcadeAxisDeadzone) { this->counter++; moved = true; }
+            }
+            if (!game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard) {
+                if (IsKeyPressed(game::Config::key_Up)) { this->counter--; moved = true; }
+                if (IsKeyPressed(game::Config::key_Down)) { this->counter++; moved = true; }
+            }
+        }
 
-    if (game::Config::kArcadeMode) {
-        float v_axis = GetGamepadAxisMovement(0, game::Config::kArcadeAxisY);
-        if (v_axis < -game::Config::kArcadeAxisDeadzone) { this->counter--; moved = true; }
-        if (v_axis > game::Config::kArcadeAxisDeadzone) { this->counter++; moved = true; }
+        if (moved) {
+            PlaySound(sound3);
+            input_delay_timer = kMenuInputDelaySeconds;
+        }
     }
-    if (!game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard) {
-        if (IsKeyPressed(game::Config::key_Up)) { this->counter--; moved = true; }
-        if (IsKeyPressed(game::Config::key_Down)) { this->counter++; moved = true; }
-    }
-
-    if (moved) {
-        PlaySound(sound3);
-        if (game::Config::kArcadeMode) input_delay = 15;
-    }
-}
 
     bool UpgradeScene::Input_Check_Sel() {
         if (game::Config::kArcadeMode)

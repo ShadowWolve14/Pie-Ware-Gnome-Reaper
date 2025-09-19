@@ -23,6 +23,8 @@ namespace game::scenes
         Rectangle abilities{1,1,80,32};
         Rectangle level_counter {1,1,32,32};
 
+        float input_delay_timer = 0.0f;
+
         Sound sound1 = LoadSound("assets/audio/sfx/Item_Obtained.wav");
         Sound sound2 = LoadSound("assets/audio/sfx/Enemy_Hit.wav");
         Sound sound3 = LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");
@@ -58,7 +60,7 @@ namespace game::scenes
         static bool Cap_Ranged  (int l){ return l < kUpgrade_Max_Level; }
 
         bool TryBuy_Health();
-        bool TryBuy_Speed();     // already implemented in .cpp
+        bool TryBuy_Speed();
         bool TryBuy_AtkSpeed();
         bool TryBuy_GlobalDMG();
         bool TryBuy_MeleeDMG();
