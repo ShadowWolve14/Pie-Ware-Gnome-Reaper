@@ -73,6 +73,8 @@ protected:
     int item_val=0;
     int item_pick_c=0;
     Vector2 item_pick_pos;
+    int fs;
+    int of;
 
 	//Sound ats= LoadSound("assets/audio/sfx/Gnome_CloseAttack.wav");
 	//Sound rats= LoadSound("assets/audio/sfx/Gnome_RangeAttack.wav");

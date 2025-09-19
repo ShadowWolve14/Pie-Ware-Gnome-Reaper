@@ -235,7 +235,7 @@ void Player_Base_Class::On_Collision(Collidable* other)
                 item_pick_pos.x= this->hitbox.x;
                 item_pick_pos.y= this->hitbox.y;
                 item_val=item->Get_Value();
-                item_pick_c=30;
+                item_pick_c=60;
                 item->Mark_For_Destruction();
             }
             else if (item->GetType() == ItemType::KEY)
@@ -246,7 +246,7 @@ void Player_Base_Class::On_Collision(Collidable* other)
                 item_pick_pos.x= this->hitbox.x;
                 item_pick_pos.y= this->hitbox.y;
                 item_val=item->Get_Value();
-                item_pick_c=30;
+                item_pick_c=60;
                 item->Mark_For_Destruction();
             }
             else if (!HasItem())
@@ -448,7 +448,7 @@ void Player_Base_Class::PickUpItem(ItemBase* item_to_pick_up)
         item_pick_pos.x= this->hitbox.x;
         item_pick_pos.y= this->hitbox.y;
         item_val=item_to_pick_up->Get_Value();
-        item_pick_c=30;
+        item_pick_c=60;
         object_manager_ptr->RemoveObject(item_to_pick_up);
     }
 }

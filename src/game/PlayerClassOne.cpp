@@ -186,9 +186,40 @@ void Player_Class_One::Tick(float delta_time)
 
 void Player_Class_One::Draw()
 {
+
+
     if (item_pick_c>0){
-        DrawTextPro(game::core::Store::font,std::to_string(item_val).c_str(),item_pick_pos,{0,0},0,4,1,WHITE);
+        switch (item_pick_c) {
+            case 12:{
+                fs=1;
+                of=8;
+                break;
+            }
+            case 24:{
+                fs=2;
+                of=6;
+                break;
+            }
+            case 36:{
+                fs=4;
+                of=4;
+                break;
+            }
+            case 48:{
+                fs=5;
+                of=2;
+                break;
+            }
+            case 59:{
+                 fs=6;
+                 of=0;
+            }
+        }
+        DrawTextPro(game::core::Store::font,std::to_string(item_val).c_str(), {item_pick_pos.x,item_pick_pos.y-of},{0,0},0,fs,1,WHITE);
+
     }
+
+
     if (IsAdrenalinBuffed())
     {
         Vector2 vfx_draw_pos = {
