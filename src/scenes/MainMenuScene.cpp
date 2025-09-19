@@ -671,15 +671,15 @@ void MainMenuScene::UpdateTyping()
     {
         bool shift_shortcut_pressed = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(game::Config::key_Ranged_Attack)) ||
                                       IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged);
+
+        bool delete_shortcut_pressed = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(game::Config::key_Use_Item)) ||
+                                       IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem);
+
         if (shift_shortcut_pressed) {
             is_keyboard_uppercase = !is_keyboard_uppercase;
             PlaySound(sound1);
         }
-
-        // DELETE-Aktion (Item-Taste)
-        bool delete_shortcut_pressed = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(game::Config::key_Use_Item)) ||
-                                       IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem);
-        if (delete_shortcut_pressed) { // getrennt von shift
+        else if (delete_shortcut_pressed) { // else if verhindert, dass beide gleichzeitig ausgelöst werden
             if (!player_name_input.empty()) {
                 player_name_input.pop_back();
                 PlaySound(sound2);
@@ -726,7 +726,7 @@ void MainMenuScene::UpdateTyping()
 
             if (moved) {
                 PlaySound(sound3);
-                input_delay = 15; // KORREKTUR: Delay auf 15 erhöht
+                input_delay = 20; // Delay auf 20 erhöht
             }
         }
 
@@ -734,23 +734,23 @@ void MainMenuScene::UpdateTyping()
         bool select_pressed = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(game::Config::key_Melee_Attack)) ||
                               IsGamepadButtonPressed(0, game::Config::kArcadeButtonConfirm);
 
-        if (select_pressed && input_delay <= 0) { // Respektiert jetzt auch den Delay
+        if (select_pressed && input_delay <= 0) {
             int y = (int)arcade_keyboard_cursor.y;
             int x = (int)arcade_keyboard_cursor.x;
 
-            if (y == 4) { // Sonder-Tasten
+            if (y == 4) {
                 char key = arcade_keyboard_layout[y][x];
                 if (key == 'S') { is_keyboard_uppercase = !is_keyboard_uppercase; PlaySound(sound1); }
                 else if (key == 'D') { if (!player_name_input.empty()) { player_name_input.pop_back(); PlaySound(sound2); } }
                 else if (key == 'E') { list_state = AWAITING_INPUT; PlaySound(sound1); }
-            } else { // Normale Tasten
+            } else {
                 if (player_name_input.length() < max_name_length) {
                     char selected_char = arcade_keyboard_layout[y][x];
                     player_name_input += is_keyboard_uppercase ? selected_char : (char)tolower(selected_char);
                     PlaySound(sound1);
                 }
             }
-            input_delay = 15; // Delay auch nach Auswahl setzen
+            input_delay = 20;
         }
 
         if (Input_Check_Back() && !player_name_input.empty()) {

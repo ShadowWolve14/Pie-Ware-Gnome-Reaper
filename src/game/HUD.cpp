@@ -342,8 +342,8 @@ void HUD::HUD_draw() {
         }
     }
 
-    DrawTextureEx(SAI,v7,rot,3,WHITE);
-    DrawTextureEx(AAI,v8,rot,3,WHITE);
+    DrawTextureEx(AAI,v7,rot,3,WHITE);
+    DrawTextureEx(SAI,v8,rot,3,WHITE);
     DrawTextureEx(II,v9,rot,3,WHITE);
 
     if (mp->Get_Health()>109){
