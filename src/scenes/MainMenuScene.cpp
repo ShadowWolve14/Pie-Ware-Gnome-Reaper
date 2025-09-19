@@ -75,6 +75,16 @@ MainMenuScene::MainMenuScene(int final_score)
 }
 
 void MainMenuScene::Initialize() {
+    this->counter = 0;
+    song.looping = true;
+    PlayMusicStream(song);
+
+    credits_page_index = 0;
+    last_page_switch_time = (float)GetTime();
+
+    game::core::Store::volume = ReadValue("MusicSettings.txt");
+    sfx_volume = ReadValue("SFXSettings.txt");
+
     customFont = LoadFont("PieWare/assets/Font/GnomishGame.ttf");
     BackButton = LoadTexture("PieWare/assets/UI/Allgemein/Button_Back.png");
     ConfirmButton = LoadTexture("PieWare/assets/UI/Allgemein/Confirm.png");
@@ -83,12 +93,11 @@ void MainMenuScene::Initialize() {
     if (game::Config::kArcadeMode) {
         ranged_attack_icon = LoadTexture(game::Config::Symbol_AAI_Arcade);
         item_use_icon = LoadTexture(game::Config::Symbol_II_Arcade);
-    } else { // Für den kArcadeDebugWithKeyboard = true Fall
+    } else {
         ranged_attack_icon = LoadTexture(game::Config::Symbol_AAI_PC);
         item_use_icon = LoadTexture(game::Config::Symbol_II_PC);
     }
 
-    // --- Tastatur-Layout ---
     is_keyboard_uppercase = true;
     arcade_keyboard_layout =
     {
@@ -96,7 +105,7 @@ void MainMenuScene::Initialize() {
         "KLMNOPQRST",
         "UVWXYZ.-_",
         "1234567890",
-        "SDE" // Platzhalter für SHIFT, DELETE, ENTER
+        "SDE"
     };
 
     LoadHighscores();
@@ -201,7 +210,7 @@ void MainMenuScene::Input_Check_Mov() {
 
     if (moved) {
         PlaySound(sound3);
-        if (game::Config::kArcadeMode) input_delay = 10;
+        if (game::Config::kArcadeMode) input_delay = 15;
     }
     if (input_delay > 0) input_delay--;
 }
@@ -334,29 +343,35 @@ void MainMenuScene::options_Update() {
 
     bool value_changed = false;
 
-    if (counter == 1) {
-        if (game::Config::kArcadeMode) {
-            float h_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
-            if (h_axis < -game::Config::kArcadeAxisDeadzone) { game::core::Store::volume = std::max(0.0f, game::core::Store::volume - 0.5f); value_changed = true; }
-            if (h_axis > game::Config::kArcadeAxisDeadzone)  { game::core::Store::volume = std::min(5.0f, game::core::Store::volume + 0.5f); value_changed = true; }
-        }
-        if (!game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard) {
-            if (IsKeyPressed(game::Config::key_Left))  { game::core::Store::volume = std::max(0.0f, game::core::Store::volume - 0.5f); value_changed = true; }
-            if (IsKeyPressed(game::Config::key_Right)) { game::core::Store::volume = std::min(5.0f, game::core::Store::volume + 0.5f); value_changed = true; }
-        }
-        if (value_changed) SaveValue("MusicSettings.txt", game::core::Store::volume);
+    if (input_delay <= 0) {
+        bool moved_h = false;
+        if (counter == 1 || counter == 2) {
+            float h_axis = 0.0f;
+            if (game::Config::kArcadeMode) {
+                h_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
+            }
 
-    } else if (counter == 2) {
-        if (game::Config::kArcadeMode) {
-             float h_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
-            if (h_axis < -game::Config::kArcadeAxisDeadzone) { sfx_volume = std::max(0.0f, sfx_volume - 0.5f); value_changed = true; }
-            if (h_axis > game::Config::kArcadeAxisDeadzone)  { sfx_volume = std::min(5.0f, sfx_volume + 0.5f); value_changed = true; }
+            if ((h_axis < -game::Config::kArcadeAxisDeadzone) || (!game::Config::kArcadeMode && IsKeyPressed(game::Config::key_Left)) || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_A))) {
+                if (counter == 1) game::core::Store::volume = std::max(0.0f, game::core::Store::volume - 0.5f);
+                else sfx_volume = std::max(0.0f, sfx_volume - 0.5f);
+                value_changed = true;
+                moved_h = true;
+            }
+            if ((h_axis > game::Config::kArcadeAxisDeadzone) || (!game::Config::kArcadeMode && IsKeyPressed(game::Config::key_Right)) || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_D))) {
+                if (counter == 1) game::core::Store::volume = std::min(5.0f, game::core::Store::volume + 0.5f);
+                else sfx_volume = std::min(5.0f, sfx_volume + 0.5f);
+                value_changed = true;
+                moved_h = true;
+            }
         }
-        if (!game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard) {
-            if (IsKeyPressed(game::Config::key_Left))  { sfx_volume = std::max(0.0f, sfx_volume - 0.5f); value_changed = true; }
-            if (IsKeyPressed(game::Config::key_Right)) { sfx_volume = std::min(5.0f, sfx_volume + 0.5f); value_changed = true; }
+        if (moved_h) {
+            input_delay = 20;
         }
-        if (value_changed) {
+    }
+
+    if (value_changed) {
+        if (counter == 1) SaveValue("MusicSettings.txt", game::core::Store::volume);
+        else {
             PlaySound(sound1);
             SaveValue("SFXSettings.txt", sfx_volume);
         }
@@ -464,12 +479,11 @@ void MainMenuScene::list_Update() {
 }
 
 void MainMenuScene::list_Draw() {
-    // --- NEUE LOGIK HIER ---
-    // Prüfen, ob die Tastatur gezeichnet werden soll
+
     bool should_draw_keyboard = (game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard) && list_state == TYPING_NAME;
-    // UI nach links verschieben, wenn die Tastatur aktiv ist, sonst zentriert lassen (offset = 0)
+
     float content_offset_x = should_draw_keyboard ? -350.0f : 0.0f;
-    // ----------------------
+
 
     Vector2 scroll_pos = {game::Config::kStageWidth / 2.0f - 440.0f + content_offset_x, 190.0f};
     DrawTextureEx(scroll_button, scroll_pos, 0, 4, WHITE);

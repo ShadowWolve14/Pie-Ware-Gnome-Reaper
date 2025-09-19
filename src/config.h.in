@@ -8,8 +8,8 @@ namespace game
     {
 public:
         // MODUS-SCHALTER: Hier wird zwischen PC- und Arcade-Version umgeschaltet.
-        inline static constexpr bool kArcadeMode = false; // true für Arcade, false für PC
-        inline static constexpr bool kArcadeDebugWithKeyboard = true;
+        inline static constexpr bool kArcadeMode = true; // true für Arcade, false für PC
+        inline static constexpr bool kArcadeDebugWithKeyboard = false;
 
         inline static constexpr const char* kProjectName = "Gnome Reaper";
         inline static constexpr const char* kProjectVersion = "1.1.1";

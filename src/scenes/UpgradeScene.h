@@ -57,7 +57,6 @@ namespace game::scenes
         static bool Cap_Melee   (int l){ return l < kUpgrade_Max_Level; }
         static bool Cap_Ranged  (int l){ return l < kUpgrade_Max_Level; }
 
-        // Buyers
         bool TryBuy_Health();
         bool TryBuy_Speed();     // already implemented in .cpp
         bool TryBuy_AtkSpeed();
@@ -68,10 +67,9 @@ namespace game::scenes
         void Input_Check_Mov();
         bool Input_Check_Sel();
 
-        // --- Fail flash (red pip) feedback ---
-        static constexpr int kRows = 6;                 // 0..5 (health, speed, atkspd, global, melee, ranged)
-        static constexpr int kFailFlashDuration = 30;   // ~1s @60fps
-        int fail_flash_timer[kRows] = {0};              // countdown per row
+        static constexpr int kRows = 6;
+        static constexpr int kFailFlashDuration = 30;
+        int fail_flash_timer[kRows] = {0};
 
         inline void TriggerFailFlash(int row) {
             if (row >= 0 && row < kRows) fail_flash_timer[row] = kFailFlashDuration;

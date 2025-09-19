@@ -221,15 +221,13 @@ namespace game::scenes {
             this->counter=0;
         }
         UpdateMusicStream(song);
-        // tick fail flash timer
-        // tick fail flash timer
         for (int i = 0; i < kRows; ++i) {
             if (fail_flash_timer[i] > 0) --fail_flash_timer[i];
         }
 
         fairyAnim.Update_Frame(GetFrameTime());
 
-        Input_Check_Mov(); // Verwendet jetzt die neue, duale Logik
+        Input_Check_Mov();
 
     constexpr int kMaxIndex = 6;
     if (counter > kMaxIndex) counter = 0;
@@ -273,16 +271,24 @@ void UpgradeScene::Input_Check_Mov() {
 
     if (moved) {
         PlaySound(sound3);
-        if (game::Config::kArcadeMode) input_delay = 10;
+        if (game::Config::kArcadeMode) input_delay = 15;
     }
 }
 
-bool UpgradeScene::Input_Check_Sel() {
-    if (game::Config::kArcadeMode) {
-        return IsGamepadButtonPressed(0, game::Config::kArcadeButtonConfirm) || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_ENTER));
+    bool UpgradeScene::Input_Check_Sel() {
+        if (game::Config::kArcadeMode)
+        {
+            bool melee_pressed  = IsGamepadButtonPressed(0, game::Config::kArcadeButtonMelee);
+            bool ranged_pressed = IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged);
+            bool item_pressed   = IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem);
+
+            // Debug-Modus weiterhin mit Enter
+            bool debug_confirm = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_ENTER));
+
+            return melee_pressed || ranged_pressed || item_pressed || debug_confirm;
+        }
+        return IsKeyPressed(game::Config::key_Melee_Attack) || (game::Config::key_Ranged_Attack) ||IsKeyPressed(KEY_ENTER);
     }
-    return IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_ENTER);
-}
 
     void UpgradeScene::Draw() {
         ClearBackground(BLACK);//Color{31, 14, 28, 255}
