@@ -276,24 +276,28 @@ void UpgradeScene::Input_Check_Mov() {
 }
 
     bool UpgradeScene::Input_Check_Sel() {
+        // --- ARCADE MODUS ---
         if (game::Config::kArcadeMode)
         {
-            bool melee_pressed  = IsGamepadButtonPressed(0, game::Config::kArcadeButtonMelee);
-            bool ranged_pressed = IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged);
-            bool item_pressed   = IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem);
+            // Wir prüfen jeden Knopf einzeln, um Fehler auszuschließen.
+            if (IsGamepadButtonPressed(0, game::Config::kArcadeButtonMelee))  return true;
+            if (IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged)) return true;
+            if (IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem))   return true;
 
             // Debug-Modus weiterhin mit Enter
-            bool debug_confirm = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_ENTER));
+            if (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_ENTER)) return true;
 
-            return melee_pressed || ranged_pressed || item_pressed || debug_confirm;
+            // Wenn keine der Tasten gedrückt wurde
+            return false;
         }
-        return IsKeyPressed(game::Config::key_Melee_Attack) || (game::Config::key_Ranged_Attack) ||IsKeyPressed(KEY_ENTER);
+
+        // --- HEILIGE PC-LOGIK (mit Bugfix) ---
+        // Hier war der Fehler: (game::Config::key_Ranged_Attack) wurde zu IsKeyPressed(...) korrigiert.
+        return IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(game::Config::key_Ranged_Attack) || IsKeyPressed(KEY_ENTER);
     }
 
     void UpgradeScene::Draw() {
-        ClearBackground(BLACK);//Color{31, 14, 28, 255}
-        //Draw Menu Backdrop
-
+        ClearBackground(BLACK);
         DrawTexturePro(soulcounter_bg,
                     {0, 0, 64, 30},                     // source rect (part of sheet)
                     {game::Config::kStageWidth/4 - 180, 50, 64*4.0f, 30*4.0f},        // dest rect (x,y,w,h → scaled ×4)
@@ -367,11 +371,7 @@ void UpgradeScene::Input_Check_Mov() {
             Color col = (souls_to_spend >= price) ? GREEN : RED;
         }
 
-
-
-        // -----Movement Speed-----
         if (counter==1){
-            // Draw Highlited Button
             abilities.x=80;
             DrawTexturePro(
                 speed_upgrade_button,
@@ -453,11 +453,7 @@ void UpgradeScene::Input_Check_Mov() {
             Color col = (souls_to_spend >= price) ? GREEN : RED;
         }
 
-
-
-        // -----Base Damage Mult-----
         if (counter==3){
-            // Draw Highlited Button
             abilities.x=80;
             DrawTexturePro(
                 DMGxMult_upgrade_button,
@@ -472,7 +468,6 @@ void UpgradeScene::Input_Check_Mov() {
 
         }
         else{
-            //Draw Regular Button Asset
             abilities.x=1;
             DrawTexturePro(
                 DMGxMult_upgrade_button,
@@ -496,11 +491,7 @@ void UpgradeScene::Input_Check_Mov() {
             Color col = (souls_to_spend >= price) ? GREEN : RED;
         }
 
-
-
-        // -----Meele DMG-----
         if (counter==4){
-            // Draw Highlited Button
             abilities.x=80;
             DrawTexturePro(
                 meeleDMG_upgrade_button,
@@ -515,7 +506,7 @@ void UpgradeScene::Input_Check_Mov() {
 
         }
         else{
-            //Draw Regular Button Asset
+
             abilities.x=1;
             DrawTexturePro(
                 meeleDMG_upgrade_button,
@@ -539,11 +530,7 @@ void UpgradeScene::Input_Check_Mov() {
             Color col = (souls_to_spend >= price) ? GREEN : RED;
         }
 
-
-
-        // -----Ranged DMG-----
         if (counter==5){
-            // Draw Highlited Button
             abilities.x=80;
             DrawTexturePro(
                 rangedDMG_upgrade_button,
@@ -558,7 +545,6 @@ void UpgradeScene::Input_Check_Mov() {
 
         }
         else{
-            //Draw Regular Button Asset
             abilities.x=1;
             DrawTexturePro(
                 rangedDMG_upgrade_button,
@@ -582,11 +568,7 @@ void UpgradeScene::Input_Check_Mov() {
             Color col = (souls_to_spend >= price) ? GREEN : RED;
         }
 
-
-
-        // ------ continue button-----
         if (counter==6){
-            // Draw Highlited Button
             abilities.x=80;
             DrawTexturePro(
                 continue_button_button,
@@ -599,7 +581,6 @@ void UpgradeScene::Input_Check_Mov() {
 );
         }
         else{
-            //Draw Regular Button Asset
             abilities.x=1;
             DrawTexturePro(
                 continue_button_button,

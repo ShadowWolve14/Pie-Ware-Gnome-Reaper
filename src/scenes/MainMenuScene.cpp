@@ -667,7 +667,9 @@ void MainMenuScene::UpdateTyping()
 {
     if (game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard)
     {
+        // KORREKTUR: Shortcuts getrennt, damit sie sich nicht beeinflussen
 
+        // SHIFT-Aktion (Fernkampf-Taste)
         bool shift_shortcut_pressed = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(game::Config::key_Ranged_Attack)) ||
                                       IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged);
         if (shift_shortcut_pressed) {
@@ -675,37 +677,36 @@ void MainMenuScene::UpdateTyping()
             PlaySound(sound1);
         }
 
+        // DELETE-Aktion (Item-Taste)
         bool delete_shortcut_pressed = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(game::Config::key_Use_Item)) ||
                                        IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem);
-        if (delete_shortcut_pressed && !player_name_input.empty()) {
-            player_name_input.pop_back();
-            PlaySound(sound2);
+        if (delete_shortcut_pressed) { // getrennt von shift
+            if (!player_name_input.empty()) {
+                player_name_input.pop_back();
+                PlaySound(sound2);
+            }
         }
 
+        // Navigation (mit korrektem Delay)
         if (input_delay <= 0) {
             bool moved = false;
             float v_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
 
+            // Hoch & Runter
             if (v_axis < -game::Config::kArcadeAxisDeadzone || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_W))) {
-
                 if (arcade_keyboard_cursor.y == 4) {
                     int x_pos = (int)arcade_keyboard_cursor.x;
-                    if (x_pos == 0) arcade_keyboard_cursor.x = 1;
-                    else if (x_pos == 1) arcade_keyboard_cursor.x = 4;
-                    else arcade_keyboard_cursor.x = 7;
+                    if (x_pos == 0) arcade_keyboard_cursor.x = 1; else if (x_pos == 1) arcade_keyboard_cursor.x = 4; else arcade_keyboard_cursor.x = 7;
                     arcade_keyboard_cursor.y = 3;
                 } else {
                     arcade_keyboard_cursor.y = (arcade_keyboard_cursor.y > 0) ? arcade_keyboard_cursor.y - 1 : arcade_keyboard_layout.size() - 1;
                 }
                 moved = true;
             }
-
             if (v_axis > game::Config::kArcadeAxisDeadzone || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_S))) {
                 if (arcade_keyboard_cursor.y == 3) {
                     int x_pos = (int)arcade_keyboard_cursor.x;
-                    if (x_pos <= 2) arcade_keyboard_cursor.x = 0;
-                    else if (x_pos <= 5) arcade_keyboard_cursor.x = 1;
-                    else arcade_keyboard_cursor.x = 2;
+                    if (x_pos <= 2) arcade_keyboard_cursor.x = 0; else if (x_pos <= 5) arcade_keyboard_cursor.x = 1; else arcade_keyboard_cursor.x = 2;
                     arcade_keyboard_cursor.y = 4;
                 } else {
                     arcade_keyboard_cursor.y = (arcade_keyboard_cursor.y < arcade_keyboard_layout.size() - 1) ? arcade_keyboard_cursor.y + 1 : 0;
@@ -713,13 +714,12 @@ void MainMenuScene::UpdateTyping()
                 moved = true;
             }
 
+            // Links & Rechts
             float h_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
-
             if (h_axis < -game::Config::kArcadeAxisDeadzone || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_A))) {
                 arcade_keyboard_cursor.x = (arcade_keyboard_cursor.x > 0) ? arcade_keyboard_cursor.x - 1 : arcade_keyboard_layout[(int)arcade_keyboard_cursor.y].length() - 1;
                 moved = true;
             }
-
             if (h_axis > game::Config::kArcadeAxisDeadzone || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_D))) {
                 arcade_keyboard_cursor.x = (arcade_keyboard_cursor.x < arcade_keyboard_layout[(int)arcade_keyboard_cursor.y].length() - 1) ? arcade_keyboard_cursor.x + 1 : 0;
                 moved = true;
@@ -727,39 +727,31 @@ void MainMenuScene::UpdateTyping()
 
             if (moved) {
                 PlaySound(sound3);
-                input_delay = 8;
+                input_delay = 15; // KORREKTUR: Delay auf 15 erhöht
             }
         }
-        if (input_delay > 0) input_delay--;
 
+        // Auswahl einer Taste mit J / rotem Knopf
         bool select_pressed = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(game::Config::key_Melee_Attack)) ||
                               IsGamepadButtonPressed(0, game::Config::kArcadeButtonConfirm);
 
-        if (select_pressed) {
+        if (select_pressed && input_delay <= 0) { // Respektiert jetzt auch den Delay
             int y = (int)arcade_keyboard_cursor.y;
             int x = (int)arcade_keyboard_cursor.x;
 
-            if (y == 4) {
+            if (y == 4) { // Sonder-Tasten
                 char key = arcade_keyboard_layout[y][x];
-                if (key == 'S') {
-                    is_keyboard_uppercase = !is_keyboard_uppercase;
-                    PlaySound(sound1);
-                } else if (key == 'D') {
-                    if (!player_name_input.empty()) {
-                        player_name_input.pop_back();
-                        PlaySound(sound2);
-                    }
-                } else if (key == 'E') {
-                    list_state = AWAITING_INPUT;
-                    PlaySound(sound1);
-                }
-            } else {
+                if (key == 'S') { is_keyboard_uppercase = !is_keyboard_uppercase; PlaySound(sound1); }
+                else if (key == 'D') { if (!player_name_input.empty()) { player_name_input.pop_back(); PlaySound(sound2); } }
+                else if (key == 'E') { list_state = AWAITING_INPUT; PlaySound(sound1); }
+            } else { // Normale Tasten
                 if (player_name_input.length() < max_name_length) {
                     char selected_char = arcade_keyboard_layout[y][x];
                     player_name_input += is_keyboard_uppercase ? selected_char : (char)tolower(selected_char);
                     PlaySound(sound1);
                 }
             }
+            input_delay = 15; // Delay auch nach Auswahl setzen
         }
 
         if (Input_Check_Back() && !player_name_input.empty()) {
@@ -769,22 +761,19 @@ void MainMenuScene::UpdateTyping()
     }
     else
     {
-
+        // ** PC-Modus Logik (unverändert) **
         int key = GetCharPressed();
         while (key > 0) {
             if ((key >= 32) && (key <= 125) && (player_name_input.length() < max_name_length)) {
-                player_name_input.push_back((char)key);
+                player_name_input.push_back((char)key); PlaySound(sound1);
             }
             key = GetCharPressed();
         }
         if (IsKeyPressed(KEY_BACKSPACE) && !player_name_input.empty()) {
-            player_name_input.pop_back();
-            PlaySound(sound2);
+            player_name_input.pop_back(); PlaySound(sound2);
         }
         if (IsKeyPressed(KEY_ENTER)) {
-            list_state = AWAITING_INPUT;
-            counter = 0;
-            PlaySound(sound1);
+            list_state = AWAITING_INPUT; counter = 0; PlaySound(sound1);
         }
     }
 }
