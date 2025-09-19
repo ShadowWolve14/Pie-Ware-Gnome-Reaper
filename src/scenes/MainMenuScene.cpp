@@ -684,11 +684,15 @@ void MainMenuScene::UpdateTyping()
                 PlaySound(sound2);
             }
         }
+
+        if (input_delay_timer > 0.0f) {
+            input_delay_timer -= GetFrameTime();
+        }
+
         if (input_delay_timer <= 0.0f) {
             bool moved = false;
             float v_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
 
-            // Hoch & Runter
             if (v_axis < -game::Config::kArcadeAxisDeadzone || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_W))) {
                 if (arcade_keyboard_cursor.y == 4) {
                     int x_pos = (int)arcade_keyboard_cursor.x;
