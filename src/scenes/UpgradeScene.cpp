@@ -218,6 +218,11 @@ namespace game::scenes {
         SetSoundVolume(sound2,game::core::Store::volume);
         SetSoundVolume(sound3,game::core::Store::volume);
 
+        // DIESE ZEILE HAT GEFEHLT:
+        if (input_delay_timer > 0.0f) {
+            input_delay_timer -= GetFrameTime();
+        }
+
         if (IsKeyPressed(game::Config::key_Ranged_Attack)){
             this->counter=0;
         }
@@ -230,28 +235,28 @@ namespace game::scenes {
 
         Input_Check_Mov();
 
-    constexpr int kMaxIndex = 6;
-    if (counter > kMaxIndex) counter = 0;
-    if (counter < 0) counter = kMaxIndex;
+        constexpr int kMaxIndex = 6;
+        if (counter > kMaxIndex) counter = 0;
+        if (counter < 0) counter = kMaxIndex;
 
-    if (Input_Check_Sel()) {
-        PlaySound(sound1);
-        switch (counter) {
-            case 0: TryBuy_Health(); break;
-            case 1: TryBuy_Speed(); break;
-            case 2: TryBuy_AtkSpeed(); break;
-            case 3: TryBuy_GlobalDMG(); break;
-            case 4: TryBuy_MeleeDMG(); break;
-            case 5: TryBuy_RangedDMG(); break;
-            case 6: {
-                int next_level = current_level + 1;
-                auto newGameScene = std::make_shared<GameScene>(next_level);
-                game::core::Store::stage->SwitchToNewScene("GameScene", newGameScene);
-                break;
+        if (Input_Check_Sel()) {
+            PlaySound(sound1);
+            switch (counter) {
+                case 0: TryBuy_Health(); break;
+                case 1: TryBuy_Speed(); break;
+                case 2: TryBuy_AtkSpeed(); break;
+                case 3: TryBuy_GlobalDMG(); break;
+                case 4: TryBuy_MeleeDMG(); break;
+                case 5: TryBuy_RangedDMG(); break;
+                case 6: {
+                    int next_level = current_level + 1;
+                    auto newGameScene = std::make_shared<GameScene>(next_level);
+                    game::core::Store::stage->SwitchToNewScene("GameScene", newGameScene);
+                    break;
+                }
             }
         }
     }
-}
 
     void UpgradeScene::Input_Check_Mov() {
         bool moved = false;
