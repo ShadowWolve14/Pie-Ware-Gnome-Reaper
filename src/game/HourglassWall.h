@@ -27,5 +27,6 @@ public:
     void Draw() override;
     void On_Collision(Collidable* other) override;
     float GetYSortPosition() const override;
+    bool IsFrozen() const;
 };
 #endif //HOURGLASSWALL_H

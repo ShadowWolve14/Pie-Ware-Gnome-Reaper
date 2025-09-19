@@ -3,6 +3,9 @@
 //
 
 #include "HUD.h"
+
+#include "../scenes/GameScene.h"
+#include "HourglassWall.h"
 #include "Store.h"
 
 HUD::HUD(Player_Class_One* mp):mp(mp) {
@@ -114,7 +117,15 @@ void HUD::HUD_update()
     }
     prevhp=mp->Get_Health();
     c--;
-    cb--;
+    if (mp && mp->scene_ptr && mp->scene_ptr->hourglass_wall_ptr) {
+        if (mp->scene_ptr->hourglass_wall_ptr->IsFrozen()) {
+            cb = 2;
+        } else {
+            cb = 0;
+        }
+    } else {
+        cb = 0;
+    }
 }
 void HUD::HUD_shake() {
     if (ct<1){
@@ -238,7 +249,6 @@ void HUD::HUD_draw() {
             }
             case icebomb: {
                if (UC > 0) { DrawTextureEx(IBombU, v6, rot, 3, WHITE);}
-               cb=game::Config::kIceBombFreezeDuration*7;
                 break;
             }
             case testo: {

@@ -94,8 +94,13 @@ float HourglassWall::GetYSortPosition() const
 {
     return this->hitbox.y + this->hitbox.height;
 }
+
 void HourglassWall::ApplyFreeze(float duration)
 {
     this->is_frozen = true;
-    this->freeze_timer = duration;
+    this->freeze_timer = std::max(this->freeze_timer, duration);
+}
+bool HourglassWall::IsFrozen() const
+{
+    return is_frozen;
 }

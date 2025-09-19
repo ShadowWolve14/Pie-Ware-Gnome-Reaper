@@ -33,7 +33,6 @@ namespace game::scenes
         float wave_timer = 0.0f;
         bool wave_timer_is_frozen = false;
         float wave_freeze_timer = 0.0f;
-        HourglassWall* hourglass_wall_ptr = nullptr;
 
         std::unique_ptr<PuzzleOne> puzzle_one;
         bool fairy_has_spawned = false;
@@ -50,6 +49,7 @@ namespace game::scenes
 
 
     public:
+        HourglassWall* hourglass_wall_ptr = nullptr;
         explicit GameScene(int level_to_load = 1);
         ~GameScene() override;
         void Update() override;
