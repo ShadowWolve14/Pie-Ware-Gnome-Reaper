@@ -8,7 +8,7 @@ namespace game
     {
 public:
         // MODUS-SCHALTER: Hier wird zwischen PC- und Arcade-Version umgeschaltet.
-        inline static constexpr bool kArcadeMode = false; // true für Arcade, false für PC
+        inline static constexpr bool kArcadeMode = true; // true für Arcade, false für PC
         inline static constexpr bool kArcadeDebugWithKeyboard = false;
 
         inline static constexpr const char* kProjectName = "Gnome Reaper";
@@ -750,7 +750,7 @@ public:
         inline static constexpr float hourglass_hitbox_y_offset = 18.0f;
 
         // Animations-Eigenschaften
-        inline static constexpr int hourglass_frame_count = 3;
+        inline static constexpr int hourglass_frame_count = 5;
         inline static constexpr const char* hourglass_lvl1_spritesheet = "PieWare/assets/Spritesheets/Hourglass.png";
         inline static constexpr const char* hourglass_lvl2_spritesheet = "PieWare/assets/Spritesheets/Hourglass_Lvl2.png";
         inline static constexpr const char* hourglass_lvl3_spritesheet = "PieWare/assets/Spritesheets/Hourglass_Lvl3.png";
