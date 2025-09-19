@@ -183,13 +183,36 @@ void Player_Base_Class::Tick(float delta_time)
             if (Vector2Length(move_Direction) > game::Config::kArcadeAxisDeadzone)
             {
                 is_Moving = true;
+
+                // --- NEUE LOGIK FÜR ARCADE DIRECTION ---
+                // Bestimmt die Richtung basierend auf den rohen Joystick-Achsen,
+                // um das Problem mit den Diagonalen zu beheben.
+                float axisX = move_Direction.x;
+                float axisY = move_Direction.y;
+                const float diagonal_leniency = 0.35f; // Wie stark eine Achse sein muss, um als "dominant" zu gelten
+
+                // Priorisiere Kardinalrichtungen (oben, unten, links, rechts)
+                if (abs(axisX) > abs(axisY) + diagonal_leniency) { // Deutlich mehr horizontale als vertikale Bewegung
+                    facing_Direction = (axisX > 0) ? RIGHT : LEFT;
+                } else if (abs(axisY) > abs(axisX) + diagonal_leniency) { // Deutlich mehr vertikale als horizontale Bewegung
+                    facing_Direction = (axisY > 0) ? DOWN : UP;
+                } else { // Ansonsten ist die Bewegung diagonal
+                    if (axisY > 0) {
+                        facing_Direction = (axisX > 0) ? DOWN_RIGHT : DOWN_LEFT;
+                    } else {
+                        facing_Direction = (axisX > 0) ? UP_RIGHT : UP_LEFT;
+                    }
+                }
+                // --- ENDE NEUE ARCADE LOGIK ---
+
             } else {
-                move_Direction = {0.0f, 0.0f}; // Verhindert "driften" bei leichter Stick-Neigung
+                move_Direction = {0.0f, 0.0f};
                 is_Moving = false;
             }
         }
         else
         {
+            // Unveränderte PC-Logik
             Update_Input_Stacks();
             if (!horizontal_inputs.empty()) {
                 Input_Direction current_h = horizontal_inputs.front();
@@ -253,7 +276,10 @@ void Player_Base_Class::Tick(float delta_time)
     }
     player_Pos = {hitbox.x, hitbox.y};
 
-    Update_Facing_Direction();
+    // Originale Logik nur noch für PC-Modus aufrufen
+    if (!game::Config::kArcadeMode) {
+        Update_Facing_Direction();
+    }
 }
 
 void Player_Base_Class::On_Collision(Collidable* other)
