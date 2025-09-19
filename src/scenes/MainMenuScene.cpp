@@ -751,10 +751,6 @@ void MainMenuScene::UpdateTyping()
 
             input_delay_timer = kMenuInputDelaySeconds;
         }
-        if (Input_Check_Back() && !player_name_input.empty()) {
-            player_name_input.pop_back();
-            PlaySound(sound2);
-        }
     }
     else
     {
