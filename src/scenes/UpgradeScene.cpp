@@ -218,7 +218,6 @@ namespace game::scenes {
         SetSoundVolume(sound2,game::core::Store::volume);
         SetSoundVolume(sound3,game::core::Store::volume);
 
-        // DIESE ZEILE HAT GEFEHLT:
         if (input_delay_timer > 0.0f) {
             input_delay_timer -= GetFrameTime();
         }
