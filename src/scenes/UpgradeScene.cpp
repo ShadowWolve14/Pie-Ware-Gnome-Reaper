@@ -276,24 +276,17 @@ void UpgradeScene::Input_Check_Mov() {
 }
 
     bool UpgradeScene::Input_Check_Sel() {
-        // --- ARCADE MODUS ---
         if (game::Config::kArcadeMode)
         {
-            // Wir prüfen jeden Knopf einzeln, um Fehler auszuschließen.
-            if (IsGamepadButtonPressed(0, game::Config::kArcadeButtonMelee))  return true;
-            if (IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged)) return true;
-            if (IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem))   return true;
+            bool melee_pressed  = IsGamepadButtonPressed(0, game::Config::kArcadeButtonMelee);
+            bool ranged_pressed = IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged);
+            bool item_pressed   = IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem);
 
-            // Debug-Modus weiterhin mit Enter
-            if (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_ENTER)) return true;
+            bool debug_confirm = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_ENTER));
 
-            // Wenn keine der Tasten gedrückt wurde
-            return false;
+            return melee_pressed || ranged_pressed || item_pressed || debug_confirm;
         }
-
-        // --- HEILIGE PC-LOGIK (mit Bugfix) ---
-        // Hier war der Fehler: (game::Config::key_Ranged_Attack) wurde zu IsKeyPressed(...) korrigiert.
-        return IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(game::Config::key_Ranged_Attack) || IsKeyPressed(KEY_ENTER);
+        return IsKeyPressed(game::Config::key_Melee_Attack) || (game::Config::key_Ranged_Attack) ||IsKeyPressed(KEY_ENTER);
     }
 
     void UpgradeScene::Draw() {
