@@ -8,7 +8,7 @@
 HUD::HUD(Player_Class_One* mp):mp(mp) {
     prevhp=100;
     c=0;
-
+    cb=0;
     IP1 = LoadTexture(game::Config::kIconHealthPotion1);
     IP1U = LoadTexture(game::Config::kIconHealthPotion1_Use);
     IP2 = LoadTexture(game::Config::kIconHealthPotion2);
