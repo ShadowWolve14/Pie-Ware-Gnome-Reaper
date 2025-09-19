@@ -277,7 +277,8 @@ namespace game::scenes {
 
             return melee_pressed || ranged_pressed || item_pressed || debug_confirm;
         }
-        return IsKeyPressed(game::Config::key_Melee_Attack) || (game::Config::key_Ranged_Attack) ||IsKeyPressed(KEY_ENTER);
+        // KORRIGIERTE ZEILE FÜR PC-VERSION
+        return IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(game::Config::key_Ranged_Attack) || IsKeyPressed(KEY_ENTER);
     }
 
     void UpgradeScene::Draw() {
