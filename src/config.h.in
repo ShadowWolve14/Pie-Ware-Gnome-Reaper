@@ -62,7 +62,7 @@ public:
 
         //____________________Spieler Klasse 1 Block____________________________
         inline static constexpr bool allow_Move_While_Attacking = true;
-        inline static constexpr int player_Class_One_Max_Health = 1;
+        inline static constexpr int player_Class_One_Max_Health = 100;
         inline static constexpr float player_Class_One_Movement_Speed = 13.0f;
         inline static constexpr float player_Class_One_Damage_Multiplier = 1.0f;
         inline static constexpr int player_Ranged_Damage_Value = 30;
