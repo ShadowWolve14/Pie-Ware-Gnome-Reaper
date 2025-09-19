@@ -173,6 +173,8 @@ void MainMenuScene::Update()
     SetSoundVolume(sound2, sfx_volume);
     SetSoundVolume(sound3, sfx_volume);
 
+    if (input_delay > 0) input_delay--;
+
     switch (state)
     {
         case main:    main_Update();    break;
@@ -667,9 +669,6 @@ void MainMenuScene::UpdateTyping()
 {
     if (game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard)
     {
-        // KORREKTUR: Shortcuts getrennt, damit sie sich nicht beeinflussen
-
-        // SHIFT-Aktion (Fernkampf-Taste)
         bool shift_shortcut_pressed = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(game::Config::key_Ranged_Attack)) ||
                                       IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged);
         if (shift_shortcut_pressed) {
