@@ -754,7 +754,7 @@ void MainMenuScene::UpdateTyping()
     }
     else
     {
-        // ** PC-Modus Logik (unverändert) **
+
         int key = GetCharPressed();
         while (key > 0) {
             if ((key >= 32) && (key <= 125) && (player_name_input.length() < max_name_length)) {
