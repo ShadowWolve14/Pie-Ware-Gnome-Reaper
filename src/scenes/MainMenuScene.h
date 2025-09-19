@@ -37,7 +37,6 @@ private:
 
     Rectangle src{1,1,140,32};
 
-
     enum menustate {main,options, credits ,end,list};
     menustate state;
 
@@ -52,6 +51,10 @@ private:
     Sound sound4 = LoadSound("assets/audio/sfx/Willhelm Scream.wav");
     float sfx_volume = 5.0f;
 
+    int credits_page_index = 0;
+    float last_page_switch_time = 0.0f;
+
+    void Input_Check_Mov();
     std::vector<HighscoreEntry> highscores;
     bool highscores_loaded = false;
     int final_score = -1;
@@ -63,14 +66,13 @@ private:
     int d=0;
     int s=0;
 
-    void Input_Check_Mov();
     bool Input_Check_Sel();
     void Initialize();
     void main_Update();
     void main_Draw();
     void options_Update();
     void options_Draw();
-    void credits_Update();
+    void credits_Update(float delta_time);
     void credits_Draw();
     void list_Update();
     void list_Draw();

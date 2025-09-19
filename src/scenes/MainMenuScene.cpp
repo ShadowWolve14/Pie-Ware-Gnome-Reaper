@@ -9,6 +9,23 @@
 #include <system_error>
 
 namespace {
+
+    std::string ReplaceUmlauts(std::string text) {
+        size_t pos = 0;
+        while ((pos = text.find("ä", pos)) != std::string::npos) { text.replace(pos, 2, "ae"); pos += 2; }
+        pos = 0;
+        while ((pos = text.find("ö", pos)) != std::string::npos) { text.replace(pos, 2, "oe"); pos += 2; }
+        pos = 0;
+        while ((pos = text.find("ü", pos)) != std::string::npos) { text.replace(pos, 2, "ue"); pos += 2; }
+        pos = 0;
+        while ((pos = text.find("Ä", pos)) != std::string::npos) { text.replace(pos, 2, "Ae"); pos += 2; }
+        pos = 0;
+        while ((pos = text.find("Ö", pos)) != std::string::npos) { text.replace(pos, 2, "Oe"); pos += 2; }
+        pos = 0;
+        while ((pos = text.find("Ü", pos)) != std::string::npos) { text.replace(pos, 2, "Ue"); pos += 2; }
+        return text;
+    }
+
     void EnsureFileExists(const std::string& filename)
     {
         namespace fs = std::filesystem;
@@ -63,6 +80,9 @@ void MainMenuScene::Initialize() {
     song.looping = true;
     PlayMusicStream(song);
 
+    credits_page_index = 0;
+    last_page_switch_time = (float)GetTime();
+
     game::core::Store::volume = ReadValue("MusicSettings.txt");
     sfx_volume = ReadValue("SFXSettings.txt");
 
@@ -91,27 +111,32 @@ void MainMenuScene::Initialize() {
     Text[10]="Programmer Marcel Rende";
     Text[11]="";
     Text[12]="";
-    Text[13]="Ein riesen Dank gilt unseren externen Helfer*innen!";
-    Text[14]="";
-    Text[15]="Musik von Jana Schmidt";
-    Text[16]="";
-    Text[17]="Arcade Automat von Thorsten Heilmann";
-    Text[18]="";
-    Text[19]="Sponsor Steffen Hever";
-    Text[20]="Sponsor Tobias Wessbecher";
-    Text[21]="";
-    Text[22]="Balancing und Excel Support Oliver Pruchnicki";
+    Text[13]="Ein riesen Dank gilt";
+    Text[14]="unseren externen Helfer*innen!";
+    Text[15]="";
+    Text[16]="Musik von Jana Schmidt";
+    Text[17]="Arcade Automat ";
+    Text[18]="von Thorsten Heilmann";
+    Text[19]="";
+    Text[20]="Sponsor Steffen Hever";
+    Text[21]="Sponsor Tobias Wessbecher";
+    Text[22]="";
     Text[23]="";
-    Text[24]="";
-    Text[25]="Vielen Dank auch an unsere vielen Tester!";
+    Text[24]="Balancing und Excel Support";
+    Text[25]="Oliver Pruchnicki";
     Text[26]="";
-    Text[27]="";
-    Text[28]="Natürlich auch Danke an euch fürs spielen!";
+    Text[27]="Vielen Dank auch an unsere";
+    Text[28]="vielen Tester!";
     Text[29]="";
-    Text[30]="";
-    Text[31]="";
+    Text[30]="Natuerlich auch Danke an euch";
+    Text[31]="fuers spielen!";
     Text[32]="";
+
+    for(auto& line : Text) {
+        line = ReplaceUmlauts(line);
+    }
 }
+
 
 MainMenuScene::~MainMenuScene()
 {
@@ -134,7 +159,7 @@ void MainMenuScene::Update()
         case main:    main_Update();    break;
         case options: options_Update(); break;
         case list:    list_Update();    break;
-        case credits: credits_Update(); break;
+        case credits: credits_Update(GetFrameTime()); break;
         case end:     game::core::Store::running = false; PlaySound(sound4); break;
     }
 }
@@ -149,11 +174,10 @@ void MainMenuScene::Input_Check_Mov() {
         PlaySound(sound3);
     }
 }
+
 bool MainMenuScene::Input_Check_Sel() {
     if (IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_ENTER)) {
-        PlaySound(sound1);
         return true;
-
     } else {
         return false;
     }
@@ -168,7 +192,9 @@ void MainMenuScene::main_Update() {
     if (counter < 0) {
         counter = 4;
     }
+
     if (Input_Check_Sel()) {
+        PlaySound(sound1);
         switch (counter) {
             case 0: {
                 game::core::Store::player_state = nullptr;
@@ -199,10 +225,11 @@ void MainMenuScene::main_Update() {
     }
 }
 
-void MainMenuScene::main_Draw() {
-    DrawTextureEx(scroll_button, {game::Config::kStageWidth / 2 - 420 - 20, 20 + 90 * 3 - 100}, 0, 4, WHITE);
-    DrawTextPro(game::core::Store::font,"Drücke Range Attack um ins Hauptmenü zurück zu kehren", {game::Config::kStageWidth/2-950,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
-    DrawTextPro(game::core::Store::font,"Drücke Meele Attack um den Aktuellen Button auszuwählen", {game::Config::kStageWidth/2+150,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
+void MainMenuScene::main_Draw()
+{
+    Vector2 scroll_pos = {game::Config::kStageWidth / 2.0f - 440.0f, 190.0f};
+    DrawTextureEx(scroll_button, scroll_pos, 0, 4, WHITE);
+
     DrawTextureEx(sign_button, {game::Config::kStageWidth / 2 - 3 * 228, 20}, 0, 3, WHITE);
     Rectangle dest{game::Config::kStageWidth / 2 - 148, 0, 280, 64};
 
@@ -306,16 +333,21 @@ void MainMenuScene::options_Update() {
     }
 
     if (Input_Check_Sel()) {
-        if (counter == 0) {
+        if (counter == 0) { // Fullscreen-Button
+            PlaySound(sound1); // Bestätigungssound
             ToggleFullscreen();
-        } else if (counter == 3) {
+        } else if (counter == 3) { // Zurück-Button
+            PlaySound(sound2); // Zurück-Sound
             state = main;
             counter = 1;
         }
     }
 }
-void MainMenuScene::options_Draw() {
-    DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-420,20+90*3-100},0,4,WHITE);
+void MainMenuScene::options_Draw()
+{
+    Vector2 scroll_pos = {game::Config::kStageWidth / 2.0f - 440.0f, 190.0f};
+    DrawTextureEx(scroll_button, scroll_pos, 0, 4, WHITE);
+
     DrawTexturePro(TB,{40+230*3,1,230,48},{game::Config::kStageWidth/2-460,20,230*4,48*4},{0,0},0,WHITE);
 
     if (counter==0){
@@ -353,10 +385,12 @@ void MainMenuScene::options_Draw() {
     Rectangle back_dest = { game::Config::kStageWidth/2 - (160 * 2.0f / 2), 840, 160 * 2.0f, 48 * 2.0f };
     DrawTexturePro(BackButton, back_source, back_dest, {0,0}, 0, WHITE);
 }
-void MainMenuScene::list_Update() {
+void MainMenuScene::list_Update()
+{
     switch(list_state) {
-        case VIEWING: {
-            if (Input_Check_Sel() || IsKeyPressed(KEY_ESCAPE)) {
+        case VIEWING:
+        {
+            if (IsKeyPressed(KEY_ESCAPE) || Input_Check_Sel()) {
                 state = main;
                 counter = 2;
                 PlaySound(sound2);
@@ -365,11 +399,15 @@ void MainMenuScene::list_Update() {
         }
 
         case AWAITING_INPUT: {
-            Input_Check_Mov();
-            if (counter > 1) counter = 0;
-            if (counter < 0) counter = 1;
-
+            if (new_highscore_rank != -1) {
+                Input_Check_Mov();
+                if (counter > 1) counter = 0;
+                if (counter < 0) counter = 1;
+            } else {
+                counter = 0;
+            }
             if (Input_Check_Sel()) {
+                PlaySound(sound1);
                 if (counter == 0) {
                     list_state = TYPING_NAME;
                 } else if (counter == 1) {
@@ -380,6 +418,8 @@ void MainMenuScene::list_Update() {
                             highscores[new_highscore_rank].name = player_name_input;
                         }
                         SaveHighscores();
+                        new_highscore_rank = -1;
+                        final_score = -1;
                     }
                     state = main;
                     counter = 2;
@@ -414,14 +454,22 @@ void MainMenuScene::list_Update() {
         }
     }
 }
+
 void MainMenuScene::list_Draw() {
-    DrawTextureEx(scroll_button, {game::Config::kStageWidth / 2 - 420 - 20, 20 + 90 * 3 - 100}, 0, 4, WHITE);
+    Vector2 scroll_pos = {game::Config::kStageWidth / 2.0f - 440.0f, 190.0f};
+    DrawTextureEx(scroll_button, scroll_pos, 0, 4, WHITE);
+
     DrawTexturePro(TB, {30 + 230 * 2, 1, 230, 48}, {game::Config::kStageWidth / 2 - 460, 20, 230 * 4, 48 * 4}, {0, 0}, 0, WHITE);
-    Vector2 titlePos = {game::Config::kStageWidth / 2 - 150, 282};
+    Vector2 titlePos = {game::Config::kStageWidth / 2 - 150, 298};
     DrawTextPro(customFont, "Highscores:", titlePos, {0, 0}, 0, 50, 3, BLACK);
     Vector2 titleSize = MeasureTextEx(customFont, "Highscores:", 50, 3);
     DrawRectangle((int)titlePos.x, (int)(titlePos.y + titleSize.y - 5), (int)titleSize.x, 4, BLACK);
     Color highlightColor = {228, 148, 59, 255};
+
+    const float content_center_x = game::Config::kStageWidth / 2.0f;
+    const float rank_x = content_center_x - 280;
+    const float name_x = content_center_x - 210;
+    const float score_x = content_center_x + 144;
 
     for (int i = 0; i < 10; ++i) {
         float y_pos = 350 + i * 50;
@@ -435,29 +483,21 @@ void MainMenuScene::list_Draw() {
             score_str = std::to_string(highscores[i].score);
         }
 
-        if (i == new_highscore_rank && final_score != -1) {
+        if (i == new_highscore_rank) {
             score_str = std::to_string(final_score);
             name_color = highlightColor;
 
-            if (player_name_input.empty()) {
-                if (list_state == TYPING_NAME) {
-                    if ((int)(GetTime() * 2.5f) % 2 == 0) name_str = "Dein Name";
-                    else name_str = " ";
-                } else {
-                     name_str = "Dein Name";
-                }
-            } else {
+            if (list_state == TYPING_NAME) {
                 name_str = player_name_input;
-            }
-
-            if (list_state == TYPING_NAME && (int)(GetTime() * 2.0f) % 2 == 0) {
-                name_str += "_";
+                if ((int)(GetTime() * 2.0f) % 2 == 0) name_str += "____";
+            } else if (list_state == AWAITING_INPUT) {
+                name_str = player_name_input.empty() ? "Dein Name" : player_name_input;
             }
         }
 
-        DrawTextEx(customFont, rank_str.c_str(), {680, y_pos}, 40, 2, BLACK);
-        DrawTextEx(customFont, name_str.c_str(), {750, y_pos}, 40, 2, name_color);
-        DrawTextEx(customFont, score_str.c_str(), {1104, y_pos}, 40, 2, BLACK);
+        DrawTextEx(customFont, rank_str.c_str(), {rank_x, y_pos}, 40, 2, BLACK);
+        DrawTextEx(customFont, name_str.c_str(), {name_x, y_pos}, 40, 2, name_color);
+        DrawTextEx(customFont, score_str.c_str(), {score_x, y_pos}, 40, 2, BLACK);
     }
 
     const float button_y_pos = 840.0f;
@@ -468,43 +508,71 @@ void MainMenuScene::list_Draw() {
         Rectangle dest = {game::Config::kStageWidth / 2 - (160 * 2.0f / 2), button_y_pos, 160 * 2.0f, 48 * 2.0f};
         DrawTexturePro(BackButton, source, dest, {0, 0}, 0, WHITE);
     } else {
-        float source_x = (counter == 1 && list_state == AWAITING_INPUT) ? 160.0f : 0.0f;
+
+        bool confirm_selected = (new_highscore_rank == -1 || (counter == 1 && list_state == AWAITING_INPUT));
+        float source_x = confirm_selected ? 160.0f : 0.0f;
+
         Rectangle source = {source_x, 0, 160, 48};
         Rectangle dest = {game::Config::kStageWidth / 2 - (160 * 2.0f / 2), button_y_pos, 160 * 2.0f, 48 * 2.0f};
         DrawTexturePro(ConfirmButton, source, dest, {0, 0}, 0, WHITE);
     }
 }
 
-void MainMenuScene::credits_Update()
+void MainMenuScene::credits_Update(float delta_time)
 {
+    if (IsKeyPressed(KEY_ESCAPE) || Input_Check_Sel()) {
+        PlaySound(sound2);
+        state = main;
+        counter = 3;
+        credits_page_index = 0;
+        last_page_switch_time = (float)GetTime();
+        return;
+    }
 
+    const float page_hold_duration = 5.0f;
+    const int lines_per_page = 11;
+    const int total_pages = (Text.size() + lines_per_page - 1) / lines_per_page;
+
+    if (GetTime() - last_page_switch_time > page_hold_duration) {
+        last_page_switch_time = (float)GetTime();
+        credits_page_index = (credits_page_index + 1) % total_pages;
+    }
 }
+
 void MainMenuScene::credits_Draw()
 {
-    DrawTextureEx(scroll_button,{game::Config::kStageWidth/2-795,1500},-90,7,WHITE);
+    Vector2 scroll_pos = {game::Config::kStageWidth / 2.0f - 440.0f, 190.0f};
+    DrawTextureEx(scroll_button, scroll_pos, 0, 4, WHITE);
+
     DrawTexturePro(TB,{20+230*1,1,230,48},{game::Config::kStageWidth/2-460,20,230*4,48*4},{0,0},0,WHITE);
-    DrawTextPro(game::core::Store::font,"Drücke Range Attack um ins Hauptmenü zurück zu kehren", {game::Config::kStageWidth/2-950,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
-    DrawTextPro(game::core::Store::font,"Drücke Meele Attack um den Aktuellen Button auszuwählen", {game::Config::kStageWidth/2+150,game::Config::kStageHeight/2+500}, {0,0}, 0, 25, 3, WHITE);
 
-    for (int l = 0; l < 4; ++l) {
-        for (int i = 0; i < 8; ++i) {
-            if (i+8*s <= Text.size()-1) {
+    const int lines_per_page = 11;
+    const float font_size = 28.0f;
+    const float line_spacing = 36.0f;
 
-                Vector2 textPos = {
-                    (float)(game::Config::kStageWidth/2 - TextLength(Text[i+8*s].c_str())*11),
-                    (float)(game::Config::kStageHeight/2 - 150 + 50*i)
-                };
-                DrawTextPro(game::core::Store::font, Text[i+8*s].c_str(), textPos, {0,0}, 0, 35, 5, BLACK);
-            } else {
-                s = -1;
-            }
-        }
-        d++;
-        if (d == 60 * game::Config::credits_anim_speed * 10) {
-            s++;
-            d = 0;
+    const float text_area_width = 750.0f;
+    const float text_area_start_x = (game::Config::kStageWidth - text_area_width) / 2.0f;
+
+    const float start_y = 340.0f;
+
+    for (int i = 0; i < lines_per_page; ++i) {
+        int text_index = i + lines_per_page * credits_page_index;
+        if (text_index < Text.size() && !Text[text_index].empty()) {
+            const std::string& current_text = Text[text_index];
+
+            Vector2 text_size = MeasureTextEx(customFont, current_text.c_str(), font_size, 2);
+            Vector2 text_pos = {
+                text_area_start_x + (text_area_width - text_size.x) / 2.0f,
+                start_y + (i * line_spacing)
+            };
+            DrawTextEx(customFont, current_text.c_str(), text_pos, font_size, 2, BLACK);
         }
     }
+
+    float back_button_source_x = 160.0f;
+    Rectangle back_source = { back_button_source_x, 0, 160, 48 };
+    Rectangle back_dest = { game::Config::kStageWidth/2 - (160 * 2.0f / 2), 840, 160 * 2.0f, 48 * 2.0f };
+    DrawTexturePro(BackButton, back_source, back_dest, {0,0}, 0, WHITE);
 }
 
 void MainMenuScene::LoadHighscores(const std::string& filename) {
@@ -558,7 +626,7 @@ void MainMenuScene::CheckForNewHighscore() {
         list_state = TYPING_NAME;
     } else {
         new_highscore_rank = -1;
-        list_state = AWAITING_INPUT;
+        list_state = VIEWING;
         counter = 0;
     }
 }
