@@ -39,6 +39,7 @@ Player_Base_Class::Player_Base_Class(int max_Health, float movement_Speed, float
     this->projectile_Speed = game::Config::player_Class_One_Projectile_Speed;
 }
 
+
 Player_Base_Class::~Player_Base_Class()
 {
 
@@ -51,38 +52,70 @@ void Player_Base_Class::Player_Input()
     {
         return;
     }
-    if (IsKeyPressed(game::Config::key_Melee_Attack) && melee_Cooldown <= 0)
-    {
-        if (is_adrenalin_buffed)
-        {
-            if (range_Attack_Cooldown <= 0)
-            {
-                Ranged_Attack();
-            }
-        }
-        else
-        {
-            Melee_Attack();
-        }
-    }
 
-    if (IsKeyPressed(game::Config::key_Ranged_Attack))
+    if (game::Config::kArcadeMode)
     {
-        if (is_buffed)
+        if (IsGamepadButtonPressed(0, game::Config::kArcadeButtonMelee) && melee_Cooldown <= 0)
         {
-            if (melee_Cooldown <= 0)
+            if (is_adrenalin_buffed)
+            {
+                if (range_Attack_Cooldown <= 0) Ranged_Attack();
+            }
+            else
             {
                 Melee_Attack();
             }
         }
-        else
+
+        if (IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged))
         {
-            if (range_Attack_Cooldown <= 0)
+            if (is_buffed)
             {
-                Ranged_Attack();
+                if (melee_Cooldown <= 0) Melee_Attack();
+            }
+            else
+            {
+                if (range_Attack_Cooldown <= 0) Ranged_Attack();
             }
         }
     }
+    else
+    {
+        if (IsKeyPressed(game::Config::key_Melee_Attack) && melee_Cooldown <= 0)
+        {
+            if (is_adrenalin_buffed)
+            {
+                if (range_Attack_Cooldown <= 0)
+                {
+                    Ranged_Attack();
+                }
+            }
+            else
+            {
+                Melee_Attack();
+            }
+        }
+
+        if (IsKeyPressed(game::Config::key_Ranged_Attack))
+        {
+            if (is_buffed)
+            {
+                if (melee_Cooldown <= 0)
+                {
+                    Melee_Attack();
+                }
+            }
+            else
+            {
+                if (range_Attack_Cooldown <= 0)
+                {
+                    Ranged_Attack();
+                }
+            }
+        }
+    }
+
+    // Use_Item wird von beiden Modi aufgerufen, die Logik darin ist ebenfalls getrennt.
     Use_Item();
 }
 
@@ -123,14 +156,11 @@ void Player_Base_Class::Tick(float delta_time)
         if (adrenalin_buff_timer <= 0.0f)
         {
             is_adrenalin_buffed = false;
-
             player_Movement_Speed -= game::Config::adrenalin_Movement_Speed_Boost;
             ranged_Base_Damage -= game::Config::adrenalin_Ranged_Damage_Boost;
             is_invincible = false;
-
             float speed_multiplier = 1.0f - (game::Config::adrenalin_Attack_Speed_Boost_Percent / 100.0f);
             ranged_Base_Cooldown /= speed_multiplier;
-
             RemoveHeldItem();
         }
     }
@@ -141,26 +171,38 @@ void Player_Base_Class::Tick(float delta_time)
     if (melee_Cooldown > 0) melee_Cooldown -= delta_time;
     if (range_Attack_Cooldown > 0) range_Attack_Cooldown -= delta_time;
 
-    Update_Input_Stacks();
-
     is_Moving = false;
+    Vector2 move_Direction = {0.0f, 0.0f};
+
     if (currentState != ATTACKING_RANGED || game::Config::allow_Move_While_Attacking) {
-        Vector2 move_Direction = {0.0f, 0.0f};
+        if (game::Config::kArcadeMode)
+        {
+            move_Direction.x = GetGamepadAxisMovement(0, game::Config::kArcadeAxisX);
+            move_Direction.y = GetGamepadAxisMovement(0, game::Config::kArcadeAxisY);
 
-        if (!horizontal_inputs.empty()) {
-            Input_Direction current_h = horizontal_inputs.front();
-            if (current_h == Input_Direction::LEFT) move_Direction.x = -1.0f;
-            else if (current_h == Input_Direction::RIGHT) move_Direction.x = 1.0f;
+            if (Vector2Length(move_Direction) > game::Config::kArcadeAxisDeadzone)
+            {
+                is_Moving = true;
+            } else {
+                move_Direction = {0.0f, 0.0f}; // Verhindert "driften" bei leichter Stick-Neigung
+                is_Moving = false;
+            }
         }
-
-        if (!vertical_inputs.empty()) {
-            Input_Direction current_v = vertical_inputs.front();
-            if (current_v == Input_Direction::UP) move_Direction.y = -1.0f;
-            else if (current_v == Input_Direction::DOWN) move_Direction.y = 1.0f;
+        else
+        {
+            Update_Input_Stacks();
+            if (!horizontal_inputs.empty()) {
+                Input_Direction current_h = horizontal_inputs.front();
+                if (current_h == Input_Direction::LEFT) move_Direction.x = -1.0f;
+                else if (current_h == Input_Direction::RIGHT) move_Direction.x = 1.0f;
+            }
+            if (!vertical_inputs.empty()) {
+                Input_Direction current_v = vertical_inputs.front();
+                if (current_v == Input_Direction::UP) move_Direction.y = -1.0f;
+                else if (current_v == Input_Direction::DOWN) move_Direction.y = 1.0f;
+            }
+            is_Moving = (move_Direction.x != 0.0f || move_Direction.y != 0.0f);
         }
-
-        is_Moving = (move_Direction.x != 0.0f || move_Direction.y != 0.0f);
-        is_Moving = (move_Direction.x != 0.0f || move_Direction.y != 0.0f);
 
         if(is_Moving)
         {
@@ -198,7 +240,6 @@ void Player_Base_Class::Tick(float delta_time)
                 }
                 else
                 {
-
                     hitbox.x += potential_movement.x;
                     hitbox.y += potential_movement.y;
                 }
@@ -455,7 +496,14 @@ void Player_Base_Class::PickUpItem(ItemBase* item_to_pick_up)
 
 void Player_Base_Class::Use_Item()
 {
-    if (IsKeyPressed(game::Config::key_Use_Item) && HasItem() && held_item->GetType() != ItemType::KEY && !is_buffed && !is_adrenalin_buffed && item_removal_timer <= 0.0f)
+    bool item_use_pressed = false;
+    if (game::Config::kArcadeMode) {
+        item_use_pressed = IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem);
+    } else {
+        item_use_pressed = IsKeyPressed(game::Config::key_Use_Item);
+    }
+
+    if (item_use_pressed && HasItem() && held_item->GetType() != ItemType::KEY && !is_buffed && !is_adrenalin_buffed && item_removal_timer <= 0.0f)
     {
         if (held_item->GetType()==ItemType::HEALTH_POTION){
             itemvfx=&potionvfx;

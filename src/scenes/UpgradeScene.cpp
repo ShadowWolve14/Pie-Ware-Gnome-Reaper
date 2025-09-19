@@ -8,11 +8,11 @@
 #include "../config.h.in"
 
 namespace game::scenes {
-    UpgradeScene::UpgradeScene(int souls, int level) {
+    UpgradeScene::UpgradeScene(int souls, int level)
+    {
         this->souls_to_spend = souls;
         this->current_level  = level;
 
-        // load fairy animation depending on level
         const std::string path = game::Config::fairy_spritesheet_path(level);
         if (path != "no sprite found") {
             const FairyAnimMeta meta = GetFairyMetaForLevel(level);
@@ -229,29 +229,60 @@ namespace game::scenes {
 
         fairyAnim.Update_Frame(GetFrameTime());
 
-        Input_Check_Mov();
+        Input_Check_Mov(); // Verwendet jetzt die neue, duale Logik
 
-        constexpr int kMaxIndex = 6;
-        if (counter > kMaxIndex) counter -= (kMaxIndex + 1);
-        if (counter < 0)         counter  = kMaxIndex;
+    constexpr int kMaxIndex = 6;
+    if (counter > kMaxIndex) counter = 0;
+    if (counter < 0) counter = kMaxIndex;
 
-        if (Input_Check_Sel()) {
-            switch (counter) {
-                case 0: { TryBuy_Health();     break; }
-                case 1: { TryBuy_Speed();      break; }
-                case 2: { TryBuy_AtkSpeed();   break; }
-                case 3: { TryBuy_GlobalDMG();  break; }
-                case 4: { TryBuy_MeleeDMG();   break; }
-                case 5: { TryBuy_RangedDMG();  break; }
-                case 6: {
-                    int next_level = current_level + 1;
-                    auto newGameScene = std::make_shared<GameScene>(next_level);
-                    game::core::Store::stage->SwitchToNewScene("GameScene", newGameScene);
-                    break;
-                }
+    if (Input_Check_Sel()) {
+        PlaySound(sound1);
+        switch (counter) {
+            case 0: TryBuy_Health(); break;
+            case 1: TryBuy_Speed(); break;
+            case 2: TryBuy_AtkSpeed(); break;
+            case 3: TryBuy_GlobalDMG(); break;
+            case 4: TryBuy_MeleeDMG(); break;
+            case 5: TryBuy_RangedDMG(); break;
+            case 6: {
+                int next_level = current_level + 1;
+                auto newGameScene = std::make_shared<GameScene>(next_level);
+                game::core::Store::stage->SwitchToNewScene("GameScene", newGameScene);
+                break;
             }
         }
     }
+}
+
+void UpgradeScene::Input_Check_Mov() {
+    bool moved = false;
+    if (game::Config::kArcadeMode && input_delay > 0) {
+        input_delay--;
+        return;
+    }
+
+    if (game::Config::kArcadeMode) {
+        float v_axis = GetGamepadAxisMovement(0, game::Config::kArcadeAxisY);
+        if (v_axis < -game::Config::kArcadeAxisDeadzone) { this->counter--; moved = true; }
+        if (v_axis > game::Config::kArcadeAxisDeadzone) { this->counter++; moved = true; }
+    }
+    if (!game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard) {
+        if (IsKeyPressed(game::Config::key_Up)) { this->counter--; moved = true; }
+        if (IsKeyPressed(game::Config::key_Down)) { this->counter++; moved = true; }
+    }
+
+    if (moved) {
+        PlaySound(sound3);
+        if (game::Config::kArcadeMode) input_delay = 10;
+    }
+}
+
+bool UpgradeScene::Input_Check_Sel() {
+    if (game::Config::kArcadeMode) {
+        return IsGamepadButtonPressed(0, game::Config::kArcadeButtonConfirm) || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_ENTER));
+    }
+    return IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_ENTER);
+}
 
     void UpgradeScene::Draw() {
         ClearBackground(BLACK);//Color{31, 14, 28, 255}
@@ -590,22 +621,4 @@ namespace game::scenes {
         DrawText("Druecke Angriff oder Enter um weiter zu kommen.", 50, 280, 20, GREEN); */
     }
 
-    void UpgradeScene::Input_Check_Mov() {
-        if (IsKeyPressed(game::Config::key_Up)){
-            this->counter= this->counter-1;
-            PlaySound(sound3);
-        }
-        if (IsKeyPressed(game::Config::key_Down)){
-            this->counter= this->counter+1;
-            PlaySound(sound3);
-        }
-    }
-    bool UpgradeScene::Input_Check_Sel() {
-        if (IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_ENTER)) {
-            PlaySound(sound1);
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

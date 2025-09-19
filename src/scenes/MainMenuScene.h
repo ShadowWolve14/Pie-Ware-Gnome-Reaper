@@ -35,6 +35,13 @@ private:
     Texture2D ConfirmButton;
     Font customFont;
 
+    std::vector<std::string> arcade_keyboard_layout;
+    Vector2 arcade_keyboard_cursor = {0, 0};
+    int input_delay = 0;
+    bool is_keyboard_uppercase = true;
+    Texture2D ranged_attack_icon;
+    Texture2D item_use_icon;
+
     Rectangle src{1,1,140,32};
 
     enum menustate {main,options, credits ,end,list};
@@ -67,7 +74,14 @@ private:
     int s=0;
 
     bool Input_Check_Sel();
+    bool Input_Check_Back(); // Neue Hilfsfunktion
     void Initialize();
+
+    // --- Arcade Mode Additions ---
+    void UpdateTyping();
+    void DrawArcadeKeyboard();
+    // -----------------------------
+
     void main_Update();
     void main_Draw();
     void options_Update();

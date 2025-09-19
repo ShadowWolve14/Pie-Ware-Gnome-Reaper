@@ -29,17 +29,14 @@ class HUD {
 
     Texture2D AA= LoadTexture(game::Config::Symbol_AA);
     Texture2D AAU= LoadTexture(game::Config::Symbol_AAU);
-    Texture2D AAI= LoadTexture(game::Config::Symbol_AAI);
     Texture2D IB= LoadTexture(game::Config::Symbol_IB);
     Texture2D IBU= LoadTexture(game::Config::Symbol_IBU);
     Texture2D IE= LoadTexture(game::Config::Symbol_IE);
     Texture2D IEU= LoadTexture(game::Config::Symbol_IEU);
-    Texture2D II= LoadTexture(game::Config::Symbol_II);
     Texture2D IK= LoadTexture(game::Config::Symbol_IK);
     Texture2D IKU= LoadTexture(game::Config::Symbol_IKU);
     Texture2D SA= LoadTexture(game::Config::Symbol_SA);
     Texture2D SAU= LoadTexture(game::Config::Symbol_SAU);
-    Texture2D SAI= LoadTexture(game::Config::Symbol_SAI);
     Texture2D HS= LoadTexture(game::Config::Symbol_HS);
     Texture2D H= LoadTexture(game::Config::Symbol_H);
     Texture2D HH= LoadTexture(game::Config::Symbol_HH);
@@ -67,6 +64,10 @@ class HUD {
     Texture2D fairy_icon_lvl2;
     Texture2D fairy_icon_lvl3;
     Texture2D key_icon;
+
+    Texture2D AAI;
+    Texture2D II;
+    Texture2D SAI;
 
 
 

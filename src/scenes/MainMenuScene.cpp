@@ -1,7 +1,6 @@
 //
 // Created by Kruse on 26/08/2025.
 //
-
 #include "MainMenuScene.h"
 #include <filesystem>
 #include <fstream>
@@ -76,20 +75,29 @@ MainMenuScene::MainMenuScene(int final_score)
 }
 
 void MainMenuScene::Initialize() {
-    this->counter = 0;
-    song.looping = true;
-    PlayMusicStream(song);
-
-    credits_page_index = 0;
-    last_page_switch_time = (float)GetTime();
-
-    game::core::Store::volume = ReadValue("MusicSettings.txt");
-    sfx_volume = ReadValue("SFXSettings.txt");
-
     customFont = LoadFont("PieWare/assets/Font/GnomishGame.ttf");
     BackButton = LoadTexture("PieWare/assets/UI/Allgemein/Button_Back.png");
     ConfirmButton = LoadTexture("PieWare/assets/UI/Allgemein/Confirm.png");
     SFXSlider = LoadTexture("PieWare/assets/UI/Allgemein/Volume.png");
+
+    if (game::Config::kArcadeMode) {
+        ranged_attack_icon = LoadTexture(game::Config::Symbol_AAI_Arcade);
+        item_use_icon = LoadTexture(game::Config::Symbol_II_Arcade);
+    } else { // Für den kArcadeDebugWithKeyboard = true Fall
+        ranged_attack_icon = LoadTexture(game::Config::Symbol_AAI_PC);
+        item_use_icon = LoadTexture(game::Config::Symbol_II_PC);
+    }
+
+    // --- Tastatur-Layout ---
+    is_keyboard_uppercase = true;
+    arcade_keyboard_layout =
+    {
+        "ABCDEFGHIJ",
+        "KLMNOPQRST",
+        "UVWXYZ.-_",
+        "1234567890",
+        "SDE" // Platzhalter für SHIFT, DELETE, ENTER
+    };
 
     LoadHighscores();
 
@@ -144,6 +152,8 @@ MainMenuScene::~MainMenuScene()
     UnloadTexture(ConfirmButton);
     UnloadTexture(SFXSlider);
     UnloadFont(customFont);
+    UnloadTexture(ranged_attack_icon);
+    UnloadTexture(item_use_icon);
 }
 
 void MainMenuScene::Update()
@@ -165,62 +175,80 @@ void MainMenuScene::Update()
 }
 
 void MainMenuScene::Input_Check_Mov() {
-    if (IsKeyPressed(game::Config::key_Up)){
-        this->counter= this->counter-1;
-        PlaySound(sound3);
+    bool moved = false;
+    if (game::Config::kArcadeMode) {
+        if (input_delay <= 0) {
+            float v_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
+            if (v_axis < -game::Config::kArcadeAxisDeadzone || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_UP))) {
+                this->counter--;
+                moved = true;
+            }
+            if (v_axis > game::Config::kArcadeAxisDeadzone || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_DOWN))) {
+                this->counter++;
+                moved = true;
+            }
+        }
+    } else {
+        if (IsKeyPressed(game::Config::key_Up)) {
+            this->counter--;
+            moved = true;
+        }
+        if (IsKeyPressed(game::Config::key_Down)) {
+            this->counter++;
+            moved = true;
+        }
     }
-    if (IsKeyPressed(game::Config::key_Down)){
-        this->counter= this->counter+1;
+
+    if (moved) {
         PlaySound(sound3);
+        if (game::Config::kArcadeMode) input_delay = 10;
     }
+    if (input_delay > 0) input_delay--;
 }
 
 bool MainMenuScene::Input_Check_Sel() {
-    if (IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_ENTER)) {
-        return true;
-    } else {
-        return false;
+    if (game::Config::kArcadeMode) {
+        return IsGamepadButtonPressed(0, game::Config::kArcadeButtonConfirm) || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_ENTER));
     }
+    return IsKeyPressed(game::Config::key_Melee_Attack) || IsKeyPressed(KEY_ENTER);
+}
+
+bool MainMenuScene::Input_Check_Back() {
+    if (game::Config::kArcadeMode) {
+        return IsGamepadButtonPressed(0, game::Config::kArcadeButtonBack) || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_ESCAPE));
+    }
+    return IsKeyPressed(KEY_ESCAPE);
 }
 
 void MainMenuScene::main_Update() {
     Input_Check_Mov();
 
-    if (counter > 4) {
-        counter = 0;
-    }
-    if (counter < 0) {
-        counter = 4;
-    }
+    if (counter > 4) counter = 0;
+    if (counter < 0) counter = 4;
 
     if (Input_Check_Sel()) {
         PlaySound(sound1);
         switch (counter) {
-            case 0: {
+            case 0:
                 game::core::Store::player_state = nullptr;
-                game::core::upgrades = {};
-                game::core::Store::stage->ReplaceWithNewScene("menu", "game", std::make_unique<game::scenes::GameScene>());
-                break;
-            }
-            case 1: {
+            game::core::upgrades = {};
+            game::core::Store::stage->ReplaceWithNewScene("menu", "game", std::make_unique<game::scenes::GameScene>());
+            break;
+            case 1:
                 counter = 0;
-                state = options;
-                break;
-            }
-            case 2: {
+            state = options;
+            break;
+            case 2:
                 state = list;
-                list_state = VIEWING;
-                counter = 0;
-                break;
-            }
-            case 3: {
+            list_state = VIEWING;
+            counter = 0;
+            break;
+            case 3:
                 state = credits;
-                break;
-            }
-            case 4: {
+            break;
+            case 4:
                 state = end;
-                break;
-            }
+            break;
         }
     }
 }
@@ -291,58 +319,61 @@ void MainMenuScene::Draw() {
         case credits: credits_Draw(); break;
     }
 }
+
 void MainMenuScene::options_Update() {
     Input_Check_Mov();
-    if (counter > 3) {
-        counter = 0;
-    }
-    if (counter < 0) {
-        counter = 3;
-    }
+    if (counter > 3) counter = 0;
+    if (counter < 0) counter = 3;
 
-    if (IsKeyPressed(KEY_ESCAPE)) {
+    if (Input_Check_Back()) {
         state = main;
         counter = 1;
         PlaySound(sound2);
         return;
     }
 
+    bool value_changed = false;
+
     if (counter == 1) {
-        if (IsKeyPressed(game::Config::key_Left)) {
-            game::core::Store::volume -= 0.5;
-            if (game::core::Store::volume < 0) game::core::Store::volume = 0;
+        if (game::Config::kArcadeMode) {
+            float h_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
+            if (h_axis < -game::Config::kArcadeAxisDeadzone) { game::core::Store::volume = std::max(0.0f, game::core::Store::volume - 0.5f); value_changed = true; }
+            if (h_axis > game::Config::kArcadeAxisDeadzone)  { game::core::Store::volume = std::min(5.0f, game::core::Store::volume + 0.5f); value_changed = true; }
         }
-        if (IsKeyPressed(game::Config::key_Right)) {
-            game::core::Store::volume += 0.5;
-            if (game::core::Store::volume > 5) game::core::Store::volume = 5;
+        if (!game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard) {
+            if (IsKeyPressed(game::Config::key_Left))  { game::core::Store::volume = std::max(0.0f, game::core::Store::volume - 0.5f); value_changed = true; }
+            if (IsKeyPressed(game::Config::key_Right)) { game::core::Store::volume = std::min(5.0f, game::core::Store::volume + 0.5f); value_changed = true; }
         }
-        SaveValue("MusicSettings.txt", game::core::Store::volume);
+        if (value_changed) SaveValue("MusicSettings.txt", game::core::Store::volume);
 
     } else if (counter == 2) {
-        if (IsKeyPressed(game::Config::key_Left)) {
-            sfx_volume -= 0.5;
-            if (sfx_volume < 0) sfx_volume = 0;
-            PlaySound(sound1);
+        if (game::Config::kArcadeMode) {
+             float h_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
+            if (h_axis < -game::Config::kArcadeAxisDeadzone) { sfx_volume = std::max(0.0f, sfx_volume - 0.5f); value_changed = true; }
+            if (h_axis > game::Config::kArcadeAxisDeadzone)  { sfx_volume = std::min(5.0f, sfx_volume + 0.5f); value_changed = true; }
         }
-        if (IsKeyPressed(game::Config::key_Right)) {
-            sfx_volume += 0.5;
-            if (sfx_volume > 5) sfx_volume = 5;
-            PlaySound(sound1);
+        if (!game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard) {
+            if (IsKeyPressed(game::Config::key_Left))  { sfx_volume = std::max(0.0f, sfx_volume - 0.5f); value_changed = true; }
+            if (IsKeyPressed(game::Config::key_Right)) { sfx_volume = std::min(5.0f, sfx_volume + 0.5f); value_changed = true; }
         }
-        SaveValue("SFXSettings.txt", sfx_volume);
+        if (value_changed) {
+            PlaySound(sound1);
+            SaveValue("SFXSettings.txt", sfx_volume);
+        }
     }
 
     if (Input_Check_Sel()) {
-        if (counter == 0) { // Fullscreen-Button
-            PlaySound(sound1); // Bestätigungssound
+        if (counter == 0) {
+            PlaySound(sound1);
             ToggleFullscreen();
-        } else if (counter == 3) { // Zurück-Button
-            PlaySound(sound2); // Zurück-Sound
+        } else if (counter == 3) {
+            PlaySound(sound2);
             state = main;
             counter = 1;
         }
     }
 }
+
 void MainMenuScene::options_Draw()
 {
     Vector2 scroll_pos = {game::Config::kStageWidth / 2.0f - 440.0f, 190.0f};
@@ -385,20 +416,18 @@ void MainMenuScene::options_Draw()
     Rectangle back_dest = { game::Config::kStageWidth/2 - (160 * 2.0f / 2), 840, 160 * 2.0f, 48 * 2.0f };
     DrawTexturePro(BackButton, back_source, back_dest, {0,0}, 0, WHITE);
 }
-void MainMenuScene::list_Update()
-{
-    switch(list_state) {
+
+void MainMenuScene::list_Update() {
+    switch (list_state) {
         case VIEWING:
-        {
-            if (IsKeyPressed(KEY_ESCAPE) || Input_Check_Sel()) {
+            if (Input_Check_Back() || Input_Check_Sel()) {
                 state = main;
                 counter = 2;
                 PlaySound(sound2);
             }
-            break;
-        }
+        break;
 
-        case AWAITING_INPUT: {
+        case AWAITING_INPUT:
             if (new_highscore_rank != -1) {
                 Input_Check_Mov();
                 if (counter > 1) counter = 0;
@@ -406,67 +435,53 @@ void MainMenuScene::list_Update()
             } else {
                 counter = 0;
             }
-            if (Input_Check_Sel()) {
-                PlaySound(sound1);
-                if (counter == 0) {
-                    list_state = TYPING_NAME;
-                } else if (counter == 1) {
-                    if (new_highscore_rank != -1) {
-                        if (player_name_input.empty()) {
-                            highscores[new_highscore_rank].name = "________";
-                        } else {
-                            highscores[new_highscore_rank].name = player_name_input;
-                        }
-                        SaveHighscores();
-                        new_highscore_rank = -1;
-                        final_score = -1;
+
+        if (Input_Check_Sel()) {
+            PlaySound(sound1);
+            if (counter == 0) {
+                list_state = TYPING_NAME;
+            } else if (counter == 1) {
+                if (new_highscore_rank != -1) {
+                    if (player_name_input.empty()) {
+                        highscores[new_highscore_rank].name = "________";
+                    } else {
+                        highscores[new_highscore_rank].name = player_name_input;
                     }
-                    state = main;
-                    counter = 2;
+                    SaveHighscores();
+                    new_highscore_rank = -1;
+                    final_score = -1;
                 }
+                state = main;
+                counter = 2;
             }
-            break;
         }
+        break;
 
-        case TYPING_NAME: {
-            int key = GetCharPressed();
-            while (key > 0) {
-                if ((key >= 32) && (key <= 125) && (player_name_input.length() < max_name_length)) {
-                    player_name_input.push_back((char)key);
-                    PlaySound(sound1);
-                } else if (player_name_input.length() >= max_name_length) {
-                    PlaySound(sound2);
-                }
-                key = GetCharPressed();
-            }
-
-            if (IsKeyPressed(KEY_BACKSPACE) && !player_name_input.empty()) {
-                player_name_input.pop_back();
-                PlaySound(sound2);
-            }
-
-            if (IsKeyPressed(KEY_ENTER)) {
-                PlaySound(sound1);
-                list_state = AWAITING_INPUT;
-                counter = 0;
-            }
-            break;
-        }
+        case TYPING_NAME:
+            UpdateTyping();
+        break;
     }
 }
 
 void MainMenuScene::list_Draw() {
-    Vector2 scroll_pos = {game::Config::kStageWidth / 2.0f - 440.0f, 190.0f};
+    // --- NEUE LOGIK HIER ---
+    // Prüfen, ob die Tastatur gezeichnet werden soll
+    bool should_draw_keyboard = (game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard) && list_state == TYPING_NAME;
+    // UI nach links verschieben, wenn die Tastatur aktiv ist, sonst zentriert lassen (offset = 0)
+    float content_offset_x = should_draw_keyboard ? -350.0f : 0.0f;
+    // ----------------------
+
+    Vector2 scroll_pos = {game::Config::kStageWidth / 2.0f - 440.0f + content_offset_x, 190.0f};
     DrawTextureEx(scroll_button, scroll_pos, 0, 4, WHITE);
 
-    DrawTexturePro(TB, {30 + 230 * 2, 1, 230, 48}, {game::Config::kStageWidth / 2 - 460, 20, 230 * 4, 48 * 4}, {0, 0}, 0, WHITE);
-    Vector2 titlePos = {game::Config::kStageWidth / 2 - 150, 298};
+    DrawTexturePro(TB, {30 + 230 * 2, 1, 230, 48}, {game::Config::kStageWidth / 2 - 460 + content_offset_x, 20, 230 * 4, 48 * 4}, {0, 0}, 0, WHITE);
+    Vector2 titlePos = {game::Config::kStageWidth / 2 - 150 + content_offset_x, 298};
     DrawTextPro(customFont, "Highscores:", titlePos, {0, 0}, 0, 50, 3, BLACK);
     Vector2 titleSize = MeasureTextEx(customFont, "Highscores:", 50, 3);
     DrawRectangle((int)titlePos.x, (int)(titlePos.y + titleSize.y - 5), (int)titleSize.x, 4, BLACK);
     Color highlightColor = {228, 148, 59, 255};
 
-    const float content_center_x = game::Config::kStageWidth / 2.0f;
+    const float content_center_x = game::Config::kStageWidth / 2.0f + content_offset_x;
     const float rank_x = content_center_x - 280;
     const float name_x = content_center_x - 210;
     const float score_x = content_center_x + 144;
@@ -501,26 +516,30 @@ void MainMenuScene::list_Draw() {
     }
 
     const float button_y_pos = 840.0f;
+    const float button_center_x = game::Config::kStageWidth / 2.0f + content_offset_x;
 
     if (list_state == VIEWING) {
         float source_x = 160.0f;
         Rectangle source = {source_x, 0, 160, 48};
-        Rectangle dest = {game::Config::kStageWidth / 2 - (160 * 2.0f / 2), button_y_pos, 160 * 2.0f, 48 * 2.0f};
+        Rectangle dest = {button_center_x - (160 * 2.0f / 2), button_y_pos, 160 * 2.0f, 48 * 2.0f};
         DrawTexturePro(BackButton, source, dest, {0, 0}, 0, WHITE);
     } else {
-
         bool confirm_selected = (new_highscore_rank == -1 || (counter == 1 && list_state == AWAITING_INPUT));
         float source_x = confirm_selected ? 160.0f : 0.0f;
 
         Rectangle source = {source_x, 0, 160, 48};
-        Rectangle dest = {game::Config::kStageWidth / 2 - (160 * 2.0f / 2), button_y_pos, 160 * 2.0f, 48 * 2.0f};
+        Rectangle dest = {button_center_x - (160 * 2.0f / 2), button_y_pos, 160 * 2.0f, 48 * 2.0f};
         DrawTexturePro(ConfirmButton, source, dest, {0, 0}, 0, WHITE);
+    }
+
+    if (should_draw_keyboard) {
+        DrawArcadeKeyboard();
     }
 }
 
 void MainMenuScene::credits_Update(float delta_time)
 {
-    if (IsKeyPressed(KEY_ESCAPE) || Input_Check_Sel()) {
+    if (Input_Check_Back() || Input_Check_Sel()) {
         PlaySound(sound2);
         state = main;
         counter = 3;
@@ -629,4 +648,186 @@ void MainMenuScene::CheckForNewHighscore() {
         list_state = VIEWING;
         counter = 0;
     }
+}
+void MainMenuScene::UpdateTyping()
+{
+    if (game::Config::kArcadeMode || game::Config::kArcadeDebugWithKeyboard)
+    {
+
+        bool shift_shortcut_pressed = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(game::Config::key_Ranged_Attack)) ||
+                                      IsGamepadButtonPressed(0, game::Config::kArcadeButtonRanged);
+        if (shift_shortcut_pressed) {
+            is_keyboard_uppercase = !is_keyboard_uppercase;
+            PlaySound(sound1);
+        }
+
+        bool delete_shortcut_pressed = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(game::Config::key_Use_Item)) ||
+                                       IsGamepadButtonPressed(0, game::Config::kArcadeButtonItem);
+        if (delete_shortcut_pressed && !player_name_input.empty()) {
+            player_name_input.pop_back();
+            PlaySound(sound2);
+        }
+
+        if (input_delay <= 0) {
+            bool moved = false;
+            float v_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
+
+            if (v_axis < -game::Config::kArcadeAxisDeadzone || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_W))) {
+
+                if (arcade_keyboard_cursor.y == 4) {
+                    int x_pos = (int)arcade_keyboard_cursor.x;
+                    if (x_pos == 0) arcade_keyboard_cursor.x = 1;
+                    else if (x_pos == 1) arcade_keyboard_cursor.x = 4;
+                    else arcade_keyboard_cursor.x = 7;
+                    arcade_keyboard_cursor.y = 3;
+                } else {
+                    arcade_keyboard_cursor.y = (arcade_keyboard_cursor.y > 0) ? arcade_keyboard_cursor.y - 1 : arcade_keyboard_layout.size() - 1;
+                }
+                moved = true;
+            }
+
+            if (v_axis > game::Config::kArcadeAxisDeadzone || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_S))) {
+                if (arcade_keyboard_cursor.y == 3) {
+                    int x_pos = (int)arcade_keyboard_cursor.x;
+                    if (x_pos <= 2) arcade_keyboard_cursor.x = 0;
+                    else if (x_pos <= 5) arcade_keyboard_cursor.x = 1;
+                    else arcade_keyboard_cursor.x = 2;
+                    arcade_keyboard_cursor.y = 4;
+                } else {
+                    arcade_keyboard_cursor.y = (arcade_keyboard_cursor.y < arcade_keyboard_layout.size() - 1) ? arcade_keyboard_cursor.y + 1 : 0;
+                }
+                moved = true;
+            }
+
+            float h_axis = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
+
+            if (h_axis < -game::Config::kArcadeAxisDeadzone || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_A))) {
+                arcade_keyboard_cursor.x = (arcade_keyboard_cursor.x > 0) ? arcade_keyboard_cursor.x - 1 : arcade_keyboard_layout[(int)arcade_keyboard_cursor.y].length() - 1;
+                moved = true;
+            }
+
+            if (h_axis > game::Config::kArcadeAxisDeadzone || (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(KEY_D))) {
+                arcade_keyboard_cursor.x = (arcade_keyboard_cursor.x < arcade_keyboard_layout[(int)arcade_keyboard_cursor.y].length() - 1) ? arcade_keyboard_cursor.x + 1 : 0;
+                moved = true;
+            }
+
+            if (moved) {
+                PlaySound(sound3);
+                input_delay = 8;
+            }
+        }
+        if (input_delay > 0) input_delay--;
+
+        bool select_pressed = (game::Config::kArcadeDebugWithKeyboard && IsKeyPressed(game::Config::key_Melee_Attack)) ||
+                              IsGamepadButtonPressed(0, game::Config::kArcadeButtonConfirm);
+
+        if (select_pressed) {
+            int y = (int)arcade_keyboard_cursor.y;
+            int x = (int)arcade_keyboard_cursor.x;
+
+            if (y == 4) {
+                char key = arcade_keyboard_layout[y][x];
+                if (key == 'S') {
+                    is_keyboard_uppercase = !is_keyboard_uppercase;
+                    PlaySound(sound1);
+                } else if (key == 'D') {
+                    if (!player_name_input.empty()) {
+                        player_name_input.pop_back();
+                        PlaySound(sound2);
+                    }
+                } else if (key == 'E') {
+                    list_state = AWAITING_INPUT;
+                    PlaySound(sound1);
+                }
+            } else {
+                if (player_name_input.length() < max_name_length) {
+                    char selected_char = arcade_keyboard_layout[y][x];
+                    player_name_input += is_keyboard_uppercase ? selected_char : (char)tolower(selected_char);
+                    PlaySound(sound1);
+                }
+            }
+        }
+
+        if (Input_Check_Back() && !player_name_input.empty()) {
+            player_name_input.pop_back();
+            PlaySound(sound2);
+        }
+    }
+    else
+    {
+
+        int key = GetCharPressed();
+        while (key > 0) {
+            if ((key >= 32) && (key <= 125) && (player_name_input.length() < max_name_length)) {
+                player_name_input.push_back((char)key);
+            }
+            key = GetCharPressed();
+        }
+        if (IsKeyPressed(KEY_BACKSPACE) && !player_name_input.empty()) {
+            player_name_input.pop_back();
+            PlaySound(sound2);
+        }
+        if (IsKeyPressed(KEY_ENTER)) {
+            list_state = AWAITING_INPUT;
+            counter = 0;
+            PlaySound(sound1);
+        }
+    }
+}
+
+void MainMenuScene::DrawArcadeKeyboard() {
+    const Color orange_base = {228, 148, 59, 255};
+    const Color orange_hover = {200, 120, 40, 255};
+
+    const float start_x = game::Config::kStageWidth / 2.0f + 100.0f;
+    const float start_y = 350.0f;
+    const float key_width = 60.0f;
+    const float key_height = 60.0f;
+    const float spacing = 10.0f;
+
+    for (int r = 0; r < 4; ++r) {
+        const std::string& row_text = arcade_keyboard_layout[r];
+        for (int c = 0; c < row_text.length(); ++c) {
+            Vector2 key_pos = { start_x + c * (key_width + spacing), start_y + r * (key_height + spacing) };
+            Rectangle key_rect = {key_pos.x, key_pos.y, key_width, key_height};
+
+            bool is_selected = (r == arcade_keyboard_cursor.y && c == arcade_keyboard_cursor.x);
+            DrawRectangleRec(key_rect, is_selected ? orange_hover : orange_base);
+            DrawRectangleLinesEx(key_rect, 2, BLACK);
+
+            char original_char = row_text[c];
+            char display_char = is_keyboard_uppercase ? original_char : (char)tolower(original_char);
+            std::string char_str(1, display_char);
+
+            Vector2 text_size = MeasureTextEx(customFont, char_str.c_str(), 40, 2);
+            DrawTextEx(customFont, char_str.c_str(), {key_pos.x + (key_width - text_size.x) / 2, key_pos.y + (key_height - text_size.y)/2}, 40, 2, BLACK);
+        }
+    }
+
+    const float special_key_y = start_y + 4 * (key_height + spacing);
+    const float special_key_width = (3 * (key_width + spacing)) - spacing;
+    const float icon_padding = 5.0f;
+
+    Rectangle shift_rect = {start_x, special_key_y, special_key_width, key_height};
+    bool is_shift_selected = (arcade_keyboard_cursor.y == 4 && arcade_keyboard_cursor.x == 0);
+    DrawRectangleRec(shift_rect, is_shift_selected ? orange_hover : orange_base);
+    DrawRectangleLinesEx(shift_rect, 2, BLACK);
+    Vector2 shift_text_size = MeasureTextEx(customFont, "SHIFT", 40, 2);
+    DrawTextEx(customFont, "SHIFT", {shift_rect.x + (shift_rect.width - shift_text_size.x) / 2, shift_rect.y + (shift_rect.height - shift_text_size.y) / 2}, 40, 2, BLACK);
+    DrawTexture(ranged_attack_icon, shift_rect.x + shift_rect.width - ranged_attack_icon.width - icon_padding, shift_rect.y + shift_rect.height - ranged_attack_icon.height - icon_padding, WHITE);
+
+    Rectangle del_rect = {start_x + special_key_width + spacing, special_key_y, special_key_width, key_height};
+    bool is_del_selected = (arcade_keyboard_cursor.y == 4 && arcade_keyboard_cursor.x == 1);
+    DrawRectangleRec(del_rect, is_del_selected ? orange_hover : orange_base);
+    DrawRectangleLinesEx(del_rect, 2, BLACK);
+    Vector2 del_text_size = MeasureTextEx(customFont, "DELETE", 40, 2);
+    DrawTextEx(customFont, "DELETE", {del_rect.x + (del_rect.width - del_text_size.x) / 2, del_rect.y + (del_rect.height - del_text_size.y) / 2}, 40, 2, BLACK);
+    DrawTexture(item_use_icon, del_rect.x + del_rect.width - item_use_icon.width - icon_padding, del_rect.y + del_rect.height - item_use_icon.height - icon_padding, WHITE);
+
+    Rectangle enter_rect = {start_x + 2 * (special_key_width + spacing), special_key_y, special_key_width, key_height};
+    bool is_enter_selected = (arcade_keyboard_cursor.y == 4 && arcade_keyboard_cursor.x == 2);
+    DrawRectangleRec(enter_rect, is_enter_selected ? orange_hover : orange_base);
+    DrawRectangleLinesEx(enter_rect, 2, BLACK);
+    Vector2 enter_text_size = MeasureTextEx(customFont, "ENTER", 40, 2);
+    DrawTextEx(customFont, "ENTER", {enter_rect.x + (enter_rect.width - enter_text_size.x) / 2, enter_rect.y + (enter_rect.height - enter_text_size.y) / 2}, 40, 2, BLACK);
 }
