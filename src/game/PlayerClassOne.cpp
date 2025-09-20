@@ -187,7 +187,7 @@ void Player_Class_One::Tick(float delta_time)
 void Player_Class_One::Draw()
 {
 
-
+/*
     if (item_pick_c>0){
         switch (item_pick_c) {
             case 12:{
@@ -217,7 +217,7 @@ void Player_Class_One::Draw()
         }
         DrawTextPro(game::core::Store::font,std::to_string(item_val).c_str(), {item_pick_pos.x,item_pick_pos.y-of},{0,0},0,fs,1,WHITE);
 
-    }
+    }*/
 
 
     if (IsAdrenalinBuffed())
