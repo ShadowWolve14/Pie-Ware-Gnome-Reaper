@@ -285,7 +285,7 @@ namespace game::scenes {
         ClearBackground(BLACK);
         DrawTexturePro(soulcounter_bg,
                     {0, 0, 64, 30},                     // source rect (part of sheet)
-                    {game::Config::kStageWidth/4 - 180, 50, 64*4.0f, 30*4.0f},        // dest rect (x,y,w,h → scaled ×4)
+                    {game::Config::kStageWidth/4 - 280, 50, 64*4.0f, 30*4.0f},        // dest rect (x,y,w,h → scaled ×4)
                     {0, 0},                                         // origin (pivot top-left)
                         0.0f,                                                // rotation
                         WHITE                                                // tint
@@ -294,10 +294,10 @@ namespace game::scenes {
         std::string Text_SoulsToSpend = std::to_string(souls_to_spend);
 
 
-        DrawTextEx(GnomeFont, Text_SoulsToSpend.c_str(), Vector2{ game::Config::kStageWidth/4 - 80, 105 }, 36, 1, Color{126, 196, 193, 255});
-        fairyAnim.Draw_Current_Frame_Pro(Vector2{ 140.0f, 400 });
+        DrawTextEx(GnomeFont, Text_SoulsToSpend.c_str(), Vector2{ game::Config::kStageWidth/4 - 180, 105 }, 36, 1, Color{126, 196, 193, 255});
+        fairyAnim.Draw_Current_Frame_Pro(Vector2{ 80.0f, 400 });
 
-        Vector2 Text_BasePos = {game::Config::kStageWidth / 2.0f + 140.0f, 170};
+        Vector2 Text_BasePos = {game::Config::kStageWidth / 2.0f + 20.0f, 170};
         int colSpacing = 100;
         int kFontSize[7] = {60, 55, 55, 45, 45, 45, 45};
 
@@ -314,7 +314,7 @@ namespace game::scenes {
         Rectangle pip_empty = { 96, 0, 32, 32 };
         Rectangle pip_empty_hi = { 64, 0, 32, 32 };  // empty highlighted (hover)
 
-        constexpr float kStartX  = game::Config::kStageWidth / 2.0f + 140.0f;
+        constexpr float kStartX  = game::Config::kStageWidth / 2.0f + 20.0f;
         constexpr float kSpacing = 96.0f;
 
         // -----Max Health-----
@@ -324,20 +324,20 @@ namespace game::scenes {
             DrawTexturePro(
                 lives_upgrade_button,
                 abilities,
-                { game::Config::kStageWidth/2.0f - 100.0f, 250.0f,
+                { game::Config::kStageWidth/2.0f - 220.0f, 250.0f,
                     abilities.width * 3.0f, abilities.height * 3.0f },
                     { 0, 0 },
                     0.0f,
                     WHITE
             );
-            DrawTextEx(GnomeFont, game::Config::upHealth, Vector2{ game::Config::kStageWidth/4 - 230, 250 }, 36, 1, Color{126, 196, 193, 255});
+            DrawTextEx(GnomeFont, game::Config::upHealth, Vector2{ game::Config::kStageWidth/4 - 280, 250 }, 36, 1, Color{126, 196, 193, 255});
         }
         else{
             abilities.x=1;
             DrawTexturePro(
                 lives_upgrade_button,
                 abilities,
-                { game::Config::kStageWidth/2.0f - 100.0f, 250.0f,
+                { game::Config::kStageWidth/2.0f - 220.0f, 250.0f,
                     abilities.width * 3.0f, abilities.height * 3.0f },
                     { 0, 0 },
                     0.0f,
@@ -361,13 +361,13 @@ namespace game::scenes {
             DrawTexturePro(
                 speed_upgrade_button,
                 abilities,
-                { game::Config::kStageWidth/2.0f - 100.0f, 350.0f,
+                { game::Config::kStageWidth/2.0f - 220.0f, 350.0f,
                     abilities.width * 3.0f, abilities.height * 3.0f },
                     { 0, 0 },
                     0.0f,
                     WHITE
             );
-        DrawTextEx(GnomeFont, game::Config::upSpeed, Vector2{ game::Config::kStageWidth/4 - 230, 250 }, 36, 1, Color{126, 196, 193, 255});
+        DrawTextEx(GnomeFont, game::Config::upSpeed, Vector2{ game::Config::kStageWidth/4 - 280, 250 }, 36, 1, Color{126, 196, 193, 255});
 
         }
         else{
@@ -375,7 +375,7 @@ namespace game::scenes {
             DrawTexturePro(
                 speed_upgrade_button,
                 abilities,
-                { game::Config::kStageWidth/2.0f - 100.0f, 350.0f,
+                { game::Config::kStageWidth/2.0f - 220.0f, 350.0f,
                     abilities.width * 3.0f, abilities.height * 3.0f },
                     { 0, 0 },
                     0.0f,
@@ -399,13 +399,13 @@ namespace game::scenes {
             DrawTexturePro(
                 atkSpeed_upgrade_button,
                 abilities,
-                { game::Config::kStageWidth/2.0f - 100.0f, 450.0f,
+                { game::Config::kStageWidth/2.0f - 220.0f, 450.0f,
                     abilities.width * 3.0f, abilities.height * 3.0f },
                     { 0, 0 },
                     0.0f,
                     WHITE
             );
-        DrawTextEx(GnomeFont, game::Config::upAtkSpeed, Vector2{ game::Config::kStageWidth/4 - 230, 250 }, 36, 1, Color{126, 196, 193, 255});
+        DrawTextEx(GnomeFont, game::Config::upAtkSpeed, Vector2{ game::Config::kStageWidth/4 - 280, 250 }, 36, 1, Color{126, 196, 193, 255});
 
         }
         else{
@@ -413,7 +413,7 @@ namespace game::scenes {
             DrawTexturePro(
                 atkSpeed_upgrade_button,
                 abilities,
-                { game::Config::kStageWidth/2.0f - 100.0f, 450.0f,
+                { game::Config::kStageWidth/2.0f - 220.0f, 450.0f,
                     abilities.width * 3.0f, abilities.height * 3.0f },
                     { 0, 0 },
                     0.0f,
@@ -437,13 +437,13 @@ namespace game::scenes {
             DrawTexturePro(
                 DMGxMult_upgrade_button,
                 abilities,
-                { game::Config::kStageWidth/2.0f - 100.0f, 550.0f,
+                { game::Config::kStageWidth/2.0f - 220.0f, 550.0f,
                     abilities.width * 3.0f, abilities.height * 3.0f },
                     { 0, 0 },
                     0.0f,
                     WHITE
             );
-            DrawTextEx(GnomeFont, game::Config::upDMGMult, Vector2{ game::Config::kStageWidth/4 - 230, 250 }, 36, 1, Color{126, 196, 193, 255});
+            DrawTextEx(GnomeFont, game::Config::upDMGMult, Vector2{ game::Config::kStageWidth/4 - 280, 250 }, 36, 1, Color{126, 196, 193, 255});
 
         }
         else{
@@ -451,7 +451,7 @@ namespace game::scenes {
             DrawTexturePro(
                 DMGxMult_upgrade_button,
                 abilities,
-                { game::Config::kStageWidth/2.0f - 100.0f, 550.0f,
+                { game::Config::kStageWidth/2.0f - 220.0f, 550.0f,
                     abilities.width * 3.0f, abilities.height * 3.0f },
                     { 0, 0 },
                     0.0f,
@@ -475,13 +475,13 @@ namespace game::scenes {
             DrawTexturePro(
                 meeleDMG_upgrade_button,
                 abilities,
-                { game::Config::kStageWidth/2.0f - 100.0f, 650.0f,
+                { game::Config::kStageWidth/2.0f - 220.0f, 650.0f,
                     abilities.width * 3.0f, abilities.height * 3.0f },
                     { 0, 0 },
                     0.0f,
                     WHITE
             );
-        DrawTextEx(GnomeFont, game::Config::upDMGMeele, Vector2{ game::Config::kStageWidth/4 - 230, 250 }, 36, 1, Color{126, 196, 193, 255});
+        DrawTextEx(GnomeFont, game::Config::upDMGMeele, Vector2{ game::Config::kStageWidth/4 - 280, 250 }, 36, 1, Color{126, 196, 193, 255});
 
         }
         else{
@@ -490,7 +490,7 @@ namespace game::scenes {
             DrawTexturePro(
                 meeleDMG_upgrade_button,
                 abilities,
-                { game::Config::kStageWidth/2.0f - 100.0f, 650.0f,
+                { game::Config::kStageWidth/2.0f - 220.0f, 650.0f,
                     abilities.width * 3.0f, abilities.height * 3.0f },
                     { 0, 0 },
                     0.0f,
@@ -514,13 +514,13 @@ namespace game::scenes {
             DrawTexturePro(
                 rangedDMG_upgrade_button,
                 abilities,
-                { game::Config::kStageWidth/2.0f - 100.0f, 750.0f,
+                { game::Config::kStageWidth/2.0f - 220.0f, 750.0f,
                     abilities.width * 3.0f, abilities.height * 3.0f },
                     { 0, 0 },
                     0.0f,
                     WHITE
             );
-        DrawTextEx(GnomeFont, game::Config::upDMGRanged, Vector2{ game::Config::kStageWidth/4 - 230, 250 }, 36, 1, Color{126, 196, 193, 255});
+        DrawTextEx(GnomeFont, game::Config::upDMGRanged, Vector2{ game::Config::kStageWidth/4 - 280, 250 }, 36, 1, Color{126, 196, 193, 255});
 
         }
         else{
@@ -528,7 +528,7 @@ namespace game::scenes {
             DrawTexturePro(
                 rangedDMG_upgrade_button,
                 abilities,
-                { game::Config::kStageWidth/2.0f - 100.0f, 750.0f,
+                { game::Config::kStageWidth/2.0f - 220.0f, 750.0f,
                     abilities.width * 3.0f, abilities.height * 3.0f },
                     { 0, 0 },
                     0.0f,
@@ -552,7 +552,7 @@ namespace game::scenes {
             DrawTexturePro(
                 continue_button_button,
                 abilities,
-                { game::Config::kStageWidth/2.0f - 100.0f, 850.0f,
+                { game::Config::kStageWidth/2.0f - 220.0f, 850.0f,
                     abilities.width * 3.0f, abilities.height * 3.0f },
                     { 0, 0 },
                     0.0f,
@@ -564,7 +564,7 @@ namespace game::scenes {
             DrawTexturePro(
                 continue_button_button,
                 abilities,
-                { game::Config::kStageWidth/2.0f - 100.0f, 850.0f,
+                { game::Config::kStageWidth/2.0f - 220.0f, 850.0f,
                     abilities.width * 3.0f, abilities.height * 3.0f },
                     { 0, 0 },
                     0.0f,
