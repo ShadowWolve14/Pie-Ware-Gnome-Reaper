@@ -137,14 +137,14 @@ void HUD::HUD_shake() {
 }
 void HUD::HUD_draw() {
     Vector2 v1{20,20};
-    Vector2 v2{1400,20};
-    Vector2 v3{1200,20};
-    Vector2 v4{1400,900};
-    Vector2 v5{1550,900};
-    Vector2 v6{1550,750};
-    Vector2 v7{1464,970};
-    Vector2 v8{1614,970};
-    Vector2 v9{1614,814};
+    Vector2 v2{1700,20};
+    Vector2 v3{1400,20};
+    Vector2 v4{1650,950};
+    Vector2 v5{1800,950};
+    Vector2 v6{1800,800};
+    Vector2 v7{1864,1014};
+    Vector2 v8{1714,1014};
+    Vector2 v9{1864,864};
     Vector2 v10{118,25};
     Vector2 v11{163,25};
     Vector2 v12{208,25};
