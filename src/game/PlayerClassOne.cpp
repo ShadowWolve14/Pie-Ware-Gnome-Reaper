@@ -233,7 +233,7 @@ void Player_Class_One::Draw()
 
         Vector2 vfx_draw_pos = {
                 this->hitbox.x - (48 - this->hitbox.width) / 2.0f,
-                this->hitbox.y - (32 - this->hitbox.height) / 2.0f+luck_offset
+                this->hitbox.y - (32 - this->hitbox.height) / 2.0f
         };
 
         if (luck_vfx_c>1*5){
